@@ -1,4 +1,10 @@
 package kr.ac.konkuk.gdsc.plantory.data.source
 
-class UserDataSource {
+import kr.ac.konkuk.gdsc.plantory.data.service.UserService
+import javax.inject.Inject
+
+class UserDataSource @Inject constructor(
+    private val userService: UserService
+) {
+
 }
