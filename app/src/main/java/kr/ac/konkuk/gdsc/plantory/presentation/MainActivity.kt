@@ -1,7 +1,9 @@
-package kr.ac.konkuk.gdsc.plantory
+package kr.ac.konkuk.gdsc.plantory.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import kr.ac.konkuk.gdsc.plantory.R
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
