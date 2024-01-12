@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- font Style -->
+    <style name="TextAppearance.PLANTORY" parent="">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/gray_800</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:letterSpacing">-0.025</item>
+    </style>
+
+    <!-- headline -->
+    <style name="TextAppearance.PLANTORY.Headline_b_36_xxl">
+        <item name="android:fontFamily">@font/plantory_pretendard_bold</item>
+        <item name="android:textSize">36sp</item>
+        <item name="lineHeight">40sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.Headline_b_24">
+        <item name="android:fontFamily">@font/plantory_pretendard_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="lineHeight">28sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.Headline_b_16">
+        <item name="android:fontFamily">@font/plantory_pretendard_bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">20sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.Headline_sb_16">
+        <item name="android:fontFamily">@font/plantory_pretendard_semibold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">20sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.Headline_b_14">
+        <item name="android:fontFamily">@font/plantory_pretendard_bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="lineHeight">18sp</item>
+    </style>
+    <style name="TextAppearance.PLANTORY.Headline_b_11">
+        <item name="android:fontFamily">@font/plantory_pretendard_bold</item>
+        <item name="android:textSize">11sp</item>
+        <item name="lineHeight">15sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.body_m_12">
+        <item name="android:fontFamily">@font/plantory_pretendard_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="lineHeight">16sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.body_r_13">
+        <item name="android:fontFamily">@font/plantory_pretendard_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="lineHeight">17sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.body_r_12">
+        <item name="android:fontFamily">@font/plantory_pretendard_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="lineHeight">16sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.body_r_11">
+        <item name="android:fontFamily">@font/plantory_pretendard_regular</item>
+        <item name="android:textSize">11sp</item>
+        <item name="lineHeight">15sp</item>
+    </style>
+
+    <style name="TextAppearance.PLANTORY.body_r_10">
+        <item name="android:fontFamily">@font/plantory_pretendard_regular</item>
+        <item name="android:textSize">10sp</item>
+        <item name="lineHeight">14sp</item>
+    </style>
+
+</resources>
