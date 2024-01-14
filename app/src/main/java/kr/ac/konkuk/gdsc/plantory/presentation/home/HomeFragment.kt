@@ -11,6 +11,7 @@ import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 
 @AndroidEntryPoint
@@ -36,6 +37,10 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         createPlantScrollJob()
         initPlantViewPagerAdapter(plants = plants)
         initPlantViewPagerIndicator(plants = plants)
+        initViewPagerDecoration(
+            previewWidth = VIEWPAGER_PREVIEW_WIDTH,
+            itemMargin = VIEWPAGER_ITEM_MARGIN
+        )
     }
 
     private fun initPlantViewPagerAdapter(plants: List<Plant>) {
@@ -50,6 +55,20 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
             attachTo(binding.vpHomePlant)
             plantItemCount = plants.size
             addDot(plantItemCount)
+        }
+    }
+
+    private fun initViewPagerDecoration(previewWidth: Int, itemMargin: Int) {
+        val decoMargin = previewWidth + itemMargin
+        val pageTransX = decoMargin + previewWidth
+        val decoration = ViewPagerDecoration(decoMargin)
+
+        binding.vpHomePlant.also {
+            it.offscreenPageLimit = 1
+            it.addItemDecoration(decoration)
+            it.setPageTransformer { page, position ->
+                page.translationX = position * -pageTransX
+            }
         }
     }
 
@@ -99,5 +118,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     companion object {
         private const val SCROLL_DELAY_TIME = 5000L
+        private const val VIEWPAGER_PREVIEW_WIDTH = 60
+        private const val VIEWPAGER_ITEM_MARGIN = 50
     }
 }
