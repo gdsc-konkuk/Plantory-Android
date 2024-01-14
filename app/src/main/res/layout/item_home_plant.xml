@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="data"
+            type="kr.ac.konkuk.gdsc.plantory.domain.entity.Plant" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_plant_dday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@{@string/home_plant_dday(data.nickname,data.dday)}"
+            android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_24"
+            android:textColor="@color/gray_800"
+            app:layout_constraintStart_toStartOf="@id/iv_plant_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_plant_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/img_plant_sample"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_plant_dday" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_plant_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/iv_plant_image"
+            app:layout_constraintStart_toStartOf="@id/iv_plant_image">
+
+            <TextView
+                android:id="@+id/tv_plant_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/home_plant_nickname"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
+                android:textColor="@color/gray_0"
+                app:layout_constraintBottom_toTopOf="@id/tv_plant_species"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_plant_nickname_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="33dp"
+                android:text="@{data.nickname}"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
+                android:textColor="@color/gray_0"
+                app:layout_constraintBottom_toBottomOf="@id/tv_plant_nickname"
+                app:layout_constraintStart_toEndOf="@id/tv_plant_nickname" />
+
+            <TextView
+                android:id="@+id/tv_plant_species"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/home_plant_species"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
+                android:textColor="@color/gray_0"
+                app:layout_constraintBottom_toTopOf="@id/tv_plant_description"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_plant_species_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="@{data.species}"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
+                android:textColor="@color/gray_0"
+                app:layout_constraintBottom_toBottomOf="@id/tv_plant_species"
+                app:layout_constraintStart_toEndOf="@id/tv_plant_species" />
+
+
+            <TextView
+                android:id="@+id/tv_plant_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/home_plant_description"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
+                android:textColor="@color/gray_0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_plant_description_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="@{data.description}"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
+                android:textColor="@color/gray_0"
+                app:layout_constraintBottom_toBottomOf="@id/tv_plant_description"
+                app:layout_constraintStart_toEndOf="@id/tv_plant_description" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/iv_plant_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/ic_plant_upload"
+            app:layout_constraintBottom_toBottomOf="@id/iv_plant_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_plant_image" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
