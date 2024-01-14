@@ -13,6 +13,8 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.PopupMenu
+import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 @AndroidEntryPoint
 class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home) {
@@ -27,6 +29,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         viewModel = HomeViewModel()
         initMockData()
         addCallback()
+        addListener()
     }
 
     private fun initMockData() {
@@ -75,6 +78,17 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     private fun addCallback() {
         registerPlantPageChangeCallback()
     }
+
+    private fun addListener() {
+        initAddButtonClickListener()
+    }
+
+    private fun initAddButtonClickListener() {
+        binding.ivHomeAdd.setOnSingleClickListener {
+            PopupMenu.showCustomPopup(it, R.layout.menu_home)
+        }
+    }
+
 
     private fun registerPlantPageChangeCallback() {
         binding.vpHomePlant.registerOnPageChangeCallback(object :
