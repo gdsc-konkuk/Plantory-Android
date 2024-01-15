@@ -42,9 +42,9 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#EBEFF0"
-            app:layout_constraintTop_toBottomOf="@+id/cl_addplant_appbar"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/cl_addplant_appbar" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_addplant_profile"
@@ -52,7 +52,7 @@
             android:layout_height="75dp"
             android:layout_marginStart="15dp"
             android:src="@drawable/ic_addplant_profile"
-            app:layout_constraintBottom_toBottomOf="@+id/et_addplant_birthday"
+            app:layout_constraintBottom_toBottomOf="@+id/tf_addplant_birthday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_addplant_birthday_text" />
 
@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cl_addplant_appbar" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_addplant_birthday"
+            android:id="@+id/tf_addplant_birthday"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -77,10 +77,12 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_addplant_birthday_text">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_addplant_birthday"
                 android:layout_width="230dp"
                 android:layout_height="match_parent"
                 android:enabled="false"
-                android:paddingVertical="10dp" />
+                android:paddingVertical="10dp"
+                android:textColor="@color/gray_800" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -88,9 +90,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_addplant_datepicker"
-            app:layout_constraintBottom_toBottomOf="@+id/et_addplant_birthday"
-            app:layout_constraintStart_toEndOf="@+id/et_addplant_birthday"
-            app:layout_constraintTop_toTopOf="@id/et_addplant_birthday" />
+            app:layout_constraintBottom_toBottomOf="@+id/tf_addplant_birthday"
+            app:layout_constraintStart_toEndOf="@+id/tf_addplant_birthday"
+            app:layout_constraintTop_toTopOf="@id/tf_addplant_birthday" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_addplant_nickname_text"
@@ -160,12 +162,12 @@
                 android:id="@+id/counter_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
                 android:text="0/14"
                 android:textSize="12sp"
-                android:layout_gravity="end"
-                app:layout_constraintTop_toBottomOf="@id/tv_addplant_species"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="5dp"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_addplant_species" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -205,15 +207,15 @@
             android:id="@+id/btn_addplant_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/ic_base_disabled"
+            android:gravity="center"
             android:text="@string/base_addbtn_text"
             android:textColor="@color/gray_0"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:background="@drawable/ic_base_disabled"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="30dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
