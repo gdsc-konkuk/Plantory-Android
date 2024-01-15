@@ -45,6 +45,7 @@ timber = "5.0.1"
 encrypted-datastore = "1.7.21-1.0.8-1.1.0-alpha01"
 coil = "2.4.0"
 lottie = "6.0.0"
+dotsindicator = "5.0"
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
@@ -119,6 +120,8 @@ lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie"
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+
+dots-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsindicator" }
 
 [bundles]
 firebase = ["firebase-analytics", "firebase-database", "firebase-messaging", "firebase-remoteConfig"]

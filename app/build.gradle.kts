@@ -45,7 +45,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -72,6 +71,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.coil)
     implementation(libs.lottie)
+    implementation(libs.dots.indicator)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
