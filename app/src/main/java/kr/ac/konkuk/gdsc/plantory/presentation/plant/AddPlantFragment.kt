@@ -32,7 +32,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         initDatePicker()
         initPlantSpeciesWordNum()
         autoCompletePlantSpecies()
-        initRegisterBtn()
     }
 
     private val getContent =

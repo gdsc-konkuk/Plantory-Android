@@ -5,5 +5,13 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Plantory" parent="Base.Theme.Plantory" />
+    <style name="Theme.Plantory" parent="Base.Theme.Plantory" >
+        <item name="android:datePickerDialogTheme">@style/PlantDatePickerDialogTheme</item>
+    </style>
+
+    <style name="PlantDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="colorAccent">@color/mint</item>
+        <item name="colorOnPrimary">@color/gray_800</item>
+    </style>
+
 </resources>
