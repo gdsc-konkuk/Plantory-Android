@@ -40,6 +40,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 selectedImageUri = uri
                 Glide.with(this)
                     .load(uri)
+                    .centerCrop()
                     .into(binding.ivAddplantProfile)
             }
         }
