@@ -23,6 +23,7 @@ class NotificationFragment :
     }
 
     private fun addListener() {
+        initBackButtonClickListener()
     }
 
     private fun initMockData() {
@@ -34,6 +35,16 @@ class NotificationFragment :
             binding.rvNotification.adapter = this
             submitList(list)
         }
+    }
+
+    private fun initBackButtonClickListener() {
+        binding.ivNotificationBack.setOnClickListener {
+            navigateToNotification()
+        }
+    }
+
+    private fun navigateToNotification() {
+        activity?.supportFragmentManager?.popBackStack()
     }
 
 }
