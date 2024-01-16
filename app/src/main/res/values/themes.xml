@@ -10,8 +10,11 @@
     </style>
 
     <style name="PlantDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-        <item name="colorAccent">@color/mint</item>
         <item name="colorOnPrimary">@color/gray_800</item>
+        <item name="android:datePickerStyle">@style/PlantDatePickerStyle</item>
     </style>
 
+    <style name="PlantDatePickerStyle" parent="android:Widget.Material.DatePicker">
+        <item name="android:headerBackground">@color/mint</item>
+    </style>
 </resources>
