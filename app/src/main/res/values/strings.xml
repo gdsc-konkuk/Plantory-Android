@@ -14,4 +14,6 @@
     <string name="home_plant_nickname">별명</string>
     <string name="home_plant_species">식물종</string>
     <string name="home_plant_description">한줄소개</string>
+
+    <string name="notification_title">알림센터</string>
 </resources>
