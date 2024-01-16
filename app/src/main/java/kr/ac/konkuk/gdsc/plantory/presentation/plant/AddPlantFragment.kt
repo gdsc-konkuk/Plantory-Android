@@ -10,7 +10,9 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.adapters.TextViewBindingAdapter.setText
-import com.bumptech.glide.Glide
+import coil.load
+import coil.size.Scale
+import coil.transform.CircleCropTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
@@ -32,16 +34,20 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         initDatePicker()
         initPlantSpeciesWordNum()
         autoCompletePlantSpecies()
+        addListener()
+    }
+
+    private fun addListener() {
+        initBackButtonClickListener()
     }
 
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
                 selectedImageUri = uri
-                Glide.with(this)
-                    .load(uri)
-                    .centerCrop()
-                    .into(binding.ivAddplantProfile)
+                binding.ivAddplantProfile.load(selectedImageUri) {
+                    crossfade(true)
+                }
             }
         }
 
@@ -99,5 +105,15 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             val item = parent.getItemAtPosition(position).toString()
             binding.tvAddplantSpecies.setText(item)
         }
+    }
+
+    private fun initBackButtonClickListener() {
+        binding.ivAddplantBack.setOnClickListener {
+            navigateToHome()
+        }
+    }
+
+    private fun navigateToHome() {
+        activity?.supportFragmentManager?.popBackStack()
     }
 }

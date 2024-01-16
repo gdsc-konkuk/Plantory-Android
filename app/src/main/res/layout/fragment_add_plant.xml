@@ -51,6 +51,7 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginStart="15dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_addplant_profile"
             app:layout_constraintBottom_toBottomOf="@+id/tf_addplant_birthday"
             app:layout_constraintStart_toStartOf="parent"
