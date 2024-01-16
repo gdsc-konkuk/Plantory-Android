@@ -2,11 +2,11 @@
 <resources>
 
     <color name="gray_0">#FFFFFFFF</color>
-    <color name="gray_50">#D4E1E4</color>
+    <color name="gray_50">#EBEFF0</color>
     <color name="gray_100">#D4E1E4</color>
     <color name="gray_200">#ADC0C5</color>
     <color name="gray_300">#80979C</color>
-    <color name="gray_800">#212121</color>
+    <color name="gray_800">#212121</color>#D4E1E4"
 
     <color name="mint">#60E0C5</color>
     <color name="mint_dark">#46AEA1</color>

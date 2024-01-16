@@ -4,9 +4,4 @@
     <corners android:radius="10dp" />
 
     <solid android:color="@color/mint" />
-
-    <size
-        android:width="320dp"
-        android:height="50dp" />
-
 </shape>

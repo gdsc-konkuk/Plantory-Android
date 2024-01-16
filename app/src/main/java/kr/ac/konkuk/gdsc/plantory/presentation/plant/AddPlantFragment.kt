@@ -8,37 +8,41 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.widget.addTextChangedListener
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
+import androidx.fragment.app.viewModels
 import coil.load
-import coil.size.Scale
-import coil.transform.CircleCropTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.util.Calendar
 
 @AndroidEntryPoint
 class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragment_add_plant) {
 
     private var selectedImageUri: Uri? = null
-    private lateinit var viewModel: AddPlantViewModel
+    private val viewModel: AddPlantViewModel by viewModels()
+    var calendar = Calendar.getInstance()
     private lateinit var adapter: ArrayAdapter<String>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel = AddPlantViewModel()
-        openGallery()
-        initDatePicker()
-        initPlantSpeciesWordNum()
-        autoCompletePlantSpecies()
+        initview()
         addListener()
+    }
+
+    private fun initview() {
+        initDatePicker()
+        initautoCompleteAdapter()
     }
 
     private fun addListener() {
         initBackButtonClickListener()
+        initPlantSpeciesListener()
+        datePickerListener()
+        openGallery()
+        autoCompletePlantSpeciesListener()
     }
 
     private val getContent =
@@ -52,18 +56,20 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         }
 
     private fun openGallery() {
-        binding.ivAddplantProfile.setOnClickListener {
+        binding.ivAddplantProfile.setOnSingleClickListener {
             getContent.launch("image/*")
         }
     }
 
     private fun initDatePicker() {
-        var calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         binding.etAddplantBirthday.setText("${year}/${month + 1}/${day}")
-        binding.ivAddplantDatepicker.setOnClickListener {
+    }
+
+    private fun datePickerListener() {
+        binding.ivAddplantDatepicker.setOnSingleClickListener {
             val date = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                 binding.etAddplantBirthday.setText("${year}/${month + 1}/${day}")
             }
@@ -77,7 +83,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         }
     }
 
-    private fun initPlantSpeciesWordNum() {
+    private fun initPlantSpeciesListener() {
         binding.tvAddplantSpecies.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -91,7 +97,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         })
     }
 
-    private fun autoCompletePlantSpecies() {
+    private fun initautoCompleteAdapter() {
         adapter =
             ArrayAdapter<String>(
                 requireContext(),
@@ -100,7 +106,8 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             )
 
         binding.tvAddplantSpecies.setAdapter(adapter)
-
+    }
+    private fun autoCompletePlantSpeciesListener() {
         binding.tvAddplantSpecies.setOnItemClickListener { parent, view, position, id ->
             val item = parent.getItemAtPosition(position).toString()
             binding.tvAddplantSpecies.setText(item)
@@ -108,7 +115,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun initBackButtonClickListener() {
-        binding.ivAddplantBack.setOnClickListener {
+        binding.ivAddplantBack.setOnSingleClickListener {
             navigateToHome()
         }
     }
