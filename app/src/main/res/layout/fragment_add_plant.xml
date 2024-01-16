@@ -153,6 +153,7 @@
                 android:id="@+id/tv_addplant_species"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:completionThreshold="1"
                 android:hint="@string/addplant_plant_species_hint"
                 android:paddingVertical="10dp"
                 android:paddingStart="15dp"
