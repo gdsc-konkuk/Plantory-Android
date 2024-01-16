@@ -2,6 +2,9 @@ package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -81,6 +84,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun addListener() {
         initAddButtonClickListener()
+        initNotificationButtonClickListener()
     }
 
     private fun initAddButtonClickListener() {
@@ -89,6 +93,11 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
+    private fun initNotificationButtonClickListener() {
+        binding.ivHomeNotification.setOnClickListener {
+            navigateToNotification()
+        }
+    }
 
     private fun registerPlantPageChangeCallback() {
         binding.vpHomePlant.registerOnPageChangeCallback(object :
@@ -130,9 +139,21 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
+    private fun navigateToNotification() {
+        navigateTo<NotificationFragment>()
+    }
+
+    private inline fun <reified T : Fragment> navigateTo() {
+        activity?.supportFragmentManager?.commit {
+            replace<T>(R.id.fcv_main, T::class.simpleName).addToBackStack(ROOT_FRAGMENT_HOME)
+        }
+    }
+
     companion object {
         private const val SCROLL_DELAY_TIME = 5000L
         private const val VIEWPAGER_PREVIEW_WIDTH = 60
         private const val VIEWPAGER_ITEM_MARGIN = 50
+
+        private const val ROOT_FRAGMENT_HOME = "homeFragment"
     }
 }
