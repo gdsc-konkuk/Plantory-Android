@@ -10,7 +10,7 @@ import kr.ac.konkuk.gdsc.plantory.R
 fun ImageView.setImageUrl(imageUrl: String?) {
     if (imageUrl == null) return
     load(imageUrl) {
-        transformations(RoundedCornersTransformation(10F))
+        transformations(RoundedCornersTransformation(8F))
     }
 }
 
