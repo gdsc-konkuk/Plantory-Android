@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
 import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
+import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.util.Calendar
@@ -42,9 +44,15 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         uploadPreviousMonth()
         uploadNextMonth()
         initBackBtn()
+        inituploadBtn()
     }
 
-    private fun initPlantInfo() {
+    private fun inituploadBtn() {
+        binding.ivDetailPlantUpload.setOnSingleClickListener {
+            parentFragmentManager.commit {
+                replace<UploadFragment>(R.id.fcv_main, T::class.simpleName).addToBackStack("DetailToUpload")
+            }
+        }
     }
 
     private fun uploadPreviousMonth() {
