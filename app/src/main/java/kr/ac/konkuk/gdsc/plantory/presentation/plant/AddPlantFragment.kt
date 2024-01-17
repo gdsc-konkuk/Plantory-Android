@@ -1,6 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.app.DatePickerDialog
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,27 +24,27 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private var selectedImageUri: Uri? = null
     private val viewModel: AddPlantViewModel by viewModels()
-    var calendar = Calendar.getInstance()
+    private var calendar: Calendar = Calendar.getInstance()
     private lateinit var adapter: ArrayAdapter<String>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-        initview()
+        initView()
         addListener()
     }
 
-    private fun initview() {
+    private fun initView() {
         initDatePicker()
-        initautoCompleteAdapter()
+        initAutoCompleteAdapter()
     }
 
     private fun addListener() {
         initBackButtonClickListener()
-        initPlantSpeciesListener()
         datePickerListener()
         openGallery()
         autoCompletePlantSpeciesListener()
+        initTextChangeListener()
     }
 
     private val getContent =
@@ -54,6 +56,42 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 }
             }
         }
+
+    private fun initTextChangeListener() {
+        binding.apply {
+            etAddplantBirthday.addTextChangedListener(textWatcher)
+            etAddplantNickname.addTextChangedListener(textWatcher)
+            tvAddplantSpecies.addTextChangedListener(textWatcher)
+            etAddplantShortDescription.addTextChangedListener(textWatcher)
+        }
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            updateRegisterBtnState()
+            updatePlantSpeciesLength()
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+        }
+    }
+
+    private fun updateRegisterBtnState() {
+        val isFieldsNotEmpty =
+            binding.etAddplantBirthday.text?.isNotEmpty() == true &&
+                    binding.etAddplantNickname.text?.isNotEmpty() == true &&
+                    binding.tvAddplantSpecies.text?.isNotEmpty() == true &&
+                    binding.etAddplantShortDescription.text?.isNotEmpty() == true
+
+        binding.btnAddplantUpload.isEnabled = isFieldsNotEmpty
+        binding.btnAddplantUpload.setBackgroundResource(
+            if (isFieldsNotEmpty) R.drawable.shape_mint_fill_10
+            else R.drawable.shape_gray_200_fill_10
+        )
+    }
 
     private fun openGallery() {
         binding.ivAddplantProfile.setOnSingleClickListener {
@@ -83,21 +121,12 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         }
     }
 
-    private fun initPlantSpeciesListener() {
-        binding.tvAddplantSpecies.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val currLength = binding.tvAddplantSpecies.length()
-                binding.counterText.text = "$currLength/14"
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
+    private fun updatePlantSpeciesLength() {
+        val currLength = binding.tvAddplantSpecies.length()
+        binding.counterText.text = "$currLength/14"
     }
 
-    private fun initautoCompleteAdapter() {
+    private fun initAutoCompleteAdapter() {
         adapter =
             ArrayAdapter<String>(
                 requireContext(),
@@ -107,6 +136,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
         binding.tvAddplantSpecies.setAdapter(adapter)
     }
+
     private fun autoCompletePlantSpeciesListener() {
         binding.tvAddplantSpecies.setOnItemClickListener { parent, view, position, id ->
             val item = parent.getItemAtPosition(position).toString()

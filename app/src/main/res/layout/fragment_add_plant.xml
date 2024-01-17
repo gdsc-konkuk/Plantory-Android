@@ -117,7 +117,7 @@
             app:layout_constraintTop_toBottomOf="@id/tf_addplant_birthday" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_addplant_nickname"
+            android:id="@+id/tf_addplant_nickname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -132,10 +132,12 @@
             app:layout_constraintTop_toBottomOf="@id/tv_addplant_nickname_text">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_addplant_nickname"
                 style="@style/TextAppearance.PLANTORY.body_r_12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/addplant_plant_nickname_hint"
+                android:maxLength="14"
                 android:paddingVertical="10dp"
                 android:textColorHint="@color/gray_300"
                 android:textSize="16sp"
@@ -153,10 +155,10 @@
             android:layout_marginTop="20dp"
             android:text="@string/addplant_plant_species"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_addplant_nickname" />
+            app:layout_constraintTop_toBottomOf="@id/tf_addplant_nickname" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_addplant_species"
+            android:id="@+id/tf_addplant_species"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -175,6 +177,7 @@
                 android:completionThreshold="1"
                 android:dropDownHeight="150dp"
                 android:hint="@string/addplant_plant_species_hint"
+                android:maxLength="14"
                 android:paddingVertical="10dp"
                 android:paddingStart="15dp"
                 android:textColorHint="@color/gray_300"
@@ -201,10 +204,10 @@
             android:layout_marginTop="20dp"
             android:text="@string/addplant_plant_description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_addplant_species" />
+            app:layout_constraintTop_toBottomOf="@id/tf_addplant_species" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_addplant_shortDescription"
+            android:id="@+id/tf_addplant_shortDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -219,10 +222,12 @@
             app:layout_constraintTop_toBottomOf="@id/tv_addplant_shortDescription_text">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_addplant_shortDescription"
                 style="@style/TextAppearance.PLANTORY.body_r_12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/addplant_plant_description_hint"
+                android:maxLength="14"
                 android:paddingVertical="10dp"
                 android:textColorHint="@color/gray_300"
                 android:textSize="16sp" />
