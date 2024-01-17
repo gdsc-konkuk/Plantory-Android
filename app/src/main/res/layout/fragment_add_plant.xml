@@ -239,8 +239,6 @@
             android:gravity="center"
             android:text="@string/base_addbtn_text"
             android:textColor="@color/gray_0"
-            android:textSize="19sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

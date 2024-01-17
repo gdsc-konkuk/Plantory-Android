@@ -63,22 +63,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             }
         }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun addplantTouchListener() {
-        binding.tvAddplantSpecies.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val itemCount = adapter.count
-
-                val desiredDropdownHeight = 50 * itemCount
-
-                binding.tvAddplantSpecies.dropDownHeight = min(desiredDropdownHeight, 300)
-
-                binding.tvAddplantSpecies.showDropDown()
-            }
-            false
-        }
-    }
-
     private fun initTextChangeListener() {
         binding.apply {
             etAddplantBirthday.addTextChangedListener(textWatcher)
@@ -157,10 +141,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 R.layout.simple_dropdown_item,
                 viewModel.plantSpeciesList
             )
-
             binding.tvAddplantSpecies.setAdapter(adapter)
-
-            addplantTouchListener()
         }
     }
 
