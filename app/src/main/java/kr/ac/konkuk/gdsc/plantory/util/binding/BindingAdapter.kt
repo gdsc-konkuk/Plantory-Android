@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import kr.ac.konkuk.gdsc.plantory.R
 
 @BindingAdapter("setImageUrl")
 fun ImageView.setImageUrl(imageUrl: String?) {
@@ -13,3 +14,11 @@ fun ImageView.setImageUrl(imageUrl: String?) {
     }
 }
 
+@BindingAdapter("setCheckBoxImage")
+fun ImageView.setCheckBoxImage(boolean: Boolean) {
+    if (boolean) {
+        load(R.drawable.ic_diary_checked)
+    }else{
+        load(R.drawable.ic_diary_unchecked)
+    }
+}
