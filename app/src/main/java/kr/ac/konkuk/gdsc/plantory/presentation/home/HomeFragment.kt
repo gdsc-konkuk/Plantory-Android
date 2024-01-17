@@ -2,6 +2,7 @@ package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupWindow
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
+import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
@@ -27,6 +29,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     private lateinit var plantScrollJob: Job
     private var currentPlantPosition = 0
     private var plantItemCount = 0
+    private var popupWindow: PopupWindow? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -92,9 +95,18 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         initNotificationButtonClickListener()
     }
 
+    private fun initAddPlantButtonClickListener(view: View) {
+        val addPlantButton = view.findViewById<View>(R.id.iv_menu_add)
+        addPlantButton?.setOnClickListener {
+            PopupMenu.dismissPopup()
+            navigateTo<AddPlantFragment>()
+        }
+    }
+
     private fun initAddButtonClickListener() {
         binding.ivHomeAdd.setOnSingleClickListener {
-            PopupMenu.showCustomPopup(it, R.layout.menu_home)
+            val popupWindow = PopupMenu.showCustomPopup(it, R.layout.menu_home)
+            initAddPlantButtonClickListener(popupWindow.contentView)
         }
     }
 

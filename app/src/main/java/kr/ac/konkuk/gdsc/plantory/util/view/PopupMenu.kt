@@ -6,21 +6,28 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 
 object PopupMenu {
-    fun showCustomPopup(view: View, layoutId: Int) {
+
+    private var popupWindow: PopupWindow? = null
+    fun showCustomPopup(view: View, layoutId: Int): PopupWindow {
         val inflater = LayoutInflater.from(view.context)
         val popupView = inflater.inflate(layoutId, null)
-        val popupWindow = PopupWindow(
+        popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        popupWindow.isOutsideTouchable = true
-        popupWindow.isFocusable = true
+        popupWindow?.isOutsideTouchable = true
+        popupWindow?.isFocusable = true
 
-        popupWindow.showAsDropDown(
+        popupWindow?.showAsDropDown(
             view,
             -55, 0
         )
+        return popupWindow as PopupWindow
+    }
+
+    fun dismissPopup() {
+        popupWindow?.dismiss()
     }
 }
