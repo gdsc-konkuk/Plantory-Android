@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import coil.load
+import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
@@ -58,6 +59,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             if (uri != null) {
                 selectedImageUri = uri
                 binding.ivAddplantProfile.load(selectedImageUri) {
+                    transformations(RoundedCornersTransformation(radius = 14f))
                     crossfade(true)
                 }
             }

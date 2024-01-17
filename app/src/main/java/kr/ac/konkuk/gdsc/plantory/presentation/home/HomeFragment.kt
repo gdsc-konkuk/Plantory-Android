@@ -30,7 +30,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     private lateinit var plantScrollJob: Job
     private var currentPlantPosition = 0
     private var plantItemCount = 0
-    private var popupWindow: PopupWindow? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -96,18 +95,9 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         initNotificationButtonClickListener()
     }
 
-    private fun initAddPlantButtonClickListener(view: View) {
-        val addPlantButton = view.findViewById<View>(R.id.iv_menu_add)
-        addPlantButton?.setOnClickListener {
-            PopupMenu.dismissPopup()
-            navigateTo<AddPlantFragment>()
-        }
-    }
-
     private fun initAddButtonClickListener() {
         binding.ivHomeAdd.setOnSingleClickListener {
             val popupWindow = PopupMenu.showCustomPopup(it, R.layout.menu_home)
-            initAddPlantButtonClickListener(popupWindow.contentView)
         }
     }
 
