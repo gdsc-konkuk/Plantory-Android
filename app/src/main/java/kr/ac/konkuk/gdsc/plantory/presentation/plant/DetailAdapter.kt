@@ -1,7 +1,5 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
-import android.text.TextUtils.substring
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,6 @@ import kr.ac.konkuk.gdsc.plantory.databinding.ItemDetailCalendarBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -42,14 +39,12 @@ class DetailAdapter(
                 dayText.alpha = 0.4f
             }
 
-            // 토요일이면 파란색 || 일요일이면 빨간색으로 색상표시
             if ((adapterPosition + 1) % 7 == 0) {
                 dayText.setTextColor(ContextCompat.getColor(binding.root.context, R.color.blue))
             } else if (adapterPosition == 0 || adapterPosition % 7 == 0) {
                 dayText.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red))
             }
 
-            //물주기/분갈이 색상 다르게
             for (record in plantDailyRecords) {
                 if (record.date.takeLast(2) != dateFormat.format(date).toString()) {
                     continue

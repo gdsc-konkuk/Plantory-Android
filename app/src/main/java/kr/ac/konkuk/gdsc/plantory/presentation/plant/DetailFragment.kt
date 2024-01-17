@@ -3,7 +3,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
-import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
@@ -29,9 +27,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.data = viewModel.plantInfo
-
         initView()
         addListener()
     }
@@ -50,7 +46,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun inituploadBtn() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
             parentFragmentManager.commit {
-                replace<UploadFragment>(R.id.fcv_main, T::class.simpleName).addToBackStack("DetailToUpload")
+                replace<UploadFragment>(
+                    R.id.fcv_main,
+                    T::class.simpleName
+                ).addToBackStack("DetailToUpload")
             }
         }
     }
@@ -85,21 +84,18 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun updateCalendar() {
-        //달 구하기
         calendar.set(Calendar.YEAR, currYear)
         calendar.set(Calendar.MONTH, currMonth)
-        calendar.set(Calendar.DAY_OF_MONTH, 1) //스크롤시 현재 월의 1일로 이동
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
 
         binding.tvDetailCalendarTitle.text = "${currYear}년 ${currMonth + 1}월"
         var dayList: MutableList<Date> = mutableListOf()
 
-        for (i in 0..4) { //주
-            for (k in 0..6) { //요일
-                //요일 표시
+        for (i in 0..4) {
+            for (k in 0..6) {
                 calendar.add(Calendar.DAY_OF_MONTH, (1 - calendar.get(Calendar.DAY_OF_WEEK)) + k)
-                dayList.add(calendar.time.clone() as Date) //배열 인덱스 만큼 요일 데이터 저장
+                dayList.add(calendar.time.clone() as Date)
             }
-            //주 표시
             calendar.add(Calendar.WEEK_OF_MONTH, 1)
         }
 
