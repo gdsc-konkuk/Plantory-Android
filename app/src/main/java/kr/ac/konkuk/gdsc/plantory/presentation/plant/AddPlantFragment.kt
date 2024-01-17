@@ -15,11 +15,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import coil.load
+import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.lang.Integer.min
 import java.util.Calendar
@@ -58,26 +60,11 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             if (uri != null) {
                 selectedImageUri = uri
                 binding.ivAddplantProfile.load(selectedImageUri) {
+                    transformations(RoundedCornersTransformation(radius = 14f))
                     crossfade(true)
                 }
             }
         }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun addplantTouchListener() {
-        binding.tvAddplantSpecies.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val itemCount = adapter.count
-
-                val desiredDropdownHeight = 50 * itemCount
-
-                binding.tvAddplantSpecies.dropDownHeight = min(desiredDropdownHeight, 300)
-
-                binding.tvAddplantSpecies.showDropDown()
-            }
-            false
-        }
-    }
 
     private fun initTextChangeListener() {
         binding.apply {
@@ -130,7 +117,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun datePickerListener() {
         binding.ivAddplantDatepicker.setOnSingleClickListener {
-            viewLifecycleOwner.lifecycle.coroutineScope.launch {
+            viewLifeCycle.coroutineScope.launch {
                 val date = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                     binding.etAddplantBirthday.setText("${year}/${month + 1}/${day}")
                 }
@@ -151,16 +138,13 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun initAutoCompleteAdapter() {
-        viewLifecycleOwner.lifecycle.coroutineScope.launch {
+        viewLifeCycle.coroutineScope.launch {
             adapter = ArrayAdapter<String>(
                 requireContext(),
                 R.layout.simple_dropdown_item,
                 viewModel.plantSpeciesList
             )
-
             binding.tvAddplantSpecies.setAdapter(adapter)
-
-            addplantTouchListener()
         }
     }
 

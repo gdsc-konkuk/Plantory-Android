@@ -14,8 +14,8 @@ import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
 
 object PopupMenu {
 
-    private var popupWindow: PopupWindow? = null
-    fun showCustomPopup(view: View, layoutId: Int): PopupWindow {
+    fun showCustomPopup(view: View, layoutId: Int) {
+        var popupWindow: PopupWindow
         val inflater = LayoutInflater.from(view.context)
         val popupView = inflater.inflate(layoutId, null)
         popupWindow = PopupWindow(
@@ -31,10 +31,5 @@ object PopupMenu {
             view,
             -55, 0
         )
-        return popupWindow as PopupWindow
-    }
-
-    fun dismissPopup() {
-        popupWindow?.dismiss()
     }
 }

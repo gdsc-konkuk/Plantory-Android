@@ -59,7 +59,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_addplant_birthday_text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginTop="24dp"
@@ -74,7 +74,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
             app:boxStrokeColor="@color/customtextinput"
             app:layout_constraintEnd_toStartOf="@id/iv_addplant_datepicker"
             app:layout_constraintStart_toEndOf="@+id/iv_addplant_profile"
@@ -84,7 +83,7 @@
                 android:id="@+id/et_addplant_birthday"
                 style="@style/TextAppearance.PLANTORY.body_r_12"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:enabled="false"
                 android:paddingVertical="10dp"
                 android:textColor="@color/gray_800"
@@ -140,7 +139,6 @@
                 android:maxLength="14"
                 android:paddingVertical="10dp"
                 android:textColorHint="@color/gray_300"
-                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_addplant_nickname_text" />
@@ -179,8 +177,7 @@
                 android:maxLength="14"
                 android:paddingVertical="10dp"
                 android:paddingStart="15dp"
-                android:textColorHint="@color/gray_300"
-                android:textSize="16sp" />
+                android:textColorHint="@color/gray_300" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/counter_text"
@@ -228,8 +225,7 @@
                 android:hint="@string/addplant_plant_description_hint"
                 android:maxLength="14"
                 android:paddingVertical="10dp"
-                android:textColorHint="@color/gray_300"
-                android:textSize="16sp" />
+                android:textColorHint="@color/gray_300" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
