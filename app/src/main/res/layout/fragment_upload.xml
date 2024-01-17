@@ -79,8 +79,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
-                app:layout_constraintDimensionRatio="H,4:3"
                 android:background="@drawable/box_upload_profile"
+                app:layout_constraintDimensionRatio="H,4:3"
                 app:layout_constraintTop_toBottomOf="@id/tv_upload_title">
 
                 <ImageView
@@ -94,6 +94,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/iv_emptyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintCircleRadius="10dp"
+                    app:layout_constraintDimensionRatio="H,4:3"
+                    app:layout_constraintStart_toStartOf="@+id/cl_upload_profile"
+                    app:layout_constraintEnd_toEndOf="@id/cl_upload_profile"
+                    app:layout_constraintTop_toTopOf="@id/cl_upload_profile"
+                    app:layout_constraintBottom_toBottomOf="@id/cl_upload_profile"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -101,8 +112,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:src="@drawable/ic_diary_checked"
-                android:tag="checked"
+                android:src="@drawable/ic_diary_unchecked"
+                android:tag="unchecked"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_upload_profile" />
 

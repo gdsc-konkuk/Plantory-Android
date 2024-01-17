@@ -44,7 +44,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
                 selectedImageUri = uri
-                binding.ivUploadProfileImg.load(selectedImageUri) {
+                binding.ivEmptyView.load(selectedImageUri) {
                     transformations(RoundedCornersTransformation(radius = 14f))
                     crossfade(true)
                 }
