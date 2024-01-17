@@ -6,6 +6,7 @@
     <data></data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_upload_total"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -40,9 +41,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_upload"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/v_upload_divider">
 
@@ -51,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2024.01.06"
+                android:layout_marginTop="16dp"
                 android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
                 android:textColor="@color/gray_300"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,24 +70,36 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_upload_date" />
 
-            <ImageView
-                android:id="@+id/iv_upload_profile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_upload_profile"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/ic_addplant_profile"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_upload_title" />
+                android:background="@drawable/box_upload_profile"
+                app:layout_constraintTop_toBottomOf="@id/tv_upload_title">
+
+                <ImageView
+                    android:id="@+id/iv_upload_profile_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_upload_profile"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/iv_upload_repoted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="24dp"
                 android:src="@drawable/ic_diary_checked"
                 android:tag="checked"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_upload_profile" />
+                app:layout_constraintTop_toBottomOf="@id/cl_upload_profile" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -131,7 +146,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tf_upload_diary"
                 android:layout_width="0dp"
-                android:layout_height="160dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:boxStrokeColor="@color/customtextinput"
                 app:counterEnabled="true"
@@ -147,26 +162,27 @@
                     style="@style/TextAppearance.PLANTORY.body_r_12"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="초록이는 오늘 어땠나요? 기록을 작성해주세요."
                     android:gravity="top"
+                    android:hint="초록이는 오늘 어땠나요? 기록을 작성해주세요."
                     android:maxLength="300"
+                    android:paddingBottom="40dp"
                     android:textColorHint="@color/gray_300" />
             </com.google.android.material.textfield.TextInputLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_diary_upload"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="29dp"
-            android:background="@drawable/shape_gray_200_fill_10"
-            android:gravity="center"
-            android:text="@string/base_addbtn_text"
-            android:textColor="@color/gray_0"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_diary_upload"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="29dp"
+                android:background="@drawable/shape_gray_200_fill_10"
+                android:text="@string/base_addbtn_text"
+                android:textColor="@color/gray_0"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

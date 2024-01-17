@@ -43,7 +43,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
                 selectedImageUri = uri
-                binding.ivUploadProfile.load(selectedImageUri) {
+                binding.ivUploadProfileImg.load(selectedImageUri) {
                     transformations(RoundedCornersTransformation(radius = 14f))
                     crossfade(true)
                 }
@@ -53,6 +53,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     private fun initTextChangeListener() {
         binding.apply {
             etUploadDiary.addTextChangedListener(textWatcher)
+
         }
     }
 
@@ -81,7 +82,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     }
 
     private fun openGallery() {
-        binding.ivUploadProfile.setOnSingleClickListener {
+        binding.ivUploadProfileImg.setOnSingleClickListener {
             getContent.launch("image/*")
         }
     }
