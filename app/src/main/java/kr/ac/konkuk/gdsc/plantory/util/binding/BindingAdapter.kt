@@ -15,10 +15,6 @@ fun ImageView.setImageUrl(imageUrl: String?) {
 }
 
 @BindingAdapter("setCheckBoxImage")
-fun ImageView.setCheckBoxImage(boolean: Boolean) {
-    if (boolean) {
-        load(R.drawable.ic_diary_checked)
-    }else{
-        load(R.drawable.ic_diary_unchecked)
-    }
+fun ImageView.setCheckBoxImage(isChecked: Boolean) {
+    load(if (isChecked) R.drawable.ic_diary_checked else R.drawable.ic_diary_unchecked)
 }
