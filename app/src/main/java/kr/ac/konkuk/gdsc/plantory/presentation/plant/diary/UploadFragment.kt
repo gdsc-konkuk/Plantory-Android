@@ -114,6 +114,6 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     }
 
     private fun navigateToHome() {
-        activity?.supportFragmentManager?.popBackStack()
+        parentFragmentManager.popBackStack()
     }
 }
