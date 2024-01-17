@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
+import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
@@ -33,6 +34,10 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         initMockData()
         addCallback()
         addListener()
+        //TODO: 지우기
+        binding.ivHomeLogo.setOnClickListener {
+            navigateTo<DiaryFragment>()
+        }
     }
 
     private fun initMockData() {
