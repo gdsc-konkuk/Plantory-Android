@@ -1,22 +1,27 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.coroutineScope
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
+import java.lang.Integer.min
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -45,6 +50,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         openGallery()
         autoCompletePlantSpeciesListener()
         initTextChangeListener()
+
     }
 
     private val getContent =
@@ -56,6 +62,22 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 }
             }
         }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun addplantTouchListener() {
+        binding.tvAddplantSpecies.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val itemCount = adapter.count
+
+                val desiredDropdownHeight = 50 * itemCount
+
+                binding.tvAddplantSpecies.dropDownHeight = min(desiredDropdownHeight, 300)
+
+                binding.tvAddplantSpecies.showDropDown()
+            }
+            false
+        }
+    }
 
     private fun initTextChangeListener() {
         binding.apply {
@@ -108,16 +130,18 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun datePickerListener() {
         binding.ivAddplantDatepicker.setOnSingleClickListener {
-            val date = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-                binding.etAddplantBirthday.setText("${year}/${month + 1}/${day}")
+            viewLifecycleOwner.lifecycle.coroutineScope.launch {
+                val date = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+                    binding.etAddplantBirthday.setText("${year}/${month + 1}/${day}")
+                }
+                DatePickerDialog(
+                    requireContext(),
+                    date,
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                ).show()
             }
-            DatePickerDialog(
-                requireContext(),
-                date,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
         }
     }
 
@@ -127,14 +151,17 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun initAutoCompleteAdapter() {
-        adapter =
-            ArrayAdapter<String>(
+        viewLifecycleOwner.lifecycle.coroutineScope.launch {
+            adapter = ArrayAdapter<String>(
                 requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
+                R.layout.simple_dropdown_item,
                 viewModel.plantSpeciesList
             )
 
-        binding.tvAddplantSpecies.setAdapter(adapter)
+            binding.tvAddplantSpecies.setAdapter(adapter)
+
+            addplantTouchListener()
+        }
     }
 
     private fun autoCompletePlantSpeciesListener() {

@@ -175,7 +175,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:completionThreshold="1"
-                android:dropDownHeight="150dp"
                 android:hint="@string/addplant_plant_species_hint"
                 android:maxLength="14"
                 android:paddingVertical="10dp"
