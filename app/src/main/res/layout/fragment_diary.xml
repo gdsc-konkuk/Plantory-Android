@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_diary_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_home_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/iv_diary_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/diary_title"
+            android:textAppearance="@style/TextAppearance.PLANTORY.Headline_sb_16"
+            app:layout_constraintBottom_toBottomOf="@id/iv_diary_back"
+            app:layout_constraintStart_toEndOf="@id/iv_diary_back"
+            app:layout_constraintTop_toTopOf="@id/iv_diary_back" />
+
+        <View
+            android:id="@+id/v_diary_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EBEFF0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_diary_back" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_diary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_diary_divider">
+
+            <TextView
+                android:id="@+id/tv_diary_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
+                android:textColor="@color/gray_300"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@{data.date}" />
+
+            <TextView
+                android:id="@+id/tv_diary_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_24"
+                android:textColor="@color/gray_800"
+                android:text="@{@string/diary_nickname(data.nickname)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_diary_date" />
+
+            <ImageView
+                android:id="@+id/iv_diary_repoted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                setCheckBoxImage="@{data.checkList.repoted}"
+                app:layout_constraintTop_toBottomOf="@id/tv_diary_title" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/diary_repoted"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_m_12"
+                android:textColor="@color/gray_800"
+                app:layout_constraintStart_toEndOf="@id/iv_diary_repoted"
+                app:layout_constraintTop_toTopOf="@id/iv_diary_repoted"
+                app:layout_constraintBottom_toBottomOf="@id/iv_diary_repoted"/>
+
+            <ImageView
+                android:id="@+id/iv_diary_watered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_diary_repoted"
+                setCheckBoxImage="@{data.checkList.watered}"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/diary_watered"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_m_12"
+                android:textColor="@color/gray_800"
+                app:layout_constraintStart_toEndOf="@id/iv_diary_watered"
+                app:layout_constraintTop_toTopOf="@id/iv_diary_watered"
+                app:layout_constraintBottom_toBottomOf="@id/iv_diary_watered"/>
+
+            <ImageView
+                android:id="@+id/iv_diary_image"
+                setImageUrl="@{data.imageUrl}"
+                app:layout_constraintDimensionRatio="H,4:3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="21dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_diary_watered" />
+
+            <View
+                android:id="@+id/v_diary_divider_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="#EBEFF0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_diary_image" />
+
+            <TextView
+                android:id="@+id/tv_diary_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
+                android:textColor="@color/gray_800"
+                android:text="@{data.comment}"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_diary_divider_2" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
