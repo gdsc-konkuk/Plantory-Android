@@ -10,4 +10,7 @@
 
     <color name="mint">#60E0C5</color>
     <color name="mint_dark">#46AEA1</color>
+
+    <color name="blue">#0019f4</color>
+    <color name="red">#D1180B</color>
 </resources>
