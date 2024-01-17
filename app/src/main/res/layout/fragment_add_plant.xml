@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data></data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_addplant_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_addplant_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_addplant_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_addplant_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/addplant_page_text"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_sb_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_addplant_back"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EBEFF0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_addplant_appbar" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_addplant_profile"
+            android:layout_width="67dp"
+            android:layout_height="62dp"
+            android:layout_marginStart="20dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_addplant_profile"
+            app:layout_constraintBottom_toBottomOf="@id/tf_addplant_birthday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_addplant_birthday_text" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addplant_birthday_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/addplant_plant_birthday"
+            android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_14"
+            app:layout_constraintStart_toEndOf="@+id/iv_addplant_profile"
+            app:layout_constraintTop_toBottomOf="@+id/cl_addplant_appbar" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_addplant_birthday"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            app:boxStrokeColor="@color/customtextinput"
+            app:layout_constraintEnd_toStartOf="@id/iv_addplant_datepicker"
+            app:layout_constraintStart_toEndOf="@+id/iv_addplant_profile"
+            app:layout_constraintTop_toBottomOf="@+id/tv_addplant_birthday_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_addplant_birthday"
+                style="@style/TextAppearance.PLANTORY.body_r_12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:paddingVertical="10dp"
+                android:textColor="@color/gray_800"
+                app:layout_constraintEnd_toStartOf="@id/iv_addplant_datepicker"
+                app:layout_constraintStart_toEndOf="@+id/iv_addplant_profile"
+                app:layout_constraintTop_toBottomOf="@+id/tv_addplant_birthday_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_addplant_datepicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:layout_marginEnd="21dp"
+            android:src="@drawable/ic_addplant_datepicker"
+            app:layout_constraintBottom_toBottomOf="@+id/tf_addplant_birthday"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tf_addplant_birthday"
+            app:layout_constraintTop_toTopOf="@id/tf_addplant_birthday" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addplant_nickname_text"
+            style="@style/TextAppearance.PLANTORY.Headline_b_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/addplant_plant_nickname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_addplant_birthday" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_addplant_nickname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            app:boxStrokeColor="@color/customtextinput"
+            app:counterEnabled="true"
+            app:counterMaxLength="14"
+            app:errorEnabled="true"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_addplant_nickname_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_addplant_nickname"
+                style="@style/TextAppearance.PLANTORY.body_r_12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/addplant_plant_nickname_hint"
+                android:maxLength="14"
+                android:paddingVertical="10dp"
+                android:textColorHint="@color/gray_300"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_addplant_nickname_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addplant_species_text"
+            style="@style/TextAppearance.PLANTORY.Headline_b_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/addplant_plant_species"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_addplant_nickname" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_addplant_species"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            app:boxStrokeColor="@color/customtextinput"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_addplant_species_text">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/tv_addplant_species"
+                style="@style/TextAppearance.PLANTORY.body_r_12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/addplant_plant_species_hint"
+                android:maxLength="14"
+                android:paddingVertical="10dp"
+                android:paddingStart="15dp"
+                android:textColorHint="@color/gray_300"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/counter_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:text="0/14"
+                android:textSize="12sp"
+                app:layout_constraintTop_toBottomOf="@id/tv_addplant_species" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addplant_shortDescription_text"
+            style="@style/TextAppearance.PLANTORY.Headline_b_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/addplant_plant_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_addplant_species" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_addplant_shortDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            app:boxStrokeColor="@color/customtextinput"
+            app:counterEnabled="true"
+            app:counterMaxLength="14"
+            app:errorEnabled="true"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_addplant_shortDescription_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_addplant_shortDescription"
+                style="@style/TextAppearance.PLANTORY.body_r_12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/addplant_plant_description_hint"
+                android:maxLength="14"
+                android:paddingVertical="10dp"
+                android:textColorHint="@color/gray_300"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_addplant_upload"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="29dp"
+            android:background="@drawable/shape_gray_200_fill_10"
+            android:gravity="center"
+            android:text="@string/base_addbtn_text"
+            android:textColor="@color/gray_0"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

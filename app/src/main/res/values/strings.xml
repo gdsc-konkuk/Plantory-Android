@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Plantory</string>
+    <string name="addplant_plant_nickname_hint">식물에게 별명을 지어주세요.</string>
+    <string name="addplant_plant_species_hint">식물의 종을 입력하세요.</string>
+    <string name="addplant_plant_description_hint">식물을 한 줄을 간단히 설명해주세요.</string>
+    <string name="base_addbtn_text">등록하기</string>
+    <string name="addplant_plant_description">한줄소개</string>
+    <string name="addplant_plant_species">식물종</string>
+    <string name="addplant_plant_nickname">별명</string>
+    <string name="addplant_plant_birthday">생일</string>
+    <string name="addplant_page_text">식물 추가하기</string>
 
     <string name="home_plant_dday">%s와 함께한지\n%d일</string>
     <string name="home_plant_nickname">별명</string>
