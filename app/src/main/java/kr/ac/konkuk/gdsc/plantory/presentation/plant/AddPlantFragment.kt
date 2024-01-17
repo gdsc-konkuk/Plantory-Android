@@ -2,7 +2,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -11,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import coil.load

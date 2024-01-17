@@ -1,35 +1,38 @@
-package kr.ac.konkuk.gdsc.plantory.util.view
-
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
-import kr.ac.konkuk.gdsc.plantory.R
-import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
+import kr.ac.konkuk.gdsc.plantory.databinding.MenuHomeBinding
 
-object PopupMenu {
+class PopupMenu(
+    context: Context,
+    private val onAddButtonClick: () -> Unit,
+    private val onUploadButtonClick: () -> Unit
+) : PopupWindow(context) {
 
-    fun showCustomPopup(view: View, layoutId: Int) {
-        val popupWindow: PopupWindow
-        val inflater = LayoutInflater.from(view.context)
-        val popupView = inflater.inflate(layoutId, null)
-        popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+    private val binding: MenuHomeBinding by lazy {
+        val inflater = LayoutInflater.from(context)
+        MenuHomeBinding.inflate(inflater, null, false)
+    }
 
-        popupWindow?.isOutsideTouchable = true
-        popupWindow?.isFocusable = true
+    init {
+        isOutsideTouchable = true
+        isTouchable = true
+        contentView = binding.root
+        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        width = ViewGroup.LayoutParams.WRAP_CONTENT
+        height = ViewGroup.LayoutParams.WRAP_CONTENT
 
-        popupWindow?.showAsDropDown(
-            view,
-            -55, 0
-        )
+        binding.ivMenuAdd.setOnClickListener {
+            onAddButtonClick.invoke()
+            dismiss()
+        }
+
+        binding.ivMenuUpload.setOnClickListener {
+            onUploadButtonClick.invoke()
+            dismiss()
+        }
     }
 }

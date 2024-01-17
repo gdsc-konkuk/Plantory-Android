@@ -1,9 +1,8 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.home
 
-import android.content.Context
+import PopupMenu
 import android.os.Bundle
 import android.view.View
-import android.widget.PopupWindow
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -20,7 +19,6 @@ import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
-import kr.ac.konkuk.gdsc.plantory.util.view.PopupMenu
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 @AndroidEntryPoint
@@ -52,8 +50,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         initPlantViewPagerAdapter(plants = plants)
         initPlantViewPagerIndicator(plants = plants)
         initViewPagerDecoration(
-            previewWidth = VIEWPAGER_PREVIEW_WIDTH,
-            itemMargin = VIEWPAGER_ITEM_MARGIN
+            previewWidth = VIEWPAGER_PREVIEW_WIDTH, itemMargin = VIEWPAGER_ITEM_MARGIN
         )
     }
 
@@ -97,9 +94,14 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun initAddButtonClickListener() {
         binding.ivHomeAdd.setOnSingleClickListener {
-            val popupWindow = PopupMenu.showCustomPopup(it, R.layout.menu_home)
+            PopupMenu(it.context, onAddButtonClick = {
+                navigateToAdd()
+            }, onUploadButtonClick = {
+                navigateToUpload()
+            }).showAsDropDown(it, -55, 0)
         }
     }
+
 
     private fun initNotificationButtonClickListener() {
         binding.ivHomeNotification.setOnClickListener {
@@ -149,6 +151,14 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun navigateToNotification() {
         navigateTo<NotificationFragment>()
+    }
+
+    private fun navigateToUpload() {
+        //navigateTo<UploadFragment>()
+    }
+
+    private fun navigateToAdd() {
+        navigateTo<AddPlantFragment>()
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
