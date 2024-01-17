@@ -1,12 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-    </data>
+    <data></data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/iv_upload_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_home_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/iv_upload_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/upload_title"
+            android:textAppearance="@style/TextAppearance.PLANTORY.Headline_sb_16"
+            app:layout_constraintBottom_toBottomOf="@id/iv_upload_back"
+            app:layout_constraintStart_toEndOf="@id/iv_upload_back"
+            app:layout_constraintTop_toTopOf="@id/iv_upload_back" />
+
+        <View
+            android:id="@+id/v_upload_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EBEFF0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_upload_back" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_upload_divider">
+
+            <TextView
+                android:id="@+id/tv_upload_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2024.01.06"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
+                android:textColor="@color/gray_300"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_upload_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="초록이의 기록"
+                android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_24"
+                android:textColor="@color/gray_800"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_upload_date" />
+
+            <ImageView
+                android:id="@+id/iv_upload_profile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_addplant_profile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_upload_title" />
+
+            <ImageView
+                android:id="@+id/iv_upload_repoted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_diary_checked"
+                android:tag="checked"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_upload_profile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/upload_repoted"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_m_12"
+                android:textColor="@color/gray_800"
+                app:layout_constraintBottom_toBottomOf="@id/iv_upload_repoted"
+                app:layout_constraintStart_toEndOf="@id/iv_upload_repoted"
+                app:layout_constraintTop_toTopOf="@id/iv_upload_repoted" />
+
+            <ImageView
+                android:id="@+id/iv_upload_watered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_diary_unchecked"
+                android:tag="unchecked"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_upload_repoted" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/upload_watered"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_m_12"
+                android:textColor="@color/gray_800"
+                app:layout_constraintBottom_toBottomOf="@id/iv_upload_watered"
+                app:layout_constraintStart_toEndOf="@id/iv_upload_watered"
+                app:layout_constraintTop_toTopOf="@id/iv_upload_watered" />
+
+            <TextView
+                android:id="@+id/tv_upload_text"
+                style="@style/TextAppearance.PLANTORY.Headline_b_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="기록"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_upload_watered" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tf_upload_diary"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_marginTop="8dp"
+                app:boxStrokeColor="@color/customtextinput"
+                app:counterEnabled="true"
+                app:counterMaxLength="300"
+                app:errorEnabled="true"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_upload_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_upload_diary"
+                    style="@style/TextAppearance.PLANTORY.body_r_12"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="초록이는 오늘 어땠나요? 기록을 작성해주세요."
+                    android:gravity="top"
+                    android:maxLength="300"
+                    android:textColorHint="@color/gray_300" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_diary_upload"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="29dp"
+            android:background="@drawable/shape_gray_200_fill_10"
+            android:gravity="center"
+            android:text="@string/base_addbtn_text"
+            android:textColor="@color/gray_0"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
