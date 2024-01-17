@@ -28,6 +28,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.data = viewModel.plantInfo
         addListener()
     }
 
