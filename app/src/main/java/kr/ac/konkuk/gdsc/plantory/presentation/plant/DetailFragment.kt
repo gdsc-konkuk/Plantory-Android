@@ -99,10 +99,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             calendar.add(Calendar.WEEK_OF_MONTH, 1)
         }
 
-        binding.recyclerCalenderView.layoutManager = GridLayoutManager(context, 7)
+        binding.rvDetailCalendar.layoutManager = GridLayoutManager(context, 7)
         val dummyInfo = viewModel.plantRecord
         detailAdapter = DetailAdapter(currMonth, dayList, dummyInfo)
-        binding.recyclerCalenderView.adapter = detailAdapter
+        binding.rvDetailCalendar.adapter = detailAdapter
 
         detailAdapter.submitList(dayList)
     }
