@@ -19,6 +19,11 @@
 
     <string name="diary_title">일지</string>
     <string name="diary_nickname">%s의 기록</string>
-    <string name="diary_watered">오늘 분갈이를 했어요</string>
-    <string name="diary_repoted">오늘 물을 주었어요</string>
+    <string name="diary_watered">오늘 물을 주었어요</string>
+    <string name="diary_repoted">오늘 분갈이를 했어요</string>
+
+    <string name="upload_title">일지 기록하기</string>
+    <string name="upload_watered">오늘 물을 주었어요</string>
+    <string name="upload_repoted">오늘 분갈이를 했어요</string>
+
 </resources>

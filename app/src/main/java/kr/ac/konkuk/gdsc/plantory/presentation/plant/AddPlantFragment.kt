@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import coil.load
+import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
@@ -56,26 +57,11 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             if (uri != null) {
                 selectedImageUri = uri
                 binding.ivAddplantProfile.load(selectedImageUri) {
+                    transformations(RoundedCornersTransformation(radius = 14f))
                     crossfade(true)
                 }
             }
         }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun addplantTouchListener() {
-        binding.tvAddplantSpecies.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val itemCount = adapter.count
-
-                val desiredDropdownHeight = 50 * itemCount
-
-                binding.tvAddplantSpecies.dropDownHeight = min(desiredDropdownHeight, 300)
-
-                binding.tvAddplantSpecies.showDropDown()
-            }
-            false
-        }
-    }
 
     private fun initTextChangeListener() {
         binding.apply {
@@ -155,10 +141,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 R.layout.simple_dropdown_item,
                 viewModel.plantSpeciesList
             )
-
             binding.tvAddplantSpecies.setAdapter(adapter)
-
-            addplantTouchListener()
         }
     }
 
