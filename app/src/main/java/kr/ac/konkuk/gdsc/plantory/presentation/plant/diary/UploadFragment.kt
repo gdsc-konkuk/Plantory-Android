@@ -2,25 +2,26 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import coil.load
-import coil.transform.RoundedCornersTransformation
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentUploadBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.binding.setCheckBoxImage
+import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
+import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 @AndroidEntryPoint
 
 class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_upload) {
 
-    private var selectedImageUri: Uri? = null
     private val viewModel: UploadViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,52 +32,65 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     }
 
     private fun addListener() {
-        initRepotedBtn()
-        initWateredBtn()
+        initRepotedClickListener()
+        initWateredClickListener()
+        initImageUriListener()
         openGallery()
         initTextChangeListener()
-        initBackBtn()
+        initBackListener()
+        updateWateredCheckedListener()
+        updateRepotedCheckedListener()
     }
 
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                selectedImageUri = uri
-                binding.ivEmptyView.load(selectedImageUri) {
-                    transformations(RoundedCornersTransformation(radius = 14f))
-                    crossfade(true)
-                }
+                viewModel.updateProfileImage(uri)
             }
         }
 
-    private fun initTextChangeListener() {
-        binding.apply {
-            etUploadDiary.addTextChangedListener(textWatcher)
-
+    private fun initImageUriListener() {
+        lifecycleScope.launch {
+            viewModel.imageUri.collectLatest { uri ->
+                binding.ivEmptyView.setImageUrl(uri.toString())
+            }
         }
     }
 
-    private val textWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            updateRegisterBtnState()
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-        }
-    }
-
-    private fun initRepotedBtn() {
+    private fun initRepotedClickListener() {
         binding.ivUploadRepoted.setOnSingleClickListener {
-            updateCheckedBtn(binding.ivUploadRepoted)
+            viewModel.updateRepotedButtonState()
         }
     }
 
-    private fun initWateredBtn() {
+    private fun initWateredClickListener() {
         binding.ivUploadWatered.setOnSingleClickListener {
-            updateCheckedBtn(binding.ivUploadWatered)
+            viewModel.updateWateredButtonState()
+        }
+    }
+
+    private fun updateWateredCheckedListener() {
+        lifecycleScope.launch {
+            viewModel.wateredState.collectLatest { isChecked ->
+                binding.ivUploadWatered.setCheckBoxImage(isChecked)
+            }
+        }
+    }
+
+    private fun updateRepotedCheckedListener() {
+        lifecycleScope.launch {
+            viewModel.repotedState.collectLatest { isChecked ->
+                binding.ivUploadRepoted.setCheckBoxImage(isChecked)
+            }
+        }
+    }
+
+    private fun updateRegisterButtonState() {
+        lifecycleScope.launch {
+            viewModel.diaryInput.collectLatest { input ->
+                val isFieldNotEmpty = input.isNotEmpty()
+                binding.btnDiaryUpload.setRegisterBackgroundResource(isFieldNotEmpty)
+            }
         }
     }
 
@@ -86,27 +100,14 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
         }
     }
 
-    private fun updateRegisterBtnState() {
-        val isFieldNotEmpty = binding.etUploadDiary.text?.isNotEmpty() == true
-        binding.btnDiaryUpload.isEnabled = isFieldNotEmpty
-        binding.btnDiaryUpload.setBackgroundResource(
-            if (isFieldNotEmpty) R.drawable.shape_mint_fill_10
-            else R.drawable.shape_gray_200_fill_10
-        )
-    }
-
-    private fun updateCheckedBtn(view: ImageView) {
-        val currentState = view.tag as? String
-        if (currentState == "unchecked") {
-            view.setImageResource(R.drawable.ic_diary_checked)
-            view.tag = "checked"
-        } else {
-            view.setImageResource(R.drawable.ic_diary_unchecked)
-            view.tag = "unchecked"
+    private fun initTextChangeListener() {
+        binding.etUploadDiary.doAfterTextChanged {text ->
+            viewModel.updateDiaryInput(text.toString())
+            updateRegisterButtonState()
         }
     }
 
-    private fun initBackBtn() {
+    private fun initBackListener() {
         binding.ivUploadBack.setOnSingleClickListener {
             navigateToHome()
         }
