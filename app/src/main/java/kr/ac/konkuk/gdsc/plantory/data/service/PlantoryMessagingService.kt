@@ -1,12 +1,9 @@
-package kr.ac.konkuk.gdsc.plantory.data.service
-
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -17,6 +14,7 @@ import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.domain.repository.DataStoreRepository
 import kr.ac.konkuk.gdsc.plantory.presentation.MainActivity
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,6 +24,10 @@ class PlantoryMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
+        saveToken(token)
+    }
+
+    private fun saveToken(token: String) {
         CoroutineScope(Dispatchers.IO).launch {
             dataStoreRepository.saveDeviceToken(token)
         }
@@ -36,39 +38,40 @@ class PlantoryMessagingService : FirebaseMessagingService() {
         if (remoteMessage.notification != null) {
             sendNotification(remoteMessage)
         } else {
-            Log.e("TAG", "Notification Empty")
+            Timber.e("Notification Empty")
         }
     }
 
-
     private fun sendNotification(remoteMessage: RemoteMessage) {
-        val id = 0
-        val title = remoteMessage.notification!!.title
-        val body = remoteMessage.notification!!.body
+        val notificationBuilder = createNotification(remoteMessage)
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel =
+            NotificationChannel("Channel ID", "Notice", NotificationManager.IMPORTANCE_HIGH)
 
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            this, id, intent,
-            (System.currentTimeMillis() / 7).toInt()
-        )
+        notificationManager.createNotificationChannel(channel)
+        notificationManager.notify(0, notificationBuilder.build())
+    }
 
-        val channelId = "Channel ID"
-        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+    private fun createNotification(remoteMessage: RemoteMessage): NotificationCompat.Builder {
+        val title = remoteMessage.notification?.title ?: ""
+        val body = remoteMessage.notification?.body ?: ""
+        val pendingIntent = createPendingIntent()
+
+        return NotificationCompat.Builder(this, "Channel ID")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
-            .setSound(soundUri)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
             .setContentIntent(pendingIntent)
-
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(channelId, "Notice", NotificationManager.IMPORTANCE_HIGH)
-
-        notificationManager.createNotificationChannel(channel)
-        notificationManager.notify(id, notificationBuilder.build())
     }
 
+    private fun createPendingIntent(): PendingIntent {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        return PendingIntent.getActivity(
+            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
 }
