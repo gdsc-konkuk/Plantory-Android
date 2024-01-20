@@ -18,7 +18,7 @@ class DetailAdapter(
     private val currMonth: Int,
     private val dayList: MutableList<Date>,
     private val dummyinfo: MutableList<PlantDailyRecord>,
-) : androidx.recyclerview.widget.ListAdapter<Date, DetailAdapter.ViewHolder>(
+) : ListAdapter<Date, DetailAdapter.ViewHolder>(
     ItemDiffCallback<Date>(
         onItemsTheSame = { old, new -> old == new },
         onContentsTheSame = { old, new -> old == new }
