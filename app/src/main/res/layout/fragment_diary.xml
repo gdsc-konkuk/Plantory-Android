@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                setCheckBoxImage="@{data.checkList.repoted}"
+                setCheckBoxImage="@{data.checkRecord.repoted}"
                 app:layout_constraintTop_toBottomOf="@id/tv_diary_title" />
 
             <TextView
@@ -99,7 +99,7 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_diary_repoted"
-                setCheckBoxImage="@{data.checkList.watered}"/>
+                setCheckBoxImage="@{data.checkRecord.watered}"/>
 
             <TextView
                 android:layout_width="wrap_content"

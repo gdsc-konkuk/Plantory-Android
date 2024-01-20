@@ -1,13 +1,11 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckList
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 import java.util.Calendar
 import java.util.Date
@@ -55,7 +53,7 @@ class DetailViewModel: ViewModel() {
             date = "2024/01/17",
             nickname = "초록이",
             comment = "자고 일어나니까 그새 좀 푸릇해진 것 같은 느낌이 들어서 몹시 뿌듯했당.... 우리초록이너무귀여워사랑해너는세상에서가장멋진다육이야 기죽지마어깨펴니가짱이야",
-            checkList = PlantCheckList(
+            checkRecord = PlantCheckRecord(
                 isRepoted = true,
                 isWatered = false
             )
@@ -68,7 +66,7 @@ class DetailViewModel: ViewModel() {
             date = "2024/01/18",
             nickname = "초록이",
             comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkList = PlantCheckList(
+            checkRecord = PlantCheckRecord(
                 isRepoted = false,
                 isWatered = true
             )
@@ -81,7 +79,7 @@ class DetailViewModel: ViewModel() {
             date = "2024/01/20",
             nickname = "초록이",
             comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkList = PlantCheckList(
+            checkRecord = PlantCheckRecord(
                 isRepoted = true,
                 isWatered = true
             )

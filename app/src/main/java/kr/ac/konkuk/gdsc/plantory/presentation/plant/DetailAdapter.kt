@@ -49,10 +49,10 @@ class DetailAdapter(
                 if (record.date.takeLast(2) != dateFormat.format(date).toString()) {
                     continue
                 }
-                if (record.checkList.isWatered) {
+                if (record.checkRecord.isWatered) {
                     binding.ivCalendarWateredStamp.visibility = View.VISIBLE
                 }
-                if (record.checkList.isRepoted) {
+                if (record.checkRecord.isRepoted) {
                     binding.ivCalendarRepotedStamp.visibility = View.VISIBLE
                 }
             }

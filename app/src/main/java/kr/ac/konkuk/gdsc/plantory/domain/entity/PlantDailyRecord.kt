@@ -6,10 +6,10 @@ data class PlantDailyRecord (
     val nickname: String,
     val imageUrl: String,
     val comment: String,
-    val checkList: PlantCheckList
+    val checkRecord: PlantCheckRecord
 )
 
-data class PlantCheckList(
+data class PlantCheckRecord(
     val isWatered: Boolean,
     val isRepoted: Boolean
 )

@@ -9,7 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
@@ -40,11 +41,11 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun addListener() {
         uploadPreviousMonth()
         uploadNextMonth()
-        initBackBtn()
-        initUploadBtn()
+        initBackButton()
+        initUploadButton()
     }
 
-    private fun initUploadBtn() {
+    private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
             parentFragmentManager.commit {
                 replace<UploadFragment>(
@@ -74,30 +75,32 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun updateCalendar() {
         lifecycleScope.launch {
-            viewModel.currentYear.collectLatest { currYear ->
-                viewModel.currentMonth.collectLatest { currMonth ->
-                    calendar.set(Calendar.YEAR, currYear)
-                    calendar.set(Calendar.MONTH, currMonth)
-                    calendar.set(Calendar.DAY_OF_MONTH, FIRST_DAY)
+            val flowCombined = viewModel.currentYear
+                .combine(viewModel.currentMonth) { year, month -> Pair(year, month) }
+                .stateIn(lifecycleScope)
 
-                    val dayList: MutableList<Date> = mutableListOf()
+            flowCombined.collect { (currYear, currMonth) ->
+                calendar.set(Calendar.YEAR, currYear)
+                calendar.set(Calendar.MONTH, currMonth)
+                calendar.set(Calendar.DAY_OF_MONTH, FIRST_DAY)
 
-                    for (i in 0..Calendar.WEEK_OF_MONTH) {
-                        for (k in 0..Calendar.DAY_OF_YEAR) {
-                            calendar.add(Calendar.DAY_OF_MONTH, (FIRST_DAY - calendar.get(Calendar.DAY_OF_WEEK)) + k)
-                            dayList.add(calendar.time.clone() as Date)
-                        }
-                        calendar.add(Calendar.WEEK_OF_MONTH, FIRST_DAY)
+                val dayList: MutableList<Date> = mutableListOf()
+
+                for (i in 0..Calendar.WEEK_OF_MONTH) {
+                    for (k in 0..Calendar.DAY_OF_YEAR) {
+                        calendar.add(Calendar.DAY_OF_MONTH, (FIRST_DAY - calendar.get(Calendar.DAY_OF_WEEK)) + k)
+                        dayList.add(calendar.time.clone() as Date)
                     }
-
-                    binding.rvDetailCalendar.layoutManager = GridLayoutManager(context, Calendar.DAY_OF_WEEK)
-                    val dummyInfo = viewModel.plantRecord
-                    detailAdapter = DetailAdapter(currMonth, dayList, dummyInfo)
-                    binding.rvDetailCalendar.adapter = detailAdapter
-
-                    binding.tvDetailCalendarTitle.text = "${currYear}년 ${currMonth + 1}월"
-                    detailAdapter.submitList(dayList)
+                    calendar.add(Calendar.WEEK_OF_MONTH, FIRST_DAY)
                 }
+
+                binding.rvDetailCalendar.layoutManager = GridLayoutManager(context, Calendar.DAY_OF_WEEK)
+                val dummyInfo = viewModel.plantRecord
+                detailAdapter = DetailAdapter(currMonth, dayList, dummyInfo)
+                binding.rvDetailCalendar.adapter = detailAdapter
+
+                binding.tvDetailCalendarTitle.text = "${currYear}년 ${currMonth + 1}월"
+                detailAdapter.submitList(dayList)
             }
         }
     }
@@ -106,7 +109,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         updateCalendar()
     }
 
-    private fun initBackBtn() {
+    private fun initBackButton() {
         binding.ivDetailBack.setOnSingleClickListener {
             navigateToHome()
         }
