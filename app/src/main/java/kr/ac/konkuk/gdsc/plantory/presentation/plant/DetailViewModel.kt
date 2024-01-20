@@ -1,19 +1,53 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckList
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
+import java.util.Calendar
+import java.util.Date
 
 @HiltViewModel
 class DetailViewModel: ViewModel() {
     val plantRecord: MutableList<PlantDailyRecord> = generateMockData()
     val plantInfo: Plant = generatePlantMockData()
 
+    private var calendar = Calendar.getInstance()
+    private val _currentYear = MutableStateFlow<Int>(-1)
+    val currentYear: StateFlow<Int> get() = _currentYear
+    private val _currentMonth = MutableStateFlow<Int>(-1)
+    val currentMonth: StateFlow<Int> get() = _currentMonth
+
+    init {
+        calendar.time = Date()
+        _currentYear.value = calendar.get(Calendar.YEAR)
+        _currentMonth.value = calendar.get(Calendar.MONTH)
+    }
+
+    fun updatePreviousNextMonthYear(isPrevious: Boolean) {
+        if (isPrevious) {
+            _currentMonth.value--
+            if (_currentMonth.value < 0) {
+                _currentMonth.value = Calendar.DECEMBER
+                _currentYear.value--
+            }
+        } else {
+            _currentMonth.value++
+            if (_currentMonth.value > 11) {
+                _currentMonth.value = Calendar.JANUARY
+                _currentYear.value++
+            }
+        }
+    }
+
     private fun generateMockData(): MutableList<PlantDailyRecord> {
 
-        var dailyRecordList = mutableListOf<PlantDailyRecord>()
+        val dailyRecordList = mutableListOf<PlantDailyRecord>()
 
         val record1 = PlantDailyRecord(
             id = 1,
