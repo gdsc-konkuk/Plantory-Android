@@ -1,12 +1,10 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,7 +18,6 @@ import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import java.lang.Integer.min
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -49,7 +46,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         openGallery()
         autoCompletePlantSpeciesListener()
         initTextChangeListener()
-
     }
 
     private val getContent =

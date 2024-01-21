@@ -15,6 +15,7 @@ import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
+import kr.ac.konkuk.gdsc.plantory.presentation.plant.DetailFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
@@ -56,7 +57,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     }
 
     private fun initPlantViewPagerAdapter(plants: List<Plant>) {
-        homeAdapter = HomeAdapter().apply {
+        homeAdapter = HomeAdapter { navigateTo<DetailFragment>() }.apply {
             binding.vpHomePlant.adapter = this
             submitList(plants)
         }
