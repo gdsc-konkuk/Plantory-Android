@@ -17,7 +17,6 @@ import java.util.Locale
 
 class DetailAdapter(
     private val currMonth: Int,
-    private val dayList: MutableList<Date>,
     private val dummyinfo: MutableList<PlantDailyRecord>,
 ) : ListAdapter<Date, DetailAdapter.ViewHolder>(
     ItemDiffCallback<Date>(

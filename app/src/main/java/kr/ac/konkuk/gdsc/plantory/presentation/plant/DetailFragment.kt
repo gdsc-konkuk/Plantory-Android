@@ -83,7 +83,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
-                    detailAdapter = DetailAdapter(currMonth, dayList, dummyInfo)
+                    detailAdapter = DetailAdapter(currMonth, dummyInfo)
                     binding.rvDetailCalendar.adapter = detailAdapter
 
                     binding.tvDetailCalendarTitle.text = "${currYear}년 ${currMonth + 1}월"
