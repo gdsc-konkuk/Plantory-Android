@@ -79,10 +79,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 .collect { (currYear, currMonth) ->
 
                     val dayList = viewModel.updateCalendarDayList(currYear, currMonth)
+                    val dummyInfo = viewModel.plantRecord
 
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
-                    val dummyInfo = viewModel.plantRecord
                     detailAdapter = DetailAdapter(currMonth, dayList, dummyInfo)
                     binding.rvDetailCalendar.adapter = detailAdapter
 
