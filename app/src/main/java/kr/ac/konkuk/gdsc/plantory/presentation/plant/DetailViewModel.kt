@@ -1,7 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
@@ -10,8 +9,7 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 import java.util.Calendar
 import java.util.Date
 
-@HiltViewModel
-class DetailViewModel: ViewModel() {
+class DetailViewModel : ViewModel() {
     val plantRecord: MutableList<PlantDailyRecord> = generateMockData()
     val plantInfo: Plant = generatePlantMockData()
 
@@ -27,7 +25,27 @@ class DetailViewModel: ViewModel() {
         _currentMonth.value = calendar.get(Calendar.MONTH)
     }
 
-    fun updatePreviousNextMonthYear(isPrevious: Boolean) {
+    fun updateCalendarDayList(currYear: Int, currMonth: Int): MutableList<Date> {
+        calendar.set(Calendar.YEAR, currYear)
+        calendar.set(Calendar.MONTH, currMonth)
+        calendar.set(Calendar.DAY_OF_MONTH, FIRST_DAY)
+
+        val dayList: MutableList<Date> = mutableListOf()
+
+        for (i in 0..Calendar.WEEK_OF_MONTH) {
+            for (k in 0..Calendar.DAY_OF_YEAR) {
+                calendar.add(
+                    Calendar.DAY_OF_MONTH,
+                    (FIRST_DAY - calendar.get(Calendar.DAY_OF_WEEK)) + k
+                )
+                dayList.add(calendar.time.clone() as Date)
+            }
+            calendar.add(Calendar.WEEK_OF_MONTH, FIRST_DAY)
+        }
+        return dayList
+    }
+
+    fun updateMonthAndYear(isPrevious: Boolean) {
         if (isPrevious) {
             _currentMonth.value--
             if (_currentMonth.value < 0) {
@@ -98,5 +116,9 @@ class DetailViewModel: ViewModel() {
             description = "하이하이",
             createdAt = "2023/12/31"
         )
+    }
+
+    companion object {
+        private const val FIRST_DAY = 1
     }
 }

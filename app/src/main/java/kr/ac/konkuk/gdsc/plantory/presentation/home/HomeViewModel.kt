@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 
-@HiltViewModel
 class HomeViewModel : ViewModel() {
     val plantList: List<Plant> = generateMockData()
 

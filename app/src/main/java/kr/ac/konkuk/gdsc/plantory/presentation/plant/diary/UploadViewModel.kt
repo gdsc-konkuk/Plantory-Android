@@ -8,7 +8,6 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-@HiltViewModel
 class UploadViewModel : ViewModel() {
     val plantInfo: PlantDailyRecord = generateMockData()
 

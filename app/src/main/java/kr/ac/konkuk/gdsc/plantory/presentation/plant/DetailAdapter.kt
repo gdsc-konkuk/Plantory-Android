@@ -40,22 +40,17 @@ class DetailAdapter(
                 dayText.alpha = 0.4f
             }
 
-            if ((adapterPosition + 1) % 7 == 0) {
+            if ((bindingAdapterPosition + 1) % 7 == 0) {
                 dayText.setTextColor(ContextCompat.getColor(binding.root.context, R.color.blue))
-            } else if (adapterPosition == 0 || adapterPosition % 7 == 0) {
+            } else if (bindingAdapterPosition == 0 || bindingAdapterPosition % 7 == 0) {
                 dayText.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red))
             }
 
-            for (record in plantDailyRecords) {
-                if (record.date.takeLast(2) != dateFormat.format(date).toString()) {
-                    continue
-                }
-                if (record.checkRecord.isWatered) {
-                    binding.ivCalendarWateredStamp.visibility = View.VISIBLE
-                }
-                if (record.checkRecord.isRepoted) {
-                    binding.ivCalendarRepotedStamp.visibility = View.VISIBLE
-                }
+            plantDailyRecords.find {
+                it.date.takeLast(2) == dateFormat.format(date).toString()
+            }?.let {record ->
+                binding.ivCalendarWateredStamp.visibility = if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
+                binding.ivCalendarRepotedStamp.visibility = if (record.checkRecord.isRepoted) View.VISIBLE else View.GONE
             }
         }
     }
@@ -68,7 +63,7 @@ class DetailAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.currMonth = currMonth
-        val currentDate = dayList[position]
+        val currentDate = getItem(position)
         val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
         val formattedCurrentDate = dateFormat.format(currentDate)
 
