@@ -10,13 +10,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.util.Calendar
@@ -49,14 +52,15 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun addListener() {
         initBackButtonClickListener()
+        initTextChangeListener()
         openGallery()
         autoCompletePlantSpeciesListener()
-        initTextChangeListener()
         updateBirthdayDatePicker()
         updateLastWateredDatePicker()
     }
 
     private fun initTextChangeListener() {
+        initImageUriChangeListener()
         initNicknameTextChangeListener()
         initSpeciesTextChangeListener()
         initDescriptionTextChangeListener()
@@ -66,12 +70,17 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
                 viewModel.updateProfileImage(uri)
-                binding.ivAddplantProfile.load(uri) {
-                    transformations(RoundedCornersTransformation(radius = 14f))
-                    crossfade(true)
-                }
             }
         }
+
+    private fun initImageUriChangeListener() {
+        lifecycleScope.launch {
+            viewModel.addImageUri.collectLatest { uri ->
+                if (uri == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
+                else binding.ivAddplantProfile.setImageUrl(uri.toString())
+            }
+        }
+    }
 
     private fun initNicknameTextChangeListener() {
         binding.etAddplantNickname.doAfterTextChanged {

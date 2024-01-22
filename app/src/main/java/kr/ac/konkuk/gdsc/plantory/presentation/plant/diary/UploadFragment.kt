@@ -13,13 +13,11 @@ import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentUploadBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
-import kr.ac.konkuk.gdsc.plantory.util.binding.setCheckBoxImage
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 @AndroidEntryPoint
-
 class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_upload) {
 
     private val viewModel: UploadViewModel by viewModels()
@@ -31,14 +29,10 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     }
 
     private fun addListener() {
-        initRepotedClickListener()
-        initWateredClickListener()
-        initImageUriListener()
+        initImageUriChangeListener()
         openGallery()
         initTextChangeListener()
         initBackListener()
-        updateWateredCheckedListener()
-        updateRepotedCheckedListener()
     }
 
     private val getContent =
@@ -48,38 +42,10 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
             }
         }
 
-    private fun initImageUriListener() {
+    private fun initImageUriChangeListener() {
         lifecycleScope.launch {
             viewModel.imageUri.collectLatest { uri ->
                 binding.ivEmptyView.setImageUrl(uri.toString())
-            }
-        }
-    }
-
-    private fun initRepotedClickListener() {
-        binding.ivUploadRepoted.setOnSingleClickListener {
-            viewModel.updateRepotedButtonState()
-        }
-    }
-
-    private fun initWateredClickListener() {
-        binding.ivUploadWatered.setOnSingleClickListener {
-            viewModel.updateWateredButtonState()
-        }
-    }
-
-    private fun updateWateredCheckedListener() {
-        lifecycleScope.launch {
-            viewModel.wateredState.collectLatest { isChecked ->
-                binding.ivUploadWatered.setCheckBoxImage(isChecked)
-            }
-        }
-    }
-
-    private fun updateRepotedCheckedListener() {
-        lifecycleScope.launch {
-            viewModel.repotedState.collectLatest { isChecked ->
-                binding.ivUploadRepoted.setCheckBoxImage(isChecked)
             }
         }
     }
