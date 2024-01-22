@@ -53,13 +53,13 @@
             android:layout_marginStart="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_addplant_profile"
-            app:layout_constraintBottom_toBottomOf="@id/tf_addplant_birthday"
+            app:layout_constraintBottom_toBottomOf="@id/tv_addplant_birthday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_addplant_birthday_text" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_addplant_birthday_text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginTop="24dp"
@@ -68,42 +68,30 @@
             app:layout_constraintStart_toEndOf="@+id/iv_addplant_profile"
             app:layout_constraintTop_toBottomOf="@+id/cl_addplant_appbar" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tf_addplant_birthday"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addplant_birthday"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            app:boxStrokeColor="@color/customtextinput"
-            app:layout_constraintEnd_toStartOf="@id/iv_addplant_datepicker"
-            app:layout_constraintStart_toEndOf="@+id/iv_addplant_profile"
-            app:layout_constraintTop_toBottomOf="@+id/tv_addplant_birthday_text">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_addplant_birthday"
-                style="@style/TextAppearance.PLANTORY.body_r_12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:paddingVertical="10dp"
-                android:textColor="@color/gray_800"
-                app:layout_constraintEnd_toStartOf="@id/iv_addplant_datepicker"
-                app:layout_constraintStart_toEndOf="@+id/iv_addplant_profile"
-                app:layout_constraintTop_toBottomOf="@+id/tv_addplant_birthday_text" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="34dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/shape_gray_100_stroke_5"
+            android:gravity="center|start"
+            android:paddingStart="15dp"
+            android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
+            app:layout_constraintEnd_toStartOf="@id/iv_addplant_birthday_datepicker"
+            app:layout_constraintStart_toStartOf="@+id/tv_addplant_birthday_text"
+            app:layout_constraintTop_toBottomOf="@+id/tv_addplant_birthday_text" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_addplant_datepicker"
+            android:id="@+id/iv_addplant_birthday_datepicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="21dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="21dp"
             android:src="@drawable/ic_addplant_datepicker"
-            app:layout_constraintBottom_toBottomOf="@+id/tf_addplant_birthday"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_addplant_birthday"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tf_addplant_birthday"
-            app:layout_constraintTop_toTopOf="@id/tf_addplant_birthday" />
+            app:layout_constraintStart_toEndOf="@+id/tv_addplant_birthday"
+            app:layout_constraintTop_toTopOf="@id/tv_addplant_birthday" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_addplant_nickname_text"
@@ -114,7 +102,7 @@
             android:layout_marginTop="18dp"
             android:text="@string/addplant_plant_nickname"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tf_addplant_birthday" />
+            app:layout_constraintTop_toBottomOf="@id/tv_addplant_birthday" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tf_addplant_nickname"
@@ -122,6 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
             app:boxStrokeColor="@color/customtextinput"
             app:counterEnabled="true"
             app:counterMaxLength="14"
@@ -162,6 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
             app:boxStrokeColor="@color/customtextinput"
             app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -170,7 +160,6 @@
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/tv_addplant_species"
-                style="@style/TextAppearance.PLANTORY.body_r_12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:completionThreshold="1"
@@ -178,6 +167,7 @@
                 android:maxLength="14"
                 android:paddingVertical="10dp"
                 android:paddingStart="15dp"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
                 android:textColorHint="@color/gray_300" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -186,11 +176,47 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="17dp"
                 android:text="0/14"
                 android:textSize="12sp"
                 app:layout_constraintTop_toBottomOf="@id/tv_addplant_species" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addplant_lastWatered_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:text="마지막 물 준 날"
+            android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_addplant_species" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addplant_lastWatered"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/shape_gray_100_stroke_5"
+            android:gravity="center|start"
+            android:paddingStart="15dp"
+            android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
+            app:layout_constraintEnd_toStartOf="@id/iv_addplant_lastWatered_datepicker"
+            app:layout_constraintStart_toStartOf="@+id/tv_addplant_lastWatered_text"
+            app:layout_constraintTop_toBottomOf="@+id/tv_addplant_lastWatered_text" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_addplant_lastWatered_datepicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="21dp"
+            android:src="@drawable/ic_addplant_datepicker"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_addplant_lastWatered"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_addplant_lastWatered"
+            app:layout_constraintTop_toTopOf="@id/tv_addplant_lastWatered" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_addplant_shortDescription_text"
@@ -198,10 +224,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:text="@string/addplant_plant_description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tf_addplant_species" />
+            app:layout_constraintTop_toBottomOf="@id/tv_addplant_lastWatered" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tf_addplant_shortDescription"
@@ -209,6 +235,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
             app:boxStrokeColor="@color/customtextinput"
             app:counterEnabled="true"
             app:counterMaxLength="14"
@@ -220,12 +247,12 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_addplant_shortDescription"
-                style="@style/TextAppearance.PLANTORY.body_r_12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/addplant_plant_description_hint"
                 android:maxLength="14"
                 android:paddingVertical="10dp"
+                android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
                 android:textColorHint="@color/gray_300" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -239,6 +266,8 @@
             android:gravity="center"
             android:text="@string/base_addbtn_text"
             android:textColor="@color/gray_0"
+            android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
