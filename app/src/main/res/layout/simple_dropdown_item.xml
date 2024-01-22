@@ -5,6 +5,5 @@
     android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
     android:singleLine="true"
     android:layout_width="match_parent"
-    android:layout_height="35dp"
-    android:textSize="17sp"
+    android:layout_height="30dp"
     android:ellipsize="marquee" />

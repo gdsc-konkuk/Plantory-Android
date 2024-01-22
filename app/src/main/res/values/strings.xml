@@ -19,6 +19,19 @@
 
     <string name="diary_title">일지</string>
     <string name="diary_nickname">%s의 기록</string>
-    <string name="diary_watered">오늘 분갈이를 했어요</string>
-    <string name="diary_repoted">오늘 물을 주었어요</string>
+    <string name="diary_watered">오늘 물을 주었어요</string>
+    <string name="diary_repoted">오늘 분갈이를 했어요</string>
+
+    <string name="upload_title">일지 기록하기</string>
+    <string name="upload_nickname">%s의 기록</string>
+    <string name="upload_watered">오늘 물을 주었어요</string>
+    <string name="upload_repoted">오늘 분갈이를 했어요</string>
+    <string name="upload_hint">%s는 오늘 어땠나요? 기록을 작성해주세요.</string>
+    <string name="upload_text">기록</string>
+
+    <string name="detail_dday">%d일</string>
+    <string name="detail_plant_species">식물종</string>
+    <string name="detail_description">한줄소개</string>
+    <string name="detail_text">%s의 성장일기</string>
+
 </resources>

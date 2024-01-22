@@ -1,7 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import androidx.lifecycle.ViewModel
-import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 class AddPlantViewModel : ViewModel() {
     val plantSpeciesList: List<String> = generateMockData()

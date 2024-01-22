@@ -25,7 +25,6 @@
         </service>
         <activity
             android:name=".presentation.MainActivity"
-            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
