@@ -1,11 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Plantory" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Plantory" parent="Base.Theme.Plantory" >
+    <style name="Theme.Plantory" parent="Base.Theme.Plantory">
         <item name="android:datePickerDialogTheme">@style/PlantDatePickerDialogTheme</item>
     </style>
 
@@ -17,4 +17,13 @@
     <style name="PlantDatePickerStyle" parent="android:Widget.Material.DatePicker">
         <item name="android:headerBackground">@color/mint</item>
     </style>
+
+
+    <style name="Theme.Plantory.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/mint</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+        <item name="postSplashScreenTheme">@style/Theme.Plantory</item>
+    </style>
+
 </resources>

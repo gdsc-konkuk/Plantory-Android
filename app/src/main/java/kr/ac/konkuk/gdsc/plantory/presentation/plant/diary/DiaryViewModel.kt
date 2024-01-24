@@ -1,11 +1,9 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 
-@HiltViewModel
 class DiaryViewModel : ViewModel() {
     val plantRecord: PlantDailyRecord = generateMockData()
 
