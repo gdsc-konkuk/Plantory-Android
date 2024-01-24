@@ -30,14 +30,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private val viewModel: AddPlantViewModel by viewModels()
     private var calendar: Calendar = Calendar.getInstance()
     private lateinit var adapter: ArrayAdapter<String>
-    private val currYear: Int
-        get() = calendar.get(Calendar.YEAR)
-
-    private val currMonth: Int
-        get() = calendar.get(Calendar.MONTH)
-
-    private val currDay: Int
-        get() = calendar.get(Calendar.DAY_OF_MONTH)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -121,8 +113,16 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun initDatePickerToCurrent() {
-        binding.tvAddplantBirthday.text = returnDateFormat(currYear, currMonth, currDay)
-        binding.tvAddplantLastWatered.text = returnDateFormat(currYear, currMonth, currDay)
+        binding.tvAddplantBirthday.text = returnDateFormat(
+            viewModel.currentYear.value,
+            viewModel.currentMonth.value,
+            viewModel.currentDay.value
+        )
+        binding.tvAddplantLastWatered.text = returnDateFormat(
+            viewModel.currentYear.value,
+            viewModel.currentMonth.value,
+            viewModel.currentDay.value
+        )
     }
 
     private fun updateBirthdayDatePicker() {
@@ -151,9 +151,9 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             DatePickerDialog(
                 requireContext(),
                 date,
-                currYear,
-                currMonth,
-                currDay
+                viewModel.currentYear.value,
+                viewModel.currentMonth.value,
+                viewModel.currentDay.value
             ).show()
         }
     }

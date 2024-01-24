@@ -4,8 +4,10 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.util.Calendar
 
 class AddPlantViewModel : ViewModel() {
+    private var calendar: Calendar = Calendar.getInstance()
     val plantSpeciesList: List<String> = generateMockData()
 
     private val _addImageUri = MutableStateFlow<Uri?>(null)
@@ -26,12 +28,24 @@ class AddPlantViewModel : ViewModel() {
     private val _addDescription = MutableStateFlow<String>("")
     val addDescription: StateFlow<String> get() = _addDescription
 
+    private val _currentYear = MutableStateFlow<Int>(0)
+    val currentYear: StateFlow<Int> get() = _currentYear
+
+    private val _currentMonth = MutableStateFlow<Int>(0)
+    val currentMonth: StateFlow<Int> get() = _currentMonth
+
+    private val _currentDay = MutableStateFlow<Int>(0)
+    val currentDay: StateFlow<Int> get() = _currentDay
+
     init {
         _addImageUri.value = null
         _addNickname.value = ""
         _addSpecies.value = ""
         _addLastWatered.value = ""
         _addDescription.value = ""
+        _currentYear.value = calendar.get(Calendar.YEAR)
+        _currentMonth.value = calendar.get(Calendar.MONTH)
+        _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
     }
 
     fun updateProfileImage(uri: Uri) {

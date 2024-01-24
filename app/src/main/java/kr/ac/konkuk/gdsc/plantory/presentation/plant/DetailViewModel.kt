@@ -19,6 +19,9 @@ class DetailViewModel : ViewModel() {
     private val _currentMonth = MutableStateFlow<Int>(-1)
     val currentMonth: StateFlow<Int> get() = _currentMonth
 
+    private val _isWatered = MutableStateFlow<Boolean>(false)
+    val isWatered: MutableStateFlow<Boolean> get() = _isWatered
+
     init {
         calendar.time = Date()
         _currentYear.value = calendar.get(Calendar.YEAR)
@@ -59,6 +62,10 @@ class DetailViewModel : ViewModel() {
                 _currentYear.value++
             }
         }
+    }
+
+    fun updateIsWatered() {
+        _isWatered.value = !_isWatered.value
     }
 
     private fun generateMockData(): MutableList<PlantDailyRecord> {
@@ -103,6 +110,19 @@ class DetailViewModel : ViewModel() {
             )
         )
         dailyRecordList.add(record3)
+
+        val record4 = PlantDailyRecord(
+            id = 4,
+            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
+            date = "2024/01/24",
+            nickname = "초록이",
+            comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
+            checkRecord = PlantCheckRecord(
+                isRepoted = true,
+                isWatered = true
+            )
+        )
+        dailyRecordList.add(record4)
 
         return dailyRecordList
     }

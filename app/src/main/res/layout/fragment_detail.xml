@@ -73,7 +73,7 @@
                     android:layout_height="0dp"
                     android:layout_margin="24dp"
                     android:layout_marginTop="24dp"
-                    android:background="@drawable/shape_mint_fill_10"
+                    android:background="@drawable/shape_gray_200_fill_10"
                     app:layout_constraintDimensionRatio="H,4:3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -167,6 +167,16 @@
                             app:layout_constraintTop_toTopOf="@id/tv_detail_plant_description"
                             app:layout_constraintBottom_toBottomOf="@id/tv_detail_plant_description"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_detail_plant_give_water"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/ic_detail_not_watered"
+                        app:layout_constraintBottom_toTopOf="@+id/iv_detail_plant_upload"
+                        app:layout_constraintStart_toStartOf="@+id/iv_detail_plant_upload"
+                        app:layout_constraintEnd_toEndOf="@id/iv_detail_plant_upload" />
 
                     <ImageView
                         android:id="@+id/iv_detail_plant_upload"
