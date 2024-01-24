@@ -5,7 +5,9 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,7 +39,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
             if (!task.isSuccessful) {
                 return@addOnCompleteListener
             }
-            Timber.d("getCurrentToken: $task.result")
+            Timber.d("getCurrentToken: ${task.result}")
         }
         navigateTo<HomeFragment>()
     }
