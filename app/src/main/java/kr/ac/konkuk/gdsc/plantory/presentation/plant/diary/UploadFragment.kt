@@ -20,7 +20,7 @@ import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 @AndroidEntryPoint
 
-class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_upload){
+class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_upload) {
 
     private val viewModel: UploadViewModel by viewModels()
 

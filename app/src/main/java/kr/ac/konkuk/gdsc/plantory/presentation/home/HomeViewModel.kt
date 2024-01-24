@@ -1,10 +1,9 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 
-@HiltViewModel
+
 class HomeViewModel : ViewModel() {
     val plantList: List<Plant> = generateMockData()
 
@@ -16,7 +15,8 @@ class HomeViewModel : ViewModel() {
             dday = 2,
             nickname = "식물1",
             species = "선인장",
-            description = "하이하이"
+            description = "하이하이",
+            "2023/12/31"
         )
 
         val mockData2 = Plant(
@@ -24,7 +24,8 @@ class HomeViewModel : ViewModel() {
             dday = 2,
             nickname = "식물2",
             species = "선인장",
-            description = "하이하이"
+            description = "하이하이",
+            "2023/12/31"
         )
 
         val mockData3 = Plant(
@@ -32,7 +33,8 @@ class HomeViewModel : ViewModel() {
             dday = 2,
             nickname = "식물3",
             species = "선인장",
-            description = "하이하이"
+            description = "하이하이",
+            "2023/12/31"
         )
         mockDataList.add(mockData1)
         mockDataList.add(mockData2)

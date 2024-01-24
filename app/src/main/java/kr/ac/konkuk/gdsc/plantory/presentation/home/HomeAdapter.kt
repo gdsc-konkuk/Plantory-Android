@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.ac.konkuk.gdsc.plantory.databinding.ItemHomePlantBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
+import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
-class HomeAdapter : androidx.recyclerview.widget.ListAdapter<Plant, HomeAdapter.HomeViewHolder>(
+class HomeAdapter(private val onItemClick: () -> Unit) : androidx.recyclerview.widget.ListAdapter<Plant, HomeAdapter.HomeViewHolder>(
     ItemDiffCallback<Plant>(
         onItemsTheSame = { old, new -> old.id == new.id },
         onContentsTheSame = { old, new -> old == new }
@@ -30,6 +31,10 @@ class HomeAdapter : androidx.recyclerview.widget.ListAdapter<Plant, HomeAdapter.
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
+
+        holder.itemView.setOnSingleClickListener {
+            onItemClick.invoke()
+        }
         holder.onBind(getItem(position))
     }
 }
