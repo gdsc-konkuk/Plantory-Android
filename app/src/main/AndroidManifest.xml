@@ -15,6 +15,14 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Plantory"
         tools:targetApi="31">
+        <service
+            android:name=".data.service.PlantoryMessagingService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".presentation.MainActivity"
             android:screenOrientation="portrait"
