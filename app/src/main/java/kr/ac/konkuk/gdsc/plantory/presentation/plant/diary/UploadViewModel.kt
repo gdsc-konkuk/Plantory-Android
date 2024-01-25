@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class UploadViewModel : ViewModel() {
-    val plantInfo: PlantDailyRecord = generateMockData()
-
     private fun generateMockData(): PlantDailyRecord {
         return PlantDailyRecord(
             id = 1,

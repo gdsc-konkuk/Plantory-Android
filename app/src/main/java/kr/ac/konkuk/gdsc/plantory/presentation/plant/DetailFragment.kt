@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
@@ -21,6 +22,7 @@ import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
 import java.util.Calendar
@@ -69,7 +71,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun updateWaterButton() {
-        lifecycleScope.launch {
+        viewLifeCycleScope.launch {
             viewModel.isWatered.collectLatest { isWatered ->
                 if (isWatered) binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
                 else binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_not_watered)
@@ -95,7 +97,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun updateCalendar() {
-        lifecycleScope.launch {
+        viewLifeCycleScope.launch {
             viewModel.currentYear.combine(viewModel.currentMonth) { year, month ->
                 Pair(year, month)
             }
@@ -108,15 +110,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
                     detailAdapter = DetailAdapter(currMonth, dummyInfo, onDateClick = { date ->
-                        parentFragmentManager.commit {
-                            replace<DiaryFragment>(
-                                R.id.fcv_main,
-                                args = bundleOf("selectedDate" to date),
-                                tag = DiaryFragment::class.simpleName
-                            ).addToBackStack(
-                                "DiaryFragment"
-                            )
-                        }
+                        navigateTo<DiaryFragment>(bundleOf("selectedDate" to date))
                     })
                     binding.rvDetailCalendar.adapter = detailAdapter
 
@@ -138,5 +132,15 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun navigateToHome() {
         parentFragmentManager.popBackStack()
+    }
+
+    private inline fun <reified T : Fragment> navigateTo(args: Bundle) {
+        parentFragmentManager.commit {
+            replace<T>(
+                R.id.fcv_main,
+                T::class.simpleName,
+                args
+            ).addToBackStack("DiaryFragement")
+        }
     }
 }

@@ -15,6 +15,7 @@ import kr.ac.konkuk.gdsc.plantory.databinding.FragmentUploadBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 @AndroidEntryPoint
@@ -43,7 +44,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
         }
 
     private fun initImageUriChangeListener() {
-        lifecycleScope.launch {
+        viewLifeCycleScope.launch {
             viewModel.imageUri.collectLatest { uri ->
                 binding.ivEmptyView.setImageUrl(uri.toString())
             }
@@ -51,7 +52,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     }
 
     private fun updateRegisterButtonState() {
-        lifecycleScope.launch {
+        viewLifeCycleScope.launch {
             viewModel.diaryInput.collectLatest { input ->
                 val isFieldNotEmpty = input.isNotEmpty()
                 binding.btnDiaryUpload.setRegisterBackgroundResource(isFieldNotEmpty)

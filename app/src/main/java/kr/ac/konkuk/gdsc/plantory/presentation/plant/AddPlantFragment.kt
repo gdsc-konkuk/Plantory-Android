@@ -21,6 +21,7 @@ import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.util.Calendar
 
@@ -28,7 +29,6 @@ import java.util.Calendar
 class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragment_add_plant) {
 
     private val viewModel: AddPlantViewModel by viewModels()
-    private var calendar: Calendar = Calendar.getInstance()
     private lateinit var adapter: ArrayAdapter<String>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,7 +66,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         }
 
     private fun initImageUriChangeListener() {
-        lifecycleScope.launch {
+        viewLifeCycleScope.launch {
             viewModel.addImageUri.collectLatest { uri ->
                 if (uri == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
                 else binding.ivAddplantProfile.setImageUrl(uri.toString())
@@ -138,7 +138,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun datePickerListener(view: TextView) {
-        viewLifeCycle.coroutineScope.launch {
+        viewLifeCycleScope.launch {
             val date = DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 view.text = returnDateFormat(year, month, day)
                 if (view == binding.tvAddplantBirthday) viewModel.updateBirthday(

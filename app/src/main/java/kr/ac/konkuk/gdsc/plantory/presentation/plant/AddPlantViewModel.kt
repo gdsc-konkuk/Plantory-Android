@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantInfo
 import java.util.Calendar
 
 class AddPlantViewModel : ViewModel() {
@@ -37,6 +38,9 @@ class AddPlantViewModel : ViewModel() {
     private val _currentDay = MutableStateFlow<Int>(0)
     val currentDay: StateFlow<Int> get() = _currentDay
 
+    private val _plantInfo = MutableStateFlow(PlantInfo("","","","","", null))
+    val plantInfo: StateFlow<PlantInfo> get() = _plantInfo
+
     init {
         _addImageUri.value = null
         _addNickname.value = ""
@@ -48,28 +52,38 @@ class AddPlantViewModel : ViewModel() {
         _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
     }
 
+    fun updatePlantInfo(newPlantInfo: PlantInfo) {
+        _plantInfo.value = newPlantInfo
+    }
+
     fun updateProfileImage(uri: Uri) {
         _addImageUri.value = uri
+        updatePlantInfo(plantInfo.value.copy(image = uri))
     }
 
     fun updateBirthday(birthday: String) {
         _addBirthday.value = birthday
+        updatePlantInfo(plantInfo.value.copy(birthDate = birthday))
     }
 
     fun updateNickname(nickname: String) {
         _addNickname.value = nickname
+        updatePlantInfo(plantInfo.value.copy(nickname = nickname))
     }
 
     fun updateSpecies(species: String) {
         _addSpecies.value = species
+        updatePlantInfo(plantInfo.value.copy(species = species))
     }
 
     fun updateLastWatered(lastWatered: String) {
         _addLastWatered.value = lastWatered
+        updatePlantInfo(plantInfo.value.copy(lastWaterDate = lastWatered))
     }
 
     fun updateDescription(description: String) {
         _addDescription.value = description
+        updatePlantInfo(plantInfo.value.copy(shortDescription = description))
     }
 
     fun updatePlantSpeciesLength(): Int {

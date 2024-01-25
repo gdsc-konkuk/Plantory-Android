@@ -52,11 +52,13 @@ class DetailAdapter(
             plantDailyRecords.find {
                 it.date.takeLast(2) == dateFormat.format(date).toString()
             }?.let {record ->
-                binding.ivCalendarWateredStamp.visibility = if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
-//                binding.ivCalendarRepotedStamp.visibility = if (record.checkRecord.isRepoted) View.VISIBLE else View.GONE
-                binding.llCalendarDay.setBackgroundResource(R.drawable.shape_watered_10_fill)
-                binding.tvCalenderDate.setTextColor(ContextCompat.getColor(binding.root.context, R.color.gray_0))
-                binding.tvCalenderDate.setTypeface(null, Typeface.BOLD)
+                binding.apply {
+                    ivCalendarWateredStamp.visibility = if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
+//                  ivCalendarRepotedStamp.visibility = if (record.checkRecord.isRepoted) View.VISIBLE else View.GONE
+                    llCalendarDay.setBackgroundResource(R.drawable.shape_watered_10_fill)
+                    tvCalenderDate.setTextColor(ContextCompat.getColor(root.context, R.color.gray_0))
+                    tvCalenderDate.setTypeface(null, Typeface.BOLD)
+                }
             }
             binding.llCalendarDay.setOnSingleClickListener {
                 onDateClick(date)
