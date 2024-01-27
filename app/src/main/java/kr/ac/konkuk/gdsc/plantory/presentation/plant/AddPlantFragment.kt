@@ -10,9 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
-import androidx.lifecycle.lifecycleScope
-import coil.load
-import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,10 +17,9 @@ import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
-import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
+import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import java.util.Calendar
 
 @AndroidEntryPoint
 class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragment_add_plant) {
@@ -61,29 +57,32 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                viewModel.updateProfileImage(uri)
+                val newPlantInfo = viewModel.plantInfo.value.copy(image = uri)
+                viewModel.updatePlantInfo(newPlantInfo)
             }
         }
 
     private fun initImageUriChangeListener() {
         viewLifeCycleScope.launch {
-            viewModel.addImageUri.collectLatest { uri ->
-                if (uri == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
-                else binding.ivAddplantProfile.setImageUrl(uri.toString())
+            viewModel.plantInfo.collectLatest { plantInfo ->
+                if (plantInfo.image == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
+                else binding.ivAddplantProfile.setImageUrl(plantInfo.image.toString())
             }
         }
     }
 
     private fun initNicknameTextChangeListener() {
         binding.etAddplantNickname.doAfterTextChanged {
-            viewModel.updateNickname(it.toString())
+            val newPlantInfo = viewModel.plantInfo.value.copy(nickname = it.toString())
+            viewModel.updatePlantInfo(newPlantInfo)
             updateRegisterBtnState()
         }
     }
 
     private fun initSpeciesTextChangeListener() {
         binding.tvAddplantSpecies.doAfterTextChanged {
-            viewModel.updateSpecies(it.toString())
+            val newPlantInfo = viewModel.plantInfo.value.copy(species = it.toString())
+            viewModel.updatePlantInfo(newPlantInfo)
             updatePlantSpeciesLength()
             updateRegisterBtnState()
         }
@@ -91,7 +90,8 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun initDescriptionTextChangeListener() {
         binding.etAddplantShortDescription.doAfterTextChanged {
-            viewModel.updateDescription(it.toString())
+            val newPlantInfo = viewModel.plantInfo.value.copy(shortDescription = it.toString())
+            viewModel.updatePlantInfo(newPlantInfo)
             updateRegisterBtnState()
         }
     }
@@ -100,10 +100,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         val isFieldsNotEmpty = viewModel.checkIsNotEmpty()
 
         binding.btnAddplantUpload.isEnabled = isFieldsNotEmpty
-        binding.btnAddplantUpload.setBackgroundResource(
-            if (isFieldsNotEmpty) R.drawable.shape_mint_fill_10
-            else R.drawable.shape_gray_200_fill_10
-        )
+        binding.btnAddplantUpload.setRegisterBackgroundResource(isFieldsNotEmpty)
     }
 
     private fun openGallery() {
@@ -141,11 +138,15 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         viewLifeCycleScope.launch {
             val date = DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 view.text = returnDateFormat(year, month, day)
-                if (view == binding.tvAddplantBirthday) viewModel.updateBirthday(
-                    returnDateFormat(year, month, day)
+                if (view == binding.tvAddplantBirthday) viewModel.updatePlantInfo(
+                    viewModel.plantInfo.value.copy(
+                        birthDate = returnDateFormat(year, month, day)
+                    )
                 )
-                else if (view == binding.tvAddplantLastWatered) viewModel.updateLastWatered(
-                    returnDateFormat(year, month, day)
+                else if (view == binding.tvAddplantLastWatered) viewModel.updatePlantInfo(
+                    viewModel.plantInfo.value.copy(
+                        birthDate = returnDateFormat(year, month, day)
+                    )
                 )
             }
             DatePickerDialog(
