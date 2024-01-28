@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.ItemDetailCalendarBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
+import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -18,6 +20,7 @@ import java.util.Locale
 class DetailAdapter(
     private val currMonth: Int,
     private val dummyinfo: MutableList<PlantDailyRecord>,
+    private val onDateClick : (Date) -> Unit
 ) : ListAdapter<Date, DetailAdapter.ViewHolder>(
     ItemDiffCallback<Date>(
         onItemsTheSame = { old, new -> old == new },
@@ -27,6 +30,7 @@ class DetailAdapter(
 
     class ViewHolder(
         private val binding: ItemDetailCalendarBinding,
+        private val onDateClick : (Date) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         var currMonth: Int = 0
         private val dayText: TextView = binding.tvCalenderDate
@@ -48,8 +52,16 @@ class DetailAdapter(
             plantDailyRecords.find {
                 it.date.takeLast(2) == dateFormat.format(date).toString()
             }?.let {record ->
-                binding.ivCalendarWateredStamp.visibility = if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
-                binding.ivCalendarRepotedStamp.visibility = if (record.checkRecord.isRepoted) View.VISIBLE else View.GONE
+                binding.apply {
+                    ivCalendarWateredStamp.visibility = if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
+//                  ivCalendarRepotedStamp.visibility = if (record.checkRecord.isRepoted) View.VISIBLE else View.GONE
+                    llCalendarDay.setBackgroundResource(R.drawable.shape_watered_10_fill)
+                    tvCalenderDate.setTextColor(ContextCompat.getColor(root.context, R.color.gray_0))
+                    tvCalenderDate.setTypeface(null, Typeface.BOLD)
+                }
+            }
+            binding.llCalendarDay.setOnSingleClickListener {
+                onDateClick(date)
             }
         }
     }
@@ -57,7 +69,7 @@ class DetailAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemDetailCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, onDateClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

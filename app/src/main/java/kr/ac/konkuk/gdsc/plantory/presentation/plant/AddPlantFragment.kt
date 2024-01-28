@@ -3,96 +3,104 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
-import coil.load
-import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
+import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import java.util.Calendar
 
 @AndroidEntryPoint
 class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragment_add_plant) {
 
-    private var selectedImageUri: Uri? = null
     private val viewModel: AddPlantViewModel by viewModels()
-    private var calendar: Calendar = Calendar.getInstance()
     private lateinit var adapter: ArrayAdapter<String>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         initView()
         addListener()
     }
 
     private fun initView() {
-        initDatePicker()
+        initDatePickerToCurrent()
         initAutoCompleteAdapter()
     }
 
     private fun addListener() {
         initBackButtonClickListener()
-        datePickerListener()
+        initTextChangeListener()
         openGallery()
         autoCompletePlantSpeciesListener()
-        initTextChangeListener()
+        updateBirthdayDatePicker()
+        updateLastWateredDatePicker()
+    }
+
+    private fun initTextChangeListener() {
+        initImageUriChangeListener()
+        initNicknameTextChangeListener()
+        initSpeciesTextChangeListener()
+        initDescriptionTextChangeListener()
     }
 
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                selectedImageUri = uri
-                binding.ivAddplantProfile.load(selectedImageUri) {
-                    transformations(RoundedCornersTransformation(radius = 14f))
-                    crossfade(true)
-                }
+                val newPlantInfo = viewModel.plantInfo.value.copy(image = uri)
+                viewModel.updatePlantInfo(newPlantInfo)
             }
         }
 
-    private fun initTextChangeListener() {
-        binding.apply {
-            etAddplantBirthday.addTextChangedListener(textWatcher)
-            etAddplantNickname.addTextChangedListener(textWatcher)
-            tvAddplantSpecies.addTextChangedListener(textWatcher)
-            etAddplantShortDescription.addTextChangedListener(textWatcher)
+    private fun initImageUriChangeListener() {
+        viewLifeCycleScope.launch {
+            viewModel.plantInfo.collectLatest { plantInfo ->
+                if (plantInfo.image == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
+                else binding.ivAddplantProfile.setImageUrl(plantInfo.image.toString())
+            }
         }
     }
 
-    private val textWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+    private fun initNicknameTextChangeListener() {
+        binding.etAddplantNickname.doAfterTextChanged {
+            val newPlantInfo = viewModel.plantInfo.value.copy(nickname = it.toString())
+            viewModel.updatePlantInfo(newPlantInfo)
             updateRegisterBtnState()
-            updatePlantSpeciesLength()
         }
+    }
 
-        override fun afterTextChanged(s: Editable?) {
+    private fun initSpeciesTextChangeListener() {
+        binding.tvAddplantSpecies.doAfterTextChanged {
+            val newPlantInfo = viewModel.plantInfo.value.copy(species = it.toString())
+            viewModel.updatePlantInfo(newPlantInfo)
+            updatePlantSpeciesLength()
+            updateRegisterBtnState()
+        }
+    }
+
+    private fun initDescriptionTextChangeListener() {
+        binding.etAddplantShortDescription.doAfterTextChanged {
+            val newPlantInfo = viewModel.plantInfo.value.copy(shortDescription = it.toString())
+            viewModel.updatePlantInfo(newPlantInfo)
+            updateRegisterBtnState()
         }
     }
 
     private fun updateRegisterBtnState() {
-        val isFieldsNotEmpty =
-            binding.etAddplantBirthday.text?.isNotEmpty() == true &&
-                    binding.etAddplantNickname.text?.isNotEmpty() == true &&
-                    binding.tvAddplantSpecies.text?.isNotEmpty() == true &&
-                    binding.etAddplantShortDescription.text?.isNotEmpty() == true
+        val isFieldsNotEmpty = viewModel.checkIsNotEmpty()
 
         binding.btnAddplantUpload.isEnabled = isFieldsNotEmpty
-        binding.btnAddplantUpload.setBackgroundResource(
-            if (isFieldsNotEmpty) R.drawable.shape_mint_fill_10
-            else R.drawable.shape_gray_200_fill_10
-        )
+        binding.btnAddplantUpload.setRegisterBackgroundResource(isFieldsNotEmpty)
     }
 
     private fun openGallery() {
@@ -101,32 +109,58 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         }
     }
 
-    private fun initDatePicker() {
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        binding.etAddplantBirthday.setText("${year}/${month + 1}/${day}")
+    private fun initDatePickerToCurrent() {
+        binding.tvAddplantBirthday.text = returnDateFormat(
+            viewModel.currentYear.value,
+            viewModel.currentMonth.value,
+            viewModel.currentDay.value
+        )
+        binding.tvAddplantLastWatered.text = returnDateFormat(
+            viewModel.currentYear.value,
+            viewModel.currentMonth.value,
+            viewModel.currentDay.value
+        )
     }
 
-    private fun datePickerListener() {
-        binding.ivAddplantDatepicker.setOnSingleClickListener {
-            viewLifecycleOwner.lifecycle.coroutineScope.launch {
-                val date = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-                    binding.etAddplantBirthday.setText("${year}/${month + 1}/${day}")
-                }
-                DatePickerDialog(
-                    requireContext(),
-                    date,
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-                ).show()
+    private fun updateBirthdayDatePicker() {
+        binding.ivAddplantBirthdayDatepicker.setOnSingleClickListener {
+            datePickerListener(binding.tvAddplantBirthday)
+        }
+    }
+
+    private fun updateLastWateredDatePicker() {
+        binding.ivAddplantLastWateredDatepicker.setOnSingleClickListener {
+            datePickerListener(binding.tvAddplantLastWatered)
+        }
+    }
+
+    private fun datePickerListener(view: TextView) {
+        viewLifeCycleScope.launch {
+            val date = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                view.text = returnDateFormat(year, month, day)
+                if (view == binding.tvAddplantBirthday) viewModel.updatePlantInfo(
+                    viewModel.plantInfo.value.copy(
+                        birthDate = returnDateFormat(year, month, day)
+                    )
+                )
+                else if (view == binding.tvAddplantLastWatered) viewModel.updatePlantInfo(
+                    viewModel.plantInfo.value.copy(
+                        birthDate = returnDateFormat(year, month, day)
+                    )
+                )
             }
+            DatePickerDialog(
+                requireContext(),
+                date,
+                viewModel.currentYear.value,
+                viewModel.currentMonth.value,
+                viewModel.currentDay.value
+            ).show()
         }
     }
 
     private fun updatePlantSpeciesLength() {
-        val currLength = binding.tvAddplantSpecies.length()
+        val currLength = viewModel.updatePlantSpeciesLength()
         binding.counterText.text = "$currLength/14"
     }
 
@@ -155,6 +189,10 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun navigateToHome() {
-        activity?.supportFragmentManager?.popBackStack()
+        parentFragmentManager.popBackStack()
+    }
+
+    private fun returnDateFormat(year: Int, month: Int, day: Int): String {
+        return "${year}-${month + 1}-${day}"
     }
 }
