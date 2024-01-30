@@ -36,6 +36,6 @@ class AuthInterceptor @Inject constructor(
     }
 
     companion object {
-        private const val DEVICE_TOKEN = "deviceToken"
+        private const val DEVICE_TOKEN = "Device-Token"
     }
 }
