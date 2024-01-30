@@ -1,5 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.domain.repository
 
-interface UserRepository {
+import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRegisterUserDto
 
+interface UserRepository {
+    suspend fun postRegisterUser(requestPostRegisterUserDto: RequestPostRegisterUserDto): Result<Unit>
 }
