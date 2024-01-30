@@ -1,7 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -15,6 +14,7 @@ import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
+import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.util.Date
 
 @AndroidEntryPoint
@@ -24,7 +24,6 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val selectedDate = arguments?.getSerializable("selectedDate") as Date
-        initMockData()
         initBackButton()
         setGetPantDailyRecordStateObserver()
     }
@@ -48,10 +47,6 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
             }
 
         }.launchIn(viewLifeCycleScope)
-import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
     }
 
     private fun initBackButton() {
