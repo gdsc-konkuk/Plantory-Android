@@ -6,10 +6,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
@@ -21,20 +26,21 @@ import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var homeAdapter: HomeAdapter
-    private lateinit var viewModel: HomeViewModel
     private lateinit var plantScrollJob: Job
     private var currentPlantPosition = 0
     private var plantItemCount = 0
+    private val viewModel by viewModels<HomeViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel = HomeViewModel()
-        initMockData()
+        setGetAllPlantsStateObserver()
         addCallback()
         addListener()
         //TODO: 지우기
@@ -43,9 +49,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
-    private fun initMockData() {
-        initPlantViewPager(viewModel.plantList)
-    }
 
     private fun initPlantViewPager(plants: List<Plant>) {
         createPlantScrollJob()
@@ -133,6 +136,27 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun updatePlantPosition(position: Int) {
         currentPlantPosition = position
+    }
+
+    private fun setGetAllPlantsStateObserver() {
+        viewModel.getAllPlantsState.flowWithLifecycle(lifecycle).onEach { state ->
+            when (state) {
+                is UiState.Loading -> {
+                }
+
+                is UiState.Success -> {
+                    Timber.d("Success : Get Plants ")
+                    initPlantViewPager(state.data)
+                }
+
+                is UiState.Failure -> {
+                    Timber.d("Failure : ${state.msg}")
+                }
+
+                is UiState.Empty -> {
+                }
+            }
+        }.launchIn(lifecycleScope)
     }
 
     private fun setPlantScrollJobState(state: Int) {
