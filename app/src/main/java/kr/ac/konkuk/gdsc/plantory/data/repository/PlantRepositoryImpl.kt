@@ -1,12 +1,13 @@
 package kr.ac.konkuk.gdsc.plantory.data.repository
 
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
-import kr.ac.konkuk.gdsc.plantory.domain.repository.DataStoreRepository
+import kr.ac.konkuk.gdsc.plantory.data.source.PlantDataSource
+import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import javax.inject.Inject
 
 class PlantRepositoryImpl @Inject constructor(
-    dataStoreRepository: DataStoreRepository
+    private val plantDataSource: PlantDataSource
 ) : PlantRepository {
 
     override suspend fun getPlantDailyRecord(): Result<ResponseGetPlantDailyRecord> {
@@ -21,4 +22,9 @@ class PlantRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun getAllPlants(): Result<List<Plant>> =
+        runCatching {
+            plantDataSource.getAllPlants().convertToPlant()
+        }
 }
