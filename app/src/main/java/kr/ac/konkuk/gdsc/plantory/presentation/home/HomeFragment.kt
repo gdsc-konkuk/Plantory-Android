@@ -22,7 +22,6 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.DetailFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
-import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
@@ -38,7 +37,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     private var currentPlantPosition = 0
     private var plantItemCount = 0
     private val viewModel by viewModels<HomeViewModel>()
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -182,10 +181,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun navigateToNotification() {
         navigateTo<NotificationFragment>()
-    }
-
-    private fun navigateToUpload() {
-        navigateTo<UploadFragment>()
     }
 
     private fun navigateToAdd() {

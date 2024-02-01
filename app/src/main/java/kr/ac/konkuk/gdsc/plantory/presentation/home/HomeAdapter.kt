@@ -8,12 +8,13 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
-class HomeAdapter(private val onItemClick: () -> Unit) : androidx.recyclerview.widget.ListAdapter<Plant, HomeAdapter.HomeViewHolder>(
-    ItemDiffCallback<Plant>(
-        onItemsTheSame = { old, new -> old.id == new.id },
-        onContentsTheSame = { old, new -> old == new }
-    )
-) {
+class HomeAdapter(private val onItemClick: () -> Unit) :
+    androidx.recyclerview.widget.ListAdapter<Plant, HomeAdapter.HomeViewHolder>(
+        ItemDiffCallback<Plant>(
+            onItemsTheSame = { old, new -> old.id == new.id },
+            onContentsTheSame = { old, new -> old == new }
+        )
+    ) {
 
     class HomeViewHolder(
         private val binding: ItemHomePlantBinding
