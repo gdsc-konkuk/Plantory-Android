@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                setCheckBoxImage="@{data.checkRecord.repoted}"
+                setCheckBoxImage="@{data.checkRecord.recorded}"
                 app:layout_constraintTop_toBottomOf="@id/tv_diary_title" />
 
             <TextView

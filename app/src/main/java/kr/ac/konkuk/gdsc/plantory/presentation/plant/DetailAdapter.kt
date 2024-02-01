@@ -1,6 +1,5 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ import java.util.Locale
 class DetailAdapter(
     private val currMonth: Int,
     private val dummyinfo: MutableList<PlantDailyRecord>,
-    private val onDateClick : (Date) -> Unit
+    private val onDateClick: (Date) -> Unit
 ) : ListAdapter<Date, DetailAdapter.ViewHolder>(
     ItemDiffCallback<Date>(
         onItemsTheSame = { old, new -> old == new },
@@ -30,7 +29,7 @@ class DetailAdapter(
 
     class ViewHolder(
         private val binding: ItemDetailCalendarBinding,
-        private val onDateClick : (Date) -> Unit
+        private val onDateClick: (Date) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         var currMonth: Int = 0
         private val dayText: TextView = binding.tvCalenderDate
@@ -51,13 +50,15 @@ class DetailAdapter(
 
             plantDailyRecords.find {
                 it.date.takeLast(2) == dateFormat.format(date).toString()
-            }?.let {record ->
+            }?.let { record ->
                 binding.apply {
-                    ivCalendarWateredStamp.visibility = if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
-//                  ivCalendarRepotedStamp.visibility = if (record.checkRecord.isRepoted) View.VISIBLE else View.GONE
-                    llCalendarDay.setBackgroundResource(R.drawable.shape_watered_10_fill)
-                    tvCalenderDate.setTextColor(ContextCompat.getColor(root.context, R.color.gray_0))
-                    tvCalenderDate.setTypeface(null, Typeface.BOLD)
+                    ivCalendarWateredStamp.visibility =
+                        if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
+                    ivCalendarRecordedStamp.visibility =
+                        if (record.checkRecord.isRecorded) View.VISIBLE else View.GONE
+//                    llCalendarDay.setBackgroundResource(R.drawable.shape_watered_10_fill)
+//                    tvCalenderDate.setTextColor(ContextCompat.getColor(root.context, R.color.gray_0))
+//                    tvCalenderDate.setTypeface(null, Typeface.BOLD)
                 }
             }
             binding.llCalendarDay.setOnSingleClickListener {

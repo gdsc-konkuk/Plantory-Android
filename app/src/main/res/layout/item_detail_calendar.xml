@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="@id/tv_calender_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -44,12 +44,10 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/iv_calendar_repoted_stamp"
+                android:id="@+id/iv_calendar_recorded_stamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_detail_repot"
                 android:visibility="gone" />
         </LinearLayout>

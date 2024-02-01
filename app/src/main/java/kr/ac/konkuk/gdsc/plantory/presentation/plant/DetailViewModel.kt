@@ -80,7 +80,7 @@ class DetailViewModel : ViewModel() {
             nickname = "초록이",
             comment = "자고 일어나니까 그새 좀 푸릇해진 것 같은 느낌이 들어서 몹시 뿌듯했당.... 우리초록이너무귀여워사랑해너는세상에서가장멋진다육이야 기죽지마어깨펴니가짱이야",
             checkRecord = PlantCheckRecord(
-                isRepoted = true,
+                isRecorded = true,
                 isWatered = false
             )
         )
@@ -93,7 +93,7 @@ class DetailViewModel : ViewModel() {
             nickname = "초록이",
             comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
             checkRecord = PlantCheckRecord(
-                isRepoted = false,
+                isRecorded = false,
                 isWatered = true
             )
         )
@@ -106,7 +106,7 @@ class DetailViewModel : ViewModel() {
             nickname = "초록이",
             comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
             checkRecord = PlantCheckRecord(
-                isRepoted = true,
+                isRecorded = true,
                 isWatered = true
             )
         )
@@ -119,7 +119,7 @@ class DetailViewModel : ViewModel() {
             nickname = "초록이",
             comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
             checkRecord = PlantCheckRecord(
-                isRepoted = true,
+                isRecorded = true,
                 isWatered = true
             )
         )
