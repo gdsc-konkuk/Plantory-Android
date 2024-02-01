@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
-                android:text="@{data.shortDescription}"
+                android:text="des"
                 android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
                 android:textColor="@color/gray_0"
                 app:layout_constraintBottom_toBottomOf="@id/tv_plant_description"

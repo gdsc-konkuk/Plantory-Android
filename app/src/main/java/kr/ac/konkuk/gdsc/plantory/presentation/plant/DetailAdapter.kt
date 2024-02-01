@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.ItemDetailCalendarBinding
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import java.text.SimpleDateFormat
@@ -18,7 +20,7 @@ import java.util.Locale
 
 class DetailAdapter(
     private val currMonth: Int,
-    private val dummyinfo: MutableList<PlantDailyRecord>,
+    private val plantHistories: List<PlantHistory>,
     private val onDateClick: (Date) -> Unit
 ) : ListAdapter<Date, DetailAdapter.ViewHolder>(
     ItemDiffCallback<Date>(
@@ -34,7 +36,7 @@ class DetailAdapter(
         var currMonth: Int = 0
         private val dayText: TextView = binding.tvCalenderDate
 
-        fun onBind(date: Date, plantDailyRecords: List<PlantDailyRecord>) {
+        fun onBind(date: Date, plantDailyRecords: List<PlantHistory>) {
             val dateFormat = SimpleDateFormat("dd", Locale.getDefault())
             dayText.text = dateFormat.format(date).toString()
 
@@ -48,17 +50,16 @@ class DetailAdapter(
                 dayText.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red))
             }
 
-            plantDailyRecords.find {
-                it.date.takeLast(2) == dateFormat.format(date).toString()
-            }?.let { record ->
+            val recordsByDate = plantDailyRecords.groupBy { it.date.takeLast(2) }
+
+            recordsByDate.forEach { (date, records) ->
                 binding.apply {
-                    ivCalendarWateredStamp.visibility =
-                        if (record.checkRecord.isWatered) View.VISIBLE else View.GONE
-                    ivCalendarRecordedStamp.visibility =
-                        if (record.checkRecord.isRecorded) View.VISIBLE else View.GONE
-//                    llCalendarDay.setBackgroundResource(R.drawable.shape_watered_10_fill)
-//                    tvCalenderDate.setTextColor(ContextCompat.getColor(root.context, R.color.gray_0))
-//                    tvCalenderDate.setTypeface(null, Typeface.BOLD)
+
+                    val waterChangeVisible = records.any { it.type == PlantHistoryType.WATER_CHANGE }
+                    val recordingVisible = records.any { it.type == PlantHistoryType.RECORDING }
+
+                    ivCalendarWateredStamp.visibility = if (waterChangeVisible) View.VISIBLE else View.GONE
+                    ivCalendarRecordedStamp.visibility = if (recordingVisible) View.VISIBLE else View.GONE
                 }
             }
             binding.llCalendarDay.setOnSingleClickListener {
@@ -79,7 +80,7 @@ class DetailAdapter(
         val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
         val formattedCurrentDate = dateFormat.format(currentDate)
 
-        val plantDailyRecordsForDate = dummyinfo.filter {
+        val plantDailyRecordsForDate = plantHistories.filter {
             it.date.substring(0, 4) == formattedCurrentDate.substring(0, 4) &&
                     it.date.substring(5, 7) == formattedCurrentDate.substring(5, 7) &&
                     it.date.takeLast(2) == formattedCurrentDate.takeLast(2)

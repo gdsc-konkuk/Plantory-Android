@@ -1,18 +1,31 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
+import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import java.util.Calendar
 import java.util.Date
+import javax.inject.Inject
 
-class DetailViewModel : ViewModel() {
+@HiltViewModel
+class DetailViewModel @Inject constructor(
+    private val plantRepository: PlantRepository
+) : ViewModel() {
     val plantRecord: MutableList<PlantDailyRecord> = generateMockData()
-    val plantInfo: Plant = generatePlantMockData()
+
+    private val _plantInfo = MutableStateFlow<Plant>(Plant(0, "", "", "", "", ""))
+    val plantInfo: StateFlow<Plant> get() = _plantInfo
 
     private var calendar = Calendar.getInstance()
     private val _currentYear = MutableStateFlow<Int>(-1)
@@ -27,6 +40,7 @@ class DetailViewModel : ViewModel() {
         calendar.time = Date()
         _currentYear.value = calendar.get(Calendar.YEAR)
         _currentMonth.value = calendar.get(Calendar.MONTH)
+        getPlantHistories()
     }
 
     fun updateCalendarDayList(currYear: Int, currMonth: Int): MutableList<Date> {
@@ -63,6 +77,10 @@ class DetailViewModel : ViewModel() {
                 _currentYear.value++
             }
         }
+    }
+
+    fun updatePlantInfo(plant: Plant) {
+        _plantInfo.value = plant
     }
 
     fun updateIsWatered() {
@@ -128,7 +146,7 @@ class DetailViewModel : ViewModel() {
         return dailyRecordList
     }
 
-    private fun generatePlantMockData(): Plant {
+    fun generatePlantMockData(): Plant {
         return Plant(
             id = 1,
             imageUrl = null,
@@ -137,6 +155,40 @@ class DetailViewModel : ViewModel() {
             birthDate = "2023/12/31",
             name = "선인장",
         )
+    }
+
+    /*getHistory*/
+    private val _getPlantHistoryState = MutableStateFlow<UiState<List<PlantHistory>>>(UiState.Loading)
+    val getPlantHistoryState: StateFlow<UiState<List<PlantHistory>>> = _getPlantHistoryState.asStateFlow()
+
+    fun getPlantHistories() {
+        viewModelScope.launch {
+            val month = formatDateToAddZero(currentMonth.value+1)
+            val targetMonth = "${currentYear.value}-${month}"
+            plantRepository.getPlantHistories(17, targetMonth)
+                .onSuccess { response ->
+                    if (response.histories != null){
+                        _getPlantHistoryState.value = UiState.Success(response.histories.map { plantHistoryDto ->
+                            PlantHistory(
+                                id = plantHistoryDto.id,
+                                type = PlantHistoryType.fromString(plantHistoryDto.type),
+                                date = plantHistoryDto.date
+                            )
+                        })
+                    }else {
+                        _getPlantHistoryState.value = UiState.Success(emptyList())
+                    }
+                }.onFailure { t ->
+                    _getPlantHistoryState.value = UiState.Failure("${t.message}")
+                }
+        }
+    }
+
+    private fun formatDateToAddZero(date: Int): String {
+        if (date < 10){
+            return String.format("%02d", date)
+        }
+        return date.toString()
     }
 
     companion object {

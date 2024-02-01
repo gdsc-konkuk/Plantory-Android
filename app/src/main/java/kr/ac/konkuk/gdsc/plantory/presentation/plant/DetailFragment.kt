@@ -9,40 +9,44 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
+import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
 import java.util.Calendar
+import java.util.Date
 
 @AndroidEntryPoint
 class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
 
     private val viewModel: DetailViewModel by viewModels()
     private lateinit var detailAdapter: DetailAdapter
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.data = viewModel.plantInfo
-        initView()
+        binding.data = viewModel.generatePlantMockData()
         addListener()
+        getPlantHistoryStateObserver()
     }
 
-    private fun initView() {
-        initCalendar()
-    }
 
     private fun addListener() {
         updatePreviousMonth()
@@ -93,10 +97,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun updatePreviousNextMonth(isPrevious: Boolean) {
         viewModel.updateMonthAndYear(isPrevious)
-        updateCalendar()
+        viewModel.getPlantHistories()
     }
 
-    private fun updateCalendar() {
+    private fun updateCalendar(plantHistories: List<PlantHistory>) {
         viewLifeCycleScope.launch {
             viewModel.currentYear.combine(viewModel.currentMonth) { year, month ->
                 Pair(year, month)
@@ -106,10 +110,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
                     val dayList = viewModel.updateCalendarDayList(currYear, currMonth)
                     val dummyInfo = viewModel.plantRecord
-
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
-                    detailAdapter = DetailAdapter(currMonth, dummyInfo, onDateClick = { date ->
+                    detailAdapter = DetailAdapter(currMonth, plantHistories, onDateClick = { date ->
                         navigateTo<DiaryFragment>(bundleOf("selectedDate" to date))
                     })
                     binding.rvDetailCalendar.adapter = detailAdapter
@@ -118,10 +121,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     detailAdapter.submitList(dayList)
                 }
         }
-    }
-
-    private fun initCalendar() {
-        updateCalendar()
     }
 
     private fun initBackButton() {
@@ -134,13 +133,36 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         parentFragmentManager.popBackStack()
     }
 
+    /*getPlantHistory*/
+    private fun getPlantHistoryStateObserver() {
+        viewModel.getPlantHistoryState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    Timber.d("Success : Register ")
+                    updateCalendar(state.data)
+                }
+
+                is UiState.Failure -> {
+                    Timber.d("Failure : ${state.msg}")
+                }
+
+                is UiState.Empty -> {
+                }
+
+                is UiState.Loading -> {
+                }
+            }
+
+        }.launchIn(viewLifeCycleScope)
+    }
+
     private inline fun <reified T : Fragment> navigateTo(args: Bundle) {
         parentFragmentManager.commit {
             replace<T>(
                 R.id.fcv_main,
                 T::class.simpleName,
                 args
-            ).addToBackStack("DiaryFragement")
+            ).addToBackStack("DiaryFragment")
         }
     }
 }

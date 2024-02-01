@@ -19,9 +19,9 @@
             style="@style/TextAppearance.PLANTORY.body_r_13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginTop="3dp"
             android:text="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,11 +30,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="@id/tv_calender_date"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="@id/tv_calender_date">
 
             <ImageView
                 android:id="@+id/iv_calendar_watered_stamp"
@@ -48,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:src="@drawable/ic_detail_repot"
+                android:src="@drawable/ic_detail_record"
                 android:visibility="gone" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
