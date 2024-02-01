@@ -76,7 +76,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         binding.btnAddplantUpload.setOnSingleClickListener {
             viewModel.viewModelScope.launch {
                 viewModel.postRegisterPlant()
-                setPostRegisterPlantStateObserver()
             }
         }
     }

@@ -45,6 +45,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         binding.data = viewModel.generatePlantMockData()
         addListener()
         getPlantHistoryStateObserver()
+        postPlantWateredStateObserver()
     }
 
 
@@ -53,7 +54,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         updateNextMonth()
         initBackButton()
         initUploadButton()
-        initWaterButton()
         updateWaterButton()
     }
 
@@ -68,17 +68,18 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }
     }
 
-    private fun initWaterButton() {
-        binding.ivDetailPlantGiveWater.setOnSingleClickListener {
-            viewModel.updateIsWatered()
-        }
-    }
-
     private fun updateWaterButton() {
-        viewLifeCycleScope.launch {
-            viewModel.isWatered.collectLatest { isWatered ->
-                if (isWatered) binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
-                else binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_not_watered)
+        //한번 물 주면 취소 불가
+        binding.ivDetailPlantGiveWater.setOnSingleClickListener {
+            viewLifeCycleScope.launch {
+                viewModel.isWatered.collectLatest { isWatered ->
+                    if (!isWatered) {
+                        viewModel.postPlantWatered()
+                        viewModel.getPlantHistories()
+                        binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
+                        viewModel.updateIsWatered()
+                    }
+                }
             }
         }
     }
@@ -140,6 +141,28 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Success -> {
                     Timber.d("Success : Register ")
                     updateCalendar(state.data)
+                }
+
+                is UiState.Failure -> {
+                    Timber.d("Failure : ${state.msg}")
+                }
+
+                is UiState.Empty -> {
+                }
+
+                is UiState.Loading -> {
+                }
+            }
+
+        }.launchIn(viewLifeCycleScope)
+    }
+
+    /*postPlantWatered*/
+    private fun postPlantWateredStateObserver() {
+        viewModel.postPlantWateredState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    Timber.d("Success : watered Register ")
                 }
 
                 is UiState.Failure -> {

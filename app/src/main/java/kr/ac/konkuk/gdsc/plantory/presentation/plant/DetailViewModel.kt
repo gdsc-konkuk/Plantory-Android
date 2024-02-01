@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
@@ -14,6 +15,8 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
+import retrofit2.HttpException
+import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -158,24 +161,28 @@ class DetailViewModel @Inject constructor(
     }
 
     /*getHistory*/
-    private val _getPlantHistoryState = MutableStateFlow<UiState<List<PlantHistory>>>(UiState.Loading)
-    val getPlantHistoryState: StateFlow<UiState<List<PlantHistory>>> = _getPlantHistoryState.asStateFlow()
+    private val _getPlantHistoryState =
+        MutableStateFlow<UiState<List<PlantHistory>>>(UiState.Loading)
+    val getPlantHistoryState: StateFlow<UiState<List<PlantHistory>>> =
+        _getPlantHistoryState.asStateFlow()
 
     fun getPlantHistories() {
         viewModelScope.launch {
-            val month = formatDateToAddZero(currentMonth.value+1)
+            val month = formatDateToAddZero(currentMonth.value + 1)
             val targetMonth = "${currentYear.value}-${month}"
-            plantRepository.getPlantHistories(17, targetMonth)
+            //TODO clickPlantId로 변경
+            plantRepository.getPlantHistories(20, targetMonth)
                 .onSuccess { response ->
-                    if (response.histories != null){
-                        _getPlantHistoryState.value = UiState.Success(response.histories.map { plantHistoryDto ->
-                            PlantHistory(
-                                id = plantHistoryDto.id,
-                                type = PlantHistoryType.fromString(plantHistoryDto.type),
-                                date = plantHistoryDto.date
-                            )
-                        })
-                    }else {
+                    if (response.histories != null) {
+                        _getPlantHistoryState.value =
+                            UiState.Success(response.histories.map { plantHistoryDto ->
+                                PlantHistory(
+                                    id = plantHistoryDto.id,
+                                    type = PlantHistoryType.fromString(plantHistoryDto.type),
+                                    date = plantHistoryDto.date
+                                )
+                            })
+                    } else {
                         _getPlantHistoryState.value = UiState.Success(emptyList())
                     }
                 }.onFailure { t ->
@@ -184,8 +191,33 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    /*post Watered*/
+    private val _postPlantWateredState =
+        MutableStateFlow<UiState<Unit>>(UiState.Loading)
+    val postPlantWateredState: StateFlow<UiState<Unit>> =
+        _postPlantWateredState.asStateFlow()
+
+    fun postPlantWatered() {
+        viewModelScope.launch {
+            _postPlantWateredState.value = UiState.Loading
+            //TODO clickPlantId로 변경
+            plantRepository.postPlantHistory(20, RequestPostPlantHistoryDto("WATER_CHANGE"))
+                .onSuccess { response ->
+                    _postPlantWateredState.value = UiState.Success(response)
+                    Timber.e("성공 $response")
+                }.onFailure { t ->
+                if (t is HttpException) {
+                    val errorResponse = t.response()?.errorBody()?.string()
+                    Timber.e("HTTP 실패: $errorResponse")
+                }
+                Timber.e("${t.message}")
+                    _postPlantWateredState.value = UiState.Failure("${t.message}")
+            }
+        }
+    }
+
     private fun formatDateToAddZero(date: Int): String {
-        if (date < 10){
+        if (date < 10) {
             return String.format("%02d", date)
         }
         return date.toString()
