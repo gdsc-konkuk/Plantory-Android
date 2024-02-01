@@ -37,4 +37,5 @@ class HomeAdapter(private val onItemClick: () -> Unit) : androidx.recyclerview.w
         }
         holder.onBind(getItem(position))
     }
+
 }
