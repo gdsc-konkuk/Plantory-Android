@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseGetPlantHistories (
+data class ResponseGetPlantHistoriesDto (
     @SerialName("histories")
     val histories: List<PlantHistoryDto>
 )

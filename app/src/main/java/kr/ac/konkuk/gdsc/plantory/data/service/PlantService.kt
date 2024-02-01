@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.data.service
 
+import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantHistoriesDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.GET
@@ -24,5 +25,5 @@ interface PlantService {
     suspend fun getPlantHistories(
         @Path("companionPlantId") companionPlantId: Int,
         @Query("targetMonth") targetMonth: String
-    ):
+    ): ResponseGetPlantHistoriesDto
 }
