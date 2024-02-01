@@ -23,6 +23,7 @@ import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
@@ -68,6 +69,18 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }
     }
 
+    private fun initWaterButton(plantHistories: List<PlantHistory>) {
+        //오늘 물 줬는지 시작때 파악
+        plantHistories.forEach { plantHistory ->
+            if (plantHistory.date.takeLast(2).toInt() == viewModel.currentDay.value) {
+                if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
+                    binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
+                    viewModel.updateIsWatered(true)
+                }
+            }
+        }
+    }
+
     private fun updateWaterButton() {
         //한번 물 주면 취소 불가
         binding.ivDetailPlantGiveWater.setOnSingleClickListener {
@@ -77,7 +90,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                         viewModel.postPlantWatered()
                         viewModel.getPlantHistories()
                         binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
-                        viewModel.updateIsWatered()
+                        viewModel.updateIsWatered(true)
                     }
                 }
             }
@@ -140,6 +153,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     Timber.d("Success : Register ")
+                    initWaterButton(state.data)
                     updateCalendar(state.data)
                 }
 

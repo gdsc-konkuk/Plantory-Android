@@ -35,6 +35,8 @@ class DetailViewModel @Inject constructor(
     val currentYear: StateFlow<Int> get() = _currentYear
     private val _currentMonth = MutableStateFlow<Int>(-1)
     val currentMonth: StateFlow<Int> get() = _currentMonth
+    private val _currentDay = MutableStateFlow<Int>(-1)
+    val currentDay: StateFlow<Int> get() = _currentDay
 
     private val _isWatered = MutableStateFlow<Boolean>(false)
     val isWatered: MutableStateFlow<Boolean> get() = _isWatered
@@ -43,6 +45,7 @@ class DetailViewModel @Inject constructor(
         calendar.time = Date()
         _currentYear.value = calendar.get(Calendar.YEAR)
         _currentMonth.value = calendar.get(Calendar.MONTH)
+        _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
         getPlantHistories()
     }
 
@@ -86,8 +89,8 @@ class DetailViewModel @Inject constructor(
         _plantInfo.value = plant
     }
 
-    fun updateIsWatered() {
-        _isWatered.value = !_isWatered.value
+    fun updateIsWatered(watered: Boolean) {
+        _isWatered.value = watered
     }
 
     private fun generateMockData(): MutableList<PlantDailyRecord> {
