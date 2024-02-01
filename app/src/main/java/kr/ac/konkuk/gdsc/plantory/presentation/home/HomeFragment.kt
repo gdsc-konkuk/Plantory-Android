@@ -34,9 +34,11 @@ import timber.log.Timber
 class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var plantScrollJob: Job
+    private var isDecorationAdded: Boolean = false
     private var currentPlantPosition = 0
     private var plantItemCount = 0
     private val viewModel by viewModels<HomeViewModel>()
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -52,11 +54,12 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun initPlantViewPager(plants: List<Plant>) {
         createPlantScrollJob()
+        initViewPagerDecoration(
+            previewWidth = VIEWPAGER_PREVIEW_WIDTH,
+            itemMargin = VIEWPAGER_ITEM_MARGIN
+        )
         initPlantViewPagerAdapter(plants = plants)
         initPlantViewPagerIndicator(plants = plants)
-        initViewPagerDecoration(
-            previewWidth = VIEWPAGER_PREVIEW_WIDTH, itemMargin = VIEWPAGER_ITEM_MARGIN
-        )
     }
 
     private fun initPlantViewPagerAdapter(plants: List<Plant>) {
@@ -75,17 +78,21 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     }
 
     private fun initViewPagerDecoration(previewWidth: Int, itemMargin: Int) {
-        val decoMargin = previewWidth + itemMargin
-        val pageTransX = decoMargin + previewWidth
-        val decoration = ViewPagerDecoration(decoMargin)
+        if (!isDecorationAdded) {
+            val decoMargin = previewWidth + itemMargin
+            val pageTransX = decoMargin + previewWidth
+            val decoration = ViewPagerDecoration(decoMargin)
 
-        binding.vpHomePlant.also {
-            it.offscreenPageLimit = 1
-            it.addItemDecoration(decoration)
-            it.setPageTransformer { page, position ->
-                page.translationX = position * -pageTransX
+            binding.vpHomePlant.also {
+                it.offscreenPageLimit = 1
+                it.addItemDecoration(decoration)
+                it.setPageTransformer { page, position ->
+                    page.translationX = position * -pageTransX
+                }
             }
+            isDecorationAdded = true
         }
+        return
     }
 
     private fun addCallback() {
