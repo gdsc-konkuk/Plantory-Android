@@ -3,19 +3,86 @@ package kr.ac.konkuk.gdsc.plantory.presentation
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
+import timber.log.Timber
+import kotlin.coroutines.resume
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
-
+    private val viewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        navigateToMain()
+        handleDeviceToken()
+        setPostRegisterUserStateObserver()
     }
 
+    private fun handleDeviceToken() {
+        lifecycleScope.launch {
+            val currentToken = getCurrentDeviceTokenFromFirebase()
+            currentToken?.let {
+                checkAndUpdateDeviceToken(it)
+            }
+        }
+    }
+
+    private suspend fun getCurrentDeviceTokenFromFirebase(): String? =
+        suspendCancellableCoroutine { continuation ->
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result
+                    Timber.d("Current Token: $token")
+                    continuation.resume(token)
+                } else {
+                    Timber.e("Failed to connect Firebase")
+                    continuation.resume(null)
+                }
+            }
+        }
+
+    private fun checkAndUpdateDeviceToken(currentToken: String) {
+        lifecycleScope.launch {
+            val storedToken = viewModel.getDeviceToken()
+            Timber.d("Stored Token: $storedToken")
+            if ((storedToken != currentToken) || storedToken.isEmpty()) {
+                viewModel.postRegisterUser(currentToken)
+            } else {
+                navigateToMain()
+            }
+        }
+    }
+
+    private fun setPostRegisterUserStateObserver() {
+        viewModel.postRegisterUserState.flowWithLifecycle(lifecycle).onEach { state ->
+            when (state) {
+                is UiState.Loading -> {
+                }
+
+                is UiState.Success -> {
+                    Timber.d("Success : Register ")
+                    navigateToMain()
+                }
+
+                is UiState.Failure -> {
+                    Timber.d("Failure : ${state.msg}")
+                }
+
+                is UiState.Empty -> {
+                }
+            }
+        }.launchIn(lifecycleScope)
+    }
 
     private fun navigateToMain() {
         navigateTo<MainActivity>()
