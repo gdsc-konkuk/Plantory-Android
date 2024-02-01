@@ -7,14 +7,14 @@ import kotlinx.serialization.Serializable
 data class ResponseGetPlantHistoriesDto (
     @SerialName("histories")
     val histories: List<PlantHistoryDto>
-)
-
-@Serializable
-data class PlantHistoryDto(
-    @SerialName("id")
-    val id: Int,
-    @SerialName("type")
-    val type: String,
-    @SerialName("date")
-    val date: String
-)
+) {
+    @Serializable
+    data class PlantHistoryDto(
+        @SerialName("id")
+        val id: Int,
+        @SerialName("type")
+        val type: String,
+        @SerialName("date")
+        val date: String
+    )
+}

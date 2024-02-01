@@ -1,7 +1,5 @@
 package kr.ac.konkuk.gdsc.plantory.data.source
 
-import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRegisterPlantDto
-import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRegisterUserDto
 import kr.ac.konkuk.gdsc.plantory.data.service.PlantService
 import kr.ac.konkuk.gdsc.plantory.data.service.UserService
 import okhttp3.MultipartBody
@@ -16,4 +14,9 @@ class PlantDataSource @Inject constructor(
         request: HashMap<String, RequestBody>,
         image: MultipartBody.Part?
     ) = plantService.postRegisterPlant(request, image)
+
+    suspend fun getPlantHistories(
+        companionPlantId: Int,
+        targetMonth: String
+    ) = plantService.getPlantHistories(companionPlantId, targetMonth)
 }
