@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.data.repository
 
+import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRegisterUserDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantHistoriesDto
 import kr.ac.konkuk.gdsc.plantory.data.source.PlantDataSource
@@ -25,5 +26,13 @@ class PlantRepositoryImpl @Inject constructor(
     ) : Result<ResponseGetPlantHistoriesDto> =
         runCatching {
             plantDataSource.getPlantHistories(companionPlantId, targetMonth)
+        }
+
+    override suspend fun postPlantHistory(
+        companionPlantId: Int,
+        requestPostHistoryDto: RequestPostPlantHistoryDto
+    ): Result<Unit> =
+        runCatching {
+            plantDataSource.postPlantHistory(companionPlantId, requestPostHistoryDto)
         }
 }
