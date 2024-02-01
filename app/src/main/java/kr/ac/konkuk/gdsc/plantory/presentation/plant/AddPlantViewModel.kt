@@ -1,7 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,9 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRegisterPlantDto
-import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRegisterUserDto
-import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantInfo
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantRegisterItem
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.multipart.ContentUriRequestBody
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
@@ -42,8 +39,8 @@ class AddPlantViewModel @Inject constructor(
     private val _currentDay = MutableStateFlow<Int>(0)
     val currentDay: StateFlow<Int> get() = _currentDay
 
-    private val _plantInfo = MutableStateFlow(PlantInfo("", "", "", "", ""))
-    val plantInfo: StateFlow<PlantInfo> get() = _plantInfo
+    private val _plantRegisterItem = MutableStateFlow(PlantRegisterItem("", "", "", "", ""))
+    val plantRegisterItem: StateFlow<PlantRegisterItem> get() = _plantRegisterItem
 
     private val _postRegisterPlantState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
     val postRegisterPlantState: StateFlow<UiState<Unit>> = _postRegisterPlantState.asStateFlow()
@@ -57,19 +54,19 @@ class AddPlantViewModel @Inject constructor(
         _currentYear.value = calendar.get(Calendar.YEAR)
         _currentMonth.value = calendar.get(Calendar.MONTH)
         _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
-        _plantInfo.value = PlantInfo(
+        _plantRegisterItem.value = PlantRegisterItem(
             "",
             "",
             "",
-            "${currentYear.value}-${currentMonth.value+1}-${currentDay.value}",
-            "${currentYear.value}-${currentMonth.value+1}-${currentDay.value}"
-        )
+            "${currentYear.value}-${formatDateToAddZero(currentMonth.value+1)}-${formatDateToAddZero(currentDay.value)}",
+            "${currentYear.value}-${formatDateToAddZero(currentMonth.value+1)}-${formatDateToAddZero(currentDay.value)}",
+            )
     }
 
     fun postRegisterPlant() {
         viewModelScope.launch {
             _postRegisterPlantState.value = UiState.Loading
-            val (request, image) = createRequestBody(plantInfo.value)
+            val (request, image) = createRequestBody(plantRegisterItem.value)
 
             plantRepository.postRegisterPlant(request, image).onSuccess { response ->
                 _postRegisterPlantState.value = UiState.Success(response)
@@ -90,7 +87,7 @@ class AddPlantViewModel @Inject constructor(
     }
 
     private fun createRequestBody(
-        plant: PlantInfo
+        plant: PlantRegisterItem
     ): Pair<HashMap<String, RequestBody>, MultipartBody.Part?> {
         val imageFormData = imageRequestBody?.toFormData()
         val plantDto = RequestPostRegisterPlantDto(
@@ -115,8 +112,8 @@ class AddPlantViewModel @Inject constructor(
         return 1
     }
 
-    fun updatePlantInfo(newPlantInfo: PlantInfo) {
-        _plantInfo.value = newPlantInfo
+    fun updatePlantInfo(newPlantRegisterItem: PlantRegisterItem) {
+        _plantRegisterItem.value = newPlantRegisterItem
     }
 
     fun updatePlantImage(uri: Uri) {
@@ -124,13 +121,20 @@ class AddPlantViewModel @Inject constructor(
     }
 
     fun updatePlantSpeciesLength(): Int {
-        return plantInfo.value.species.length
+        return plantRegisterItem.value.species.length
     }
 
     fun checkIsNotEmpty(): Boolean {
-        with(plantInfo.value) {
+        with(plantRegisterItem.value) {
             return nickname.isNotEmpty() && species.isNotEmpty() && shortDescription.isNotEmpty()
         }
+    }
+
+    private fun formatDateToAddZero(date: Int): String {
+        if (date < 10){
+            return String.format("%02d", date)
+        }
+        return date.toString()
     }
 
     private fun generateMockData(): List<String> {
