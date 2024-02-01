@@ -42,7 +42,7 @@ class AddPlantViewModel @Inject constructor(
     private val _currentDay = MutableStateFlow<Int>(0)
     val currentDay: StateFlow<Int> get() = _currentDay
 
-    private val _plantInfo = MutableStateFlow(PlantInfo(0, "", "", "", "", ""))
+    private val _plantInfo = MutableStateFlow(PlantInfo("", "", "", "", ""))
     val plantInfo: StateFlow<PlantInfo> get() = _plantInfo
 
     private val _postRegisterPlantState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
@@ -58,7 +58,6 @@ class AddPlantViewModel @Inject constructor(
         _currentMonth.value = calendar.get(Calendar.MONTH)
         _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
         _plantInfo.value = PlantInfo(
-            0,
             "",
             "",
             "",
@@ -113,7 +112,7 @@ class AddPlantViewModel @Inject constructor(
     }
 
     private fun findPlantInformationId(species: String): Int {
-        return 84
+        return 1
     }
 
     fun updatePlantInfo(newPlantInfo: PlantInfo) {

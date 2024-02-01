@@ -75,6 +75,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private fun initRegisterButtonClickListener() {
         binding.btnAddplantUpload.setOnSingleClickListener {
             viewModel.postRegisterPlant()
+            parentFragmentManager.popBackStack()
         }
     }
 

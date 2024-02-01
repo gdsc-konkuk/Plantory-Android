@@ -17,4 +17,8 @@ data class RequestPostRegisterPlantDto(
     val birthDate: String,
     @SerialName("lastWaterDate")
     val lastWaterDate: String,
-)
+){
+    fun convertToPlantInfo() : PlantInfo = PlantInfo(
+        "plantInfoId", nickname, shortDescription, birthDate, lastWaterDate
+    )
+}
