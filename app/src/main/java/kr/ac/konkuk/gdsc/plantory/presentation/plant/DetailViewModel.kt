@@ -1,6 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
@@ -130,11 +131,11 @@ class DetailViewModel : ViewModel() {
     private fun generatePlantMockData(): Plant {
         return Plant(
             id = 1,
-            dday = 2,
+            imageUrl = null,
             nickname = "식물1",
-            species = "선인장",
-            description = "하이하이",
-            createdAt = "2023/12/31"
+            shortDescription = "하이하이",
+            birthDate = "2023/12/31",
+            name = "선인장",
         )
     }
 

@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kr.ac.konkuk.gdsc.plantory.data.service.PlantService
 import kr.ac.konkuk.gdsc.plantory.data.service.UserService
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -16,6 +17,11 @@ object ServiceModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService =
         retrofit.create(UserService::class.java)
+
+    @Provides
+    @Singleton
+    fun providePlantService(retrofit: Retrofit): PlantService =
+        retrofit.create(PlantService::class.java)
 }
 
 

@@ -10,16 +10,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.flowWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
+import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.multipart.ContentUriRequestBody
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragment_add_plant) {
@@ -31,6 +39,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         super.onViewCreated(view, savedInstanceState)
         initView()
         addListener()
+        setPostRegisterPlantStateObserver()
     }
 
     private fun initView() {
@@ -40,6 +49,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun addListener() {
         initBackButtonClickListener()
+        initRegisterButtonClickListener()
         initTextChangeListener()
         openGallery()
         autoCompletePlantSpeciesListener()
@@ -57,16 +67,43 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                val newPlantInfo = viewModel.plantInfo.value.copy(image = uri)
-                viewModel.updatePlantInfo(newPlantInfo)
+                viewModel.updatePlantImage(uri)
+                updateRequestBody()
             }
         }
 
+    private fun initRegisterButtonClickListener() {
+        binding.btnAddplantUpload.setOnSingleClickListener {
+            viewModel.postRegisterPlant()
+        }
+    }
+
+    private fun setPostRegisterPlantStateObserver() {
+        viewModel.postRegisterPlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    Timber.d("Success : Register ")
+                }
+
+                is UiState.Failure -> {
+                    Timber.d("Failure : ${state.msg}")
+                }
+
+                is UiState.Empty -> {
+                }
+
+                is UiState.Loading -> {
+                }
+            }
+
+        }.launchIn(viewLifeCycleScope)
+    }
+
     private fun initImageUriChangeListener() {
         viewLifeCycleScope.launch {
-            viewModel.plantInfo.collectLatest { plantInfo ->
-                if (plantInfo.image == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
-                else binding.ivAddplantProfile.setImageUrl(plantInfo.image.toString())
+            viewModel.plantImage.collectLatest { plantImage ->
+                if (plantImage == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
+                else binding.ivAddplantProfile.setImageUrl(plantImage.toString())
             }
         }
     }
@@ -94,6 +131,12 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             viewModel.updatePlantInfo(newPlantInfo)
             updateRegisterBtnState()
         }
+    }
+
+    private fun updateRequestBody() {
+        val imageUri = viewModel.plantImage.value ?: return
+        val requestBody = ContentUriRequestBody(requireContext(), imageUri)
+        viewModel.updateRequestBody(requestBody)
     }
 
     private fun updateRegisterBtnState() {
@@ -145,7 +188,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 )
                 else if (view == binding.tvAddplantLastWatered) viewModel.updatePlantInfo(
                     viewModel.plantInfo.value.copy(
-                        birthDate = returnDateFormat(year, month, day)
+                        lastWaterDate = returnDateFormat(year, month, day)
                     )
                 )
             }
