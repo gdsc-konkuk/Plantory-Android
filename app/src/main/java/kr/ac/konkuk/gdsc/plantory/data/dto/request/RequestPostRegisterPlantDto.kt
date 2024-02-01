@@ -2,7 +2,7 @@ package kr.ac.konkuk.gdsc.plantory.data.dto.request
 
 import kotlinx.serialization.SerialName
 
-data class RequestPostPlant(
+data class RequestPostRegisterPlantDto(
     @SerialName("plantInformationId")
     val plantInformationId: Int,
     @SerialName("nickname")
