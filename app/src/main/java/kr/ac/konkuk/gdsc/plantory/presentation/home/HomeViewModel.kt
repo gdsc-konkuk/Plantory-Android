@@ -21,11 +21,7 @@ class HomeViewModel @Inject constructor(
     val getAllPlantsState: StateFlow<UiState<List<Plant>>> =
         _getAllPlantsState.asStateFlow()
 
-    init {
-        getAllPlants()
-    }
-
-    private fun getAllPlants() {
+    fun getAllPlants() {
         viewModelScope.launch {
             plantRepository.getAllPlants(
             ).onSuccess { response ->
