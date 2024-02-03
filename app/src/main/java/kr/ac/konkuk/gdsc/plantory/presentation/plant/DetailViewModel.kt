@@ -4,15 +4,15 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDetail
 import java.util.Calendar
 import java.util.Date
 
 class DetailViewModel : ViewModel() {
     val plantRecord: MutableList<PlantDailyRecord> = generateMockData()
-    val plantInfo: Plant = generatePlantMockData()
+    val plantInfo: PlantDetail = generatePlantMockData()
 
     private var calendar = Calendar.getInstance()
     private val _currentYear = MutableStateFlow<Int>(-1)
@@ -128,8 +128,8 @@ class DetailViewModel : ViewModel() {
         return dailyRecordList
     }
 
-    private fun generatePlantMockData(): Plant {
-        return Plant(
+    private fun generatePlantMockData(): PlantDetail {
+        return PlantDetail(
             id = 1,
             imageUrl = null,
             nickname = "식물1",

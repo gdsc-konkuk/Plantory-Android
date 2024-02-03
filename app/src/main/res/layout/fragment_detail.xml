@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="data"
-            type="kr.ac.konkuk.gdsc.plantory.domain.entity.Plant" />
+            type="kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDetail" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,11 +63,13 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/v_detail_divider"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_detail_divider">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_upload_profile"
                     android:layout_width="match_parent"
@@ -102,7 +105,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
-                            android:text="@{data.birthDate}"
+                            android:text="@{data.createdAt}"
                             android:textAppearance="@style/TextAppearance.PLANTORY.body_r_10"
                             android:textColor="@color/gray_0"
                             app:layout_constraintBottom_toTopOf="@id/tv_detail_dday"
@@ -110,13 +113,13 @@
 
                         <TextView
                             android:id="@+id/tv_detail_dday"
+                            style="@style/TextAppearance.PLANTORY.Headline_b_36_xxl"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="7일"
-                            style="@style/TextAppearance.PLANTORY.Headline_b_36_xxl"
+                            android:text="@{@string/detail_dday(data.dday)}"
                             android:textColor="@color/gray_0"
                             app:layout_constraintBottom_toTopOf="@id/tv_detail_plant_species"
-                            app:layout_constraintStart_toStartOf="parent"/>
+                            app:layout_constraintStart_toStartOf="parent" />
 
                         <TextView
                             android:id="@+id/tv_detail_plant_species"
@@ -127,19 +130,19 @@
                             android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
                             android:textColor="@color/gray_0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_detail_dday"/>
+                            app:layout_constraintTop_toBottomOf="@+id/tv_detail_dday" />
 
                         <TextView
                             android:id="@+id/tv_detail_plant_species_data"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="24dp"
-                            android:text="선인장"
+                            android:text="@{data.species}"
                             android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
                             android:textColor="@color/gray_0"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_detail_plant_species"
                             app:layout_constraintStart_toEndOf="@id/tv_detail_plant_species"
-                            app:layout_constraintTop_toTopOf="@id/tv_detail_plant_species"
-                            app:layout_constraintBottom_toBottomOf="@id/tv_detail_plant_species"/>
+                            app:layout_constraintTop_toTopOf="@id/tv_detail_plant_species" />
 
 
                         <TextView
@@ -151,21 +154,21 @@
                             android:text="@string/detail_description"
                             android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
                             android:textColor="@color/gray_0"
-                            app:layout_constraintTop_toBottomOf="@id/tv_detail_plant_species"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_detail_plant_species" />
 
                         <TextView
                             android:id="@+id/tv_detail_plant_description_data"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
-                            android:text="@{data.shortDescription}"
+                            android:text="@{data.description}"
                             android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
                             android:textColor="@color/gray_0"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_detail_plant_description"
                             app:layout_constraintStart_toEndOf="@id/tv_detail_plant_description"
-                            app:layout_constraintTop_toTopOf="@id/tv_detail_plant_description"
-                            app:layout_constraintBottom_toBottomOf="@id/tv_detail_plant_description"/>
+                            app:layout_constraintTop_toTopOf="@id/tv_detail_plant_description" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <ImageView
@@ -175,8 +178,8 @@
                         android:layout_marginBottom="8dp"
                         android:src="@drawable/ic_detail_not_watered"
                         app:layout_constraintBottom_toTopOf="@+id/iv_detail_plant_upload"
-                        app:layout_constraintStart_toStartOf="@+id/iv_detail_plant_upload"
-                        app:layout_constraintEnd_toEndOf="@id/iv_detail_plant_upload" />
+                        app:layout_constraintEnd_toEndOf="@id/iv_detail_plant_upload"
+                        app:layout_constraintStart_toStartOf="@+id/iv_detail_plant_upload" />
 
                     <ImageView
                         android:id="@+id/iv_detail_plant_upload"
@@ -209,11 +212,11 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:textColor="@color/gray_800"
                     android:background="@drawable/shape_gray_50_fill_5"
                     android:padding="10dp"
                     android:text="날짜"
                     android:textAlignment="center"
+                    android:textColor="@color/gray_800"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_detail_diary_text" />
 
@@ -221,33 +224,33 @@
                     android:id="@+id/iv_detail_calendar_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_detail_calendar_left"
-                    android:layout_marginStart="15dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_detail_calendar_title"
                     app:layout_constraintStart_toStartOf="@+id/tv_detail_calendar_title"
-                    app:layout_constraintTop_toTopOf="@+id/tv_detail_calendar_title"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_detail_calendar_title"/>
+                    app:layout_constraintTop_toTopOf="@+id/tv_detail_calendar_title" />
 
                 <ImageView
                     android:id="@+id/iv_detail_calendar_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_detail_calendar_right"
-                    android:layout_marginEnd="15dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_detail_calendar_title"
                     app:layout_constraintEnd_toEndOf="@+id/tv_detail_calendar_title"
-                    app:layout_constraintTop_toTopOf="@+id/tv_detail_calendar_title"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_detail_calendar_title"/>
+                    app:layout_constraintTop_toTopOf="@+id/tv_detail_calendar_title" />
 
                 <!--요일-->
                 <LinearLayout
                     android:id="@+id/ll_month_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/transparent"
                     android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="24dp"
                     app:layout_constraintBottom_toTopOf="@id/rv_detail_calendar"
                     app:layout_constraintTop_toBottomOf="@id/tv_detail_calendar_title">
 
@@ -312,10 +315,10 @@
                     android:id="@+id/rv_detail_calendar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:listitem="@layout/item_detail_calendar"
-                    android:layout_marginTop="10dp"
                     android:layout_marginHorizontal="24dp"
-                    app:layout_constraintTop_toBottomOf="@+id/ll_month_layout" />
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/ll_month_layout"
+                    tools:listitem="@layout/item_detail_calendar" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

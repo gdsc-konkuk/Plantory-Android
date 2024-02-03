@@ -22,15 +22,15 @@ class MainViewModel @Inject constructor(
     private val _postRegisterUserState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
     val postRegisterUserState: StateFlow<UiState<Unit>> = _postRegisterUserState.asStateFlow()
 
-    suspend fun getDeviceToken(): String {
-        return dataStoreRepository.getDeviceToken()?.first() ?: ""
+    suspend fun getDeviceToken(): String? {
+        return dataStoreRepository.getDeviceToken()?.first()
     }
 
-    fun postRegisterUser() {
+    fun postRegisterUser(deviceToken: String) {
         viewModelScope.launch {
             userRepository.postRegisterUser(
                 RequestPostRegisterUserDto(
-                    deviceToken = getDeviceToken()
+                    deviceToken = deviceToken
                 )
             ).onSuccess { response ->
                 _postRegisterUserState.value = UiState.Success(response)
@@ -39,5 +39,4 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
 }

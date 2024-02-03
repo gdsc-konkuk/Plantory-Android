@@ -12,6 +12,9 @@ import javax.inject.Inject
 class PlantDataSource @Inject constructor(
     private val plantService: PlantService
 ) {
+    suspend fun getAllPlants() =
+        plantService.getAllPlants()
+
     suspend fun postRegisterPlant(
         request: HashMap<String, RequestBody>,
         image: MultipartBody.Part?
