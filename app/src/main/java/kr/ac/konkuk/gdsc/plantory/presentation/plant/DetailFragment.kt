@@ -43,10 +43,17 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private lateinit var detailAdapter: DetailAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.data = viewModel.generatePlantMockData()
+        val plantId = arguments?.getInt("plantId", -1) ?: -1
+        if (plantId != -1) {
+            viewModel.updateClickedPlantId(plantId)
+        }
+
         addListener()
+        getPlantByIdStateObserver()
         getPlantHistoryStateObserver()
         postPlantWateredStateObserver()
+
+        viewModel.getPlantHistories()
     }
 
 
@@ -88,9 +95,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 viewModel.isWatered.collectLatest { isWatered ->
                     if (!isWatered) {
                         viewModel.postPlantWatered()
-                        viewModel.getPlantHistories()
                         binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
                         viewModel.updateIsWatered(true)
+                        viewModel.getPlantHistories()
                     }
                 }
             }
@@ -123,7 +130,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 .collect { (currYear, currMonth) ->
 
                     val dayList = viewModel.updateCalendarDayList(currYear, currMonth)
-                    val dummyInfo = viewModel.plantRecord
+//                    val dummyInfo = viewModel.plantRecord
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
                     detailAdapter = DetailAdapter(currMonth, plantHistories, onDateClick = { date ->
@@ -147,12 +154,33 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         parentFragmentManager.popBackStack()
     }
 
+    /*getPlantById*/
+    private fun getPlantByIdStateObserver() {
+        viewModel.getPlantByIdState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    Log.d("ABCDE", state.data.toString())
+                    binding.data = state.data
+                }
+
+                is UiState.Failure -> {
+                    Timber.d("Failure : ${state.msg}")
+                }
+
+                is UiState.Empty -> {
+                }
+
+                is UiState.Loading -> {
+                }
+            }
+        }.launchIn(viewLifeCycleScope)
+    }
+
     /*getPlantHistory*/
     private fun getPlantHistoryStateObserver() {
         viewModel.getPlantHistoryState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    Timber.d("Success : Register ")
                     initWaterButton(state.data)
                     updateCalendar(state.data)
                 }
@@ -176,7 +204,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         viewModel.postPlantWateredState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    Timber.d("Success : watered Register ")
+                    viewModel.getPlantHistories()
                 }
 
                 is UiState.Failure -> {

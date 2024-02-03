@@ -9,7 +9,7 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
 
 class HomeAdapter(
-    private val onItemClick: () -> Unit,
+    private val onItemClick: (Int) -> Unit,
     private val onAddPlantButtonClick: () -> Unit,
     private val onUploadDiaryButtonClick: () -> Unit
 ) :
@@ -27,7 +27,7 @@ class HomeAdapter(
             data: Plant,
             position: Int,
             itemCount: Int,
-            onItemClick: () -> Unit,
+            onItemClick: (Int) -> Unit,
             onAddPlantButtonClick: () -> Unit,
             onUploadDiaryButtonClick: () -> Unit
         ) {
@@ -36,7 +36,7 @@ class HomeAdapter(
                 binding.root.setOnClickListener { }
                 binding.ivPlantUpload.setOnClickListener { onAddPlantButtonClick.invoke() }
             } else {
-                binding.root.setOnClickListener { onItemClick.invoke() }
+                binding.root.setOnClickListener { onItemClick.invoke(data.id) }
                 binding.ivPlantUpload.setOnClickListener { onUploadDiaryButtonClick.invoke() }
             }
             binding.executePendingBindings()
