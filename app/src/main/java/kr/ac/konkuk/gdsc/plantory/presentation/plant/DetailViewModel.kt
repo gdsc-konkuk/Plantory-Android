@@ -9,15 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import retrofit2.HttpException
 import timber.log.Timber
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDetail
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -98,17 +95,6 @@ class DetailViewModel @Inject constructor(
 
     fun updateIsWatered(watered: Boolean) {
         _isWatered.value = watered
-    }
-
-    fun generatePlantMockData(): PlantDetail {
-        return PlantDetail(
-            id = 1,
-            dday = 2,
-            nickname = "식물1",
-            species = "선인장",
-            description = "하이하이",
-            createdAt = "2023/12/31"
-        )
     }
 
     /*getPlantById*/

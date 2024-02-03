@@ -56,7 +56,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         viewModel.getPlantHistories()
     }
 
-
     private fun addListener() {
         updatePreviousMonth()
         updateNextMonth()
