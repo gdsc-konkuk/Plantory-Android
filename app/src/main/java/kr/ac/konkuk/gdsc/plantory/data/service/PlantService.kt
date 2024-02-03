@@ -11,7 +11,7 @@ import retrofit2.http.PartMap
 
 interface PlantService {
     @GET("api/v1/plants")
-    suspend fun getAllPlants() : ResponseGetAllPlantsDto
+    suspend fun getAllPlants(): ResponseGetAllPlantsDto
 
     @Multipart
     @POST("api/v1/plants")
@@ -19,3 +19,5 @@ interface PlantService {
         @PartMap request: HashMap<String, RequestBody>,
         @Part image: MultipartBody.Part?
     )
+
+}
