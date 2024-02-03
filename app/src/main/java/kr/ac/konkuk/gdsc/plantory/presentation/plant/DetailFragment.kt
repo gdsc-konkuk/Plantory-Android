@@ -41,6 +41,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private val viewModel: DetailViewModel by viewModels()
     private lateinit var detailAdapter: DetailAdapter
+    private var firstCallCalendar = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val plantId = arguments?.getInt("plantId", -1) ?: -1
@@ -135,6 +136,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
                     binding.tvDetailCalendarTitle.text = "${currYear}년 ${currMonth + 1}월"
                     detailAdapter.submitList(dayList)
+
+                    firstCallCalendar = false
                 }
         }
     }
@@ -176,12 +179,13 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         viewModel.getPlantHistoryState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    when {
-                        state.data.isNotEmpty() -> {
-                            initWaterButton(state.data)
-                            updateCalendar(state.data)
-                        }
+                    if (state.data.isEmpty() && !firstCallCalendar) {
+
+                    }else {
+                        initWaterButton(state.data)
+                        updateCalendar(state.data)
                     }
+
                 }
 
                 is UiState.Failure -> {
