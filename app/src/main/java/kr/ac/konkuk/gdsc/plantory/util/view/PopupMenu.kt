@@ -8,8 +8,7 @@ import kr.ac.konkuk.gdsc.plantory.databinding.MenuHomeBinding
 
 class PopupMenu(
     context: Context,
-    private val onAddButtonClick: () -> Unit,
-    private val onUploadButtonClick: () -> Unit
+    private val onAddButtonClick: () -> Unit
 ) : PopupWindow(context) {
 
     private val binding: MenuHomeBinding by lazy {
@@ -27,11 +26,6 @@ class PopupMenu(
 
         binding.ivMenuAdd.setOnClickListener {
             onAddButtonClick.invoke()
-            dismiss()
-        }
-
-        binding.ivMenuUpload.setOnClickListener {
-            onUploadButtonClick.invoke()
             dismiss()
         }
     }

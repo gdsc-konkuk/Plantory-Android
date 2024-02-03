@@ -3,14 +3,19 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDiaryBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 @AndroidEntryPoint
 class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_diary) {
@@ -18,14 +23,30 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //달력 클릭시 날짜 전달
         val selectedDate = arguments?.getSerializable("selectedDate") as Date
-        initMockData()
         initBackButton()
+        setGetPantDailyRecordStateObserver()
     }
 
-    private fun initMockData() {
-        binding.data = viewModel.plantRecord
+    private fun setGetPantDailyRecordStateObserver() {
+        viewModel.getPlantDailyRecordState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    binding.data = state.data
+                }
+
+                is UiState.Failure -> {
+                    snackBar(binding.root) { state.msg }
+                }
+
+                is UiState.Empty -> {
+                }
+
+                is UiState.Loading -> {
+                }
+            }
+
+        }.launchIn(viewLifeCycleScope)
     }
 
     private fun initBackButton() {
