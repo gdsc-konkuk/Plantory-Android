@@ -52,5 +52,4 @@ class HomeAdapter(
             ItemHomePlantBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeViewHolder(binding)
     }
-
 }

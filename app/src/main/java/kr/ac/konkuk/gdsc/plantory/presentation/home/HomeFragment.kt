@@ -216,7 +216,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         parentFragmentManager.commit {
             replace<T>(
                 R.id.fcv_main,
-                UCharacter.GraphemeClusterBreak.T::class.simpleName,
+                T::class.simpleName,
                 args
             ).addToBackStack("HomeToDetail")
         }
