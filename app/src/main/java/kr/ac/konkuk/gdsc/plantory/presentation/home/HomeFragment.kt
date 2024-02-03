@@ -22,6 +22,7 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.DetailFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
+import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
@@ -62,7 +63,11 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     }
 
     private fun initPlantViewPagerAdapter(plants: List<Plant>) {
-        homeAdapter = HomeAdapter { navigateTo<DetailFragment>() }.apply {
+        homeAdapter = HomeAdapter(
+            onItemClick = { navigateToDetail() },
+            onAddPlantButtonClick = { navigateToAdd() },
+            onUploadDiaryButtonClick = { navigateToUpload() }
+        ).apply {
             binding.vpHomePlant.adapter = this
             submitList(plants)
         }
@@ -186,6 +191,14 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun navigateToAdd() {
         navigateTo<AddPlantFragment>()
+    }
+
+    private fun navigateToDetail() {
+        navigateTo<DetailFragment>()
+    }
+
+    private fun navigateToUpload() {
+        navigateTo<UploadFragment>()
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
