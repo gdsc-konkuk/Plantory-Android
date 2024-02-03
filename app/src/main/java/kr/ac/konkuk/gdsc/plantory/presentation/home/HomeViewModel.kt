@@ -29,7 +29,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             plantRepository.getAllPlants(
             ).onSuccess { response ->
-                _getAllPlantsState.value = UiState.Success(addNewPlantItem(response.size, response))
+                _getAllPlantsState.value = if (response.isEmpty()) {
+                    UiState.Empty
+                } else {
+                    UiState.Success(addNewPlantItem(response.size, response))
+                }
             }.onFailure { t ->
                 _getAllPlantsState.value = UiState.Failure("${t.message}")
             }
@@ -40,7 +44,7 @@ class HomeViewModel @Inject constructor(
         return list.toMutableList().apply { add(size, emptyItemForAddPlant) }
     }
 
-    private val emptyItemForAddPlant = Plant(
+    val emptyItemForAddPlant = Plant(
         birthDate = "",
         id = Int.MAX_VALUE,
         imageUrl = "",

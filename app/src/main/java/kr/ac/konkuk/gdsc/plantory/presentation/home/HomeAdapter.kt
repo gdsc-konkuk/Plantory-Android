@@ -33,7 +33,6 @@ class HomeAdapter(private val onItemClick: () -> Unit) :
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-
         holder.itemView.setOnSingleClickListener {
             onItemClick.invoke()
         }

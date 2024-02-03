@@ -160,6 +160,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
                 }
 
                 is UiState.Empty -> {
+                    initPlantViewPager(listOf(viewModel.emptyItemForAddPlant))
                 }
             }
         }.launchIn(lifecycleScope)
