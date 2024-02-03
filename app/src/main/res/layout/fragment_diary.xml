@@ -7,7 +7,7 @@
 
         <variable
             name="data"
-            type="kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord" />
+            type="kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,33 +73,13 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_diary_date" />
 
             <ImageView
-                android:id="@+id/iv_diary_repoted"
+                android:id="@+id/iv_diary_watered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                setCheckBoxImage="@{data.checkRecord.recorded}"
+                setCheckBoxImage="@{data.isWatered}"
                 app:layout_constraintTop_toBottomOf="@id/tv_diary_title" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="@string/diary_repoted"
-                android:textAppearance="@style/TextAppearance.PLANTORY.body_m_12"
-                android:textColor="@color/gray_800"
-                app:layout_constraintStart_toEndOf="@id/iv_diary_repoted"
-                app:layout_constraintTop_toTopOf="@id/iv_diary_repoted"
-                app:layout_constraintBottom_toBottomOf="@id/iv_diary_repoted"/>
-
-            <ImageView
-                android:id="@+id/iv_diary_watered"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_diary_repoted"
-                setCheckBoxImage="@{data.checkRecord.watered}"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -141,7 +121,6 @@
                 android:textColor="@color/gray_800"
                 android:text="@{data.comment}"
                 android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/v_diary_divider_2" />
 

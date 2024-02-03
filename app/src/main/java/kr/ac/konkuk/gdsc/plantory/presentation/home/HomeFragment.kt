@@ -6,10 +6,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
@@ -21,20 +26,23 @@ import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var homeAdapter: HomeAdapter
-    private lateinit var viewModel: HomeViewModel
     private lateinit var plantScrollJob: Job
+    private var isDecorationAdded: Boolean = false
     private var currentPlantPosition = 0
     private var plantItemCount = 0
+    private val viewModel by viewModels<HomeViewModel>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel = HomeViewModel()
-        initMockData()
+        setGetAllPlantsStateObserver()
         addCallback()
         addListener()
         //TODO: 지우기
@@ -43,21 +51,23 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
-    private fun initMockData() {
-        initPlantViewPager(viewModel.plantList)
-    }
 
     private fun initPlantViewPager(plants: List<Plant>) {
         createPlantScrollJob()
+        initViewPagerDecoration(
+            previewWidth = VIEWPAGER_PREVIEW_WIDTH,
+            itemMargin = VIEWPAGER_ITEM_MARGIN
+        )
         initPlantViewPagerAdapter(plants = plants)
         initPlantViewPagerIndicator(plants = plants)
-        initViewPagerDecoration(
-            previewWidth = VIEWPAGER_PREVIEW_WIDTH, itemMargin = VIEWPAGER_ITEM_MARGIN
-        )
     }
 
     private fun initPlantViewPagerAdapter(plants: List<Plant>) {
-        homeAdapter = HomeAdapter { navigateTo<DetailFragment>() }.apply {
+        homeAdapter = HomeAdapter(
+            onItemClick = { navigateToDetail() },
+            onAddPlantButtonClick = { navigateToAdd() },
+            onUploadDiaryButtonClick = { navigateToUpload() }
+        ).apply {
             binding.vpHomePlant.adapter = this
             submitList(plants)
         }
@@ -72,17 +82,21 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     }
 
     private fun initViewPagerDecoration(previewWidth: Int, itemMargin: Int) {
-        val decoMargin = previewWidth + itemMargin
-        val pageTransX = decoMargin + previewWidth
-        val decoration = ViewPagerDecoration(decoMargin)
+        if (!isDecorationAdded) {
+            val decoMargin = previewWidth + itemMargin
+            val pageTransX = decoMargin + previewWidth
+            val decoration = ViewPagerDecoration(decoMargin)
 
-        binding.vpHomePlant.also {
-            it.offscreenPageLimit = 1
-            it.addItemDecoration(decoration)
-            it.setPageTransformer { page, position ->
-                page.translationX = position * -pageTransX
+            binding.vpHomePlant.also {
+                it.offscreenPageLimit = 1
+                it.addItemDecoration(decoration)
+                it.setPageTransformer { page, position ->
+                    page.translationX = position * -pageTransX
+                }
             }
+            isDecorationAdded = true
         }
+        return
     }
 
     private fun addCallback() {
@@ -98,8 +112,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         binding.ivHomeAdd.setOnSingleClickListener {
             PopupMenu(it.context, onAddButtonClick = {
                 navigateToAdd()
-            }, onUploadButtonClick = {
-                navigateToUpload()
             }).showAsDropDown(it, -55, 0)
         }
     }
@@ -137,6 +149,28 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         currentPlantPosition = position
     }
 
+    private fun setGetAllPlantsStateObserver() {
+        viewModel.getAllPlantsState.flowWithLifecycle(lifecycle).onEach { state ->
+            when (state) {
+                is UiState.Loading -> {
+                }
+
+                is UiState.Success -> {
+                    Timber.d("Success : Get Plants ")
+                    initPlantViewPager(state.data)
+                }
+
+                is UiState.Failure -> {
+                    Timber.d("Failure : ${state.msg}")
+                }
+
+                is UiState.Empty -> {
+                    initPlantViewPager(listOf(viewModel.emptyItemForAddPlant))
+                }
+            }
+        }.launchIn(lifecycleScope)
+    }
+
     private fun setPlantScrollJobState(state: Int) {
         when (state) {
             ViewPager2.SCROLL_STATE_IDLE -> {
@@ -155,12 +189,16 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         navigateTo<NotificationFragment>()
     }
 
-    private fun navigateToUpload() {
-        navigateTo<UploadFragment>()
-    }
-
     private fun navigateToAdd() {
         navigateTo<AddPlantFragment>()
+    }
+
+    private fun navigateToDetail() {
+        navigateTo<DetailFragment>()
+    }
+
+    private fun navigateToUpload() {
+        navigateTo<UploadFragment>()
     }
 
     private inline fun <reified T : Fragment> navigateTo() {

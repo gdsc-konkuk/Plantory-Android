@@ -2,13 +2,14 @@ package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.ac.konkuk.gdsc.plantory.databinding.ItemHomeNotificationBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Notification
 import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
 
 class NotificationAdapter :
-    androidx.recyclerview.widget.ListAdapter<Notification, NotificationAdapter.NotificationHolder>(
+    ListAdapter<Notification, NotificationAdapter.NotificationHolder>(
         ItemDiffCallback<Notification>(
             onItemsTheSame = { old, new -> old.id == new.id },
             onContentsTheSame = { old, new -> old == new }

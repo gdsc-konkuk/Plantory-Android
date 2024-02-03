@@ -17,6 +17,7 @@ import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import retrofit2.HttpException
 import timber.log.Timber
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDetail
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -25,10 +26,10 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val plantRepository: PlantRepository
 ) : ViewModel() {
-    val plantRecord: MutableList<PlantDailyRecord> = generateMockData()
-
+//    val plantRecord: MutableList<PlantDailyRecord> = generatePlantMockData()
     private val _plantInfo = MutableStateFlow<Plant>(Plant(0, "", "", "", "", ""))
     val plantInfo: StateFlow<Plant> get() = _plantInfo
+//    val plantDetail: PlantDetail = generatePlantMockData()
 
     private var calendar = Calendar.getInstance()
     private val _currentYear = MutableStateFlow<Int>(-1)
@@ -93,73 +94,14 @@ class DetailViewModel @Inject constructor(
         _isWatered.value = watered
     }
 
-    private fun generateMockData(): MutableList<PlantDailyRecord> {
-
-        val dailyRecordList = mutableListOf<PlantDailyRecord>()
-
-        val record1 = PlantDailyRecord(
+    fun generatePlantMockData(): PlantDetail {
+        return PlantDetail(
             id = 1,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/17",
-            nickname = "초록이",
-            comment = "자고 일어나니까 그새 좀 푸릇해진 것 같은 느낌이 들어서 몹시 뿌듯했당.... 우리초록이너무귀여워사랑해너는세상에서가장멋진다육이야 기죽지마어깨펴니가짱이야",
-            checkRecord = PlantCheckRecord(
-                isRecorded = true,
-                isWatered = false
-            )
-        )
-        dailyRecordList.add(record1)
-
-        val record2 = PlantDailyRecord(
-            id = 2,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/18",
-            nickname = "초록이",
-            comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkRecord = PlantCheckRecord(
-                isRecorded = false,
-                isWatered = true
-            )
-        )
-        dailyRecordList.add(record2)
-
-        val record3 = PlantDailyRecord(
-            id = 3,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/20",
-            nickname = "초록이",
-            comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkRecord = PlantCheckRecord(
-                isRecorded = true,
-                isWatered = true
-            )
-        )
-        dailyRecordList.add(record3)
-
-        val record4 = PlantDailyRecord(
-            id = 4,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/24",
-            nickname = "초록이",
-            comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkRecord = PlantCheckRecord(
-                isRecorded = true,
-                isWatered = true
-            )
-        )
-        dailyRecordList.add(record4)
-
-        return dailyRecordList
-    }
-
-    fun generatePlantMockData(): Plant {
-        return Plant(
-            id = 1,
-            imageUrl = null,
+            dday = 2,
             nickname = "식물1",
-            shortDescription = "하이하이",
-            birthDate = "2023/12/31",
-            name = "선인장",
+            species = "선인장",
+            description = "하이하이",
+            createdAt = "2023/12/31"
         )
     }
 

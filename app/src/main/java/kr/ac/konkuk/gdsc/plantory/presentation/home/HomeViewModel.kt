@@ -1,42 +1,56 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
+import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
+import javax.inject.Inject
 
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val plantRepository: PlantRepository
+) : ViewModel() {
+    private val _getAllPlantsState =
+        MutableStateFlow<UiState<List<Plant>>>(UiState.Loading)
+    val getAllPlantsState: StateFlow<UiState<List<Plant>>> =
+        _getAllPlantsState.asStateFlow()
 
-class HomeViewModel : ViewModel() {
-    val plantList: List<Plant> = generateMockData()
-
-    private fun generateMockData(): List<Plant> {
-        val mockDataList = mutableListOf<Plant>()
-        
-        val mockData1 = Plant(
-            id = 1,
-            imageUrl = null,
-            nickname = "식물1",
-            shortDescription = "하이하이",
-            birthDate = "2023/12/31",
-            name = "선인장",
-        )
-        val mockData2 = Plant(
-            id = 2,
-            imageUrl = null,
-            nickname = "식물1",
-            shortDescription = "하이하이",
-            birthDate = "2023/12/31",
-            name = "선인장",
-        )
-        val mockData3 = Plant(
-            id = 3,
-            imageUrl = null,
-            nickname = "식물1",
-            shortDescription = "하이하이",
-            birthDate = "2023/12/31",
-            name = "선인장",
-        )
-        mockDataList.add(mockData1)
-        mockDataList.add(mockData2)
-        mockDataList.add(mockData3)
-        return mockDataList
+    init {
+        getAllPlants()
     }
+
+    private fun getAllPlants() {
+        viewModelScope.launch {
+            plantRepository.getAllPlants(
+            ).onSuccess { response ->
+                _getAllPlantsState.value = if (response.isEmpty()) {
+                    UiState.Empty
+                } else {
+                    UiState.Success(addNewPlantItem(response.size, response))
+                }
+            }.onFailure { t ->
+                _getAllPlantsState.value = UiState.Failure("${t.message}")
+            }
+        }
+    }
+
+    private fun addNewPlantItem(size: Int, list: List<Plant>): MutableList<Plant> {
+        return list.toMutableList().apply { add(size, emptyItemForAddPlant) }
+    }
+
+    val emptyItemForAddPlant = Plant(
+        birthDate = "",
+        id = Int.MAX_VALUE,
+        imageUrl = "R.drawable.img_home_new",
+        name = "",
+        nickname = "",
+        shortDescription = ""
+    )
+
 }

@@ -8,10 +8,18 @@ import coil.transform.RoundedCornersTransformation
 import kr.ac.konkuk.gdsc.plantory.R
 
 @BindingAdapter("setImageUrl")
-fun ImageView.setImageUrl(imageUrl: String?) {
-    if (imageUrl == null) return
-    load(imageUrl) {
-        transformations(RoundedCornersTransformation(8F))
+fun ImageView.setImageUrl(imageUrl: String) {
+    if (imageUrl.startsWith("R.drawable.")) {
+        val drawableResId = context.resources.getIdentifier(
+            imageUrl.removePrefix("R.drawable."),
+            "drawable",
+            context.packageName
+        )
+        setImageResource(drawableResId)
+    } else {
+        load(imageUrl) {
+            transformations(RoundedCornersTransformation(8F))
+        }
     }
 }
 
