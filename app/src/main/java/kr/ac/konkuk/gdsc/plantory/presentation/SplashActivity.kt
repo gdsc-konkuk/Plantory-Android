@@ -10,10 +10,13 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import timber.log.Timber
 import kotlin.coroutines.resume
@@ -38,17 +41,15 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private suspend fun getCurrentDeviceTokenFromFirebase(): String? =
-        suspendCancellableCoroutine { continuation ->
-            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val token = task.result
+        withContext(Dispatchers.IO) {
+            runCatching { FirebaseMessaging.getInstance().token.await() }
+                .onSuccess { token ->
                     Timber.d("Current Token: $token")
-                    continuation.resume(token)
-                } else {
-                    Timber.e("Failed to connect Firebase")
-                    continuation.resume(null)
                 }
-            }
+                .onFailure { e ->
+                    Timber.e("Failed to connect Firebase: ${e.message}")
+                }
+                .getOrNull()
         }
 
     private fun checkAndUpdateDeviceToken(currentToken: String) {
