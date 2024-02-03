@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
+import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeViewModel
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
@@ -74,10 +75,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun initRegisterButtonClickListener() {
         binding.btnAddplantUpload.setOnSingleClickListener {
-            viewModel.viewModelScope.launch {
-                viewModel.postRegisterPlant()
-                setPostRegisterPlantStateObserver()
-            }
+            viewModel.postRegisterPlant()
         }
     }
 
@@ -114,16 +112,14 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun initNicknameTextChangeListener() {
         binding.etAddplantNickname.doAfterTextChanged {
-            val newPlantInfo = viewModel.plantRegisterItem.value.copy(nickname = it.toString())
-            viewModel.updatePlantInfo(newPlantInfo)
+            viewModel.updatePlantInfo(viewModel.plantRegisterItem.value.copy(nickname = it.toString()))
             updateRegisterBtnState()
         }
     }
 
     private fun initSpeciesTextChangeListener() {
         binding.tvAddplantSpecies.doAfterTextChanged {
-            val newPlantInfo = viewModel.plantRegisterItem.value.copy(species = it.toString())
-            viewModel.updatePlantInfo(newPlantInfo)
+            viewModel.updatePlantInfo(viewModel.plantRegisterItem.value.copy(species = it.toString()))
             updatePlantSpeciesLength()
             updateRegisterBtnState()
         }
@@ -131,8 +127,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun initDescriptionTextChangeListener() {
         binding.etAddplantShortDescription.doAfterTextChanged {
-            val newPlantInfo = viewModel.plantRegisterItem.value.copy(shortDescription = it.toString())
-            viewModel.updatePlantInfo(newPlantInfo)
+            viewModel.updatePlantInfo(viewModel.plantRegisterItem.value.copy(shortDescription = it.toString()))
             updateRegisterBtnState()
         }
     }
@@ -157,16 +152,13 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun initDatePickerToCurrent() {
-        binding.tvAddplantBirthday.text = returnDateFormat(
+        val currentDate = returnDateFormat(
             viewModel.currentYear.value,
             viewModel.currentMonth.value,
             viewModel.currentDay.value
         )
-        binding.tvAddplantLastWatered.text = returnDateFormat(
-            viewModel.currentYear.value,
-            viewModel.currentMonth.value,
-            viewModel.currentDay.value
-        )
+        binding.tvAddplantBirthday.text = currentDate
+        binding.tvAddplantLastWatered.text = currentDate
     }
 
     private fun updateBirthdayDatePicker() {
@@ -240,11 +232,11 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun returnDateFormat(year: Int, month: Int, day: Int): String {
-        return "${year}-${formatDateToAddZero(month+1)}-${formatDateToAddZero(day)}"
+        return "${year}-${formatDateToAddZero(month + 1)}-${formatDateToAddZero(day)}"
     }
 
     private fun formatDateToAddZero(date: Int): String {
-        if (date < 10){
+        if (date < 10) {
             return String.format("%02d", date)
         }
         return date.toString()

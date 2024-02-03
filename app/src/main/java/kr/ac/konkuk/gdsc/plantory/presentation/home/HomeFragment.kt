@@ -45,7 +45,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         setGetAllPlantsStateObserver()
         addCallback()
         addListener()
-        //TODO: 지우기
+        viewModel.getAllPlants()
         binding.ivHomeLogo.setOnClickListener {
             navigateTo<DiaryFragment>()
         }
