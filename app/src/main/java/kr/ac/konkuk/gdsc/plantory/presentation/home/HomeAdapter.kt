@@ -2,6 +2,7 @@ package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.ac.konkuk.gdsc.plantory.databinding.ItemHomePlantBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
@@ -9,7 +10,7 @@ import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 class HomeAdapter(private val onItemClick: () -> Unit) :
-    androidx.recyclerview.widget.ListAdapter<Plant, HomeAdapter.HomeViewHolder>(
+    ListAdapter<Plant, HomeAdapter.HomeViewHolder>(
         ItemDiffCallback<Plant>(
             onItemsTheSame = { old, new -> old.id == new.id },
             onContentsTheSame = { old, new -> old == new }

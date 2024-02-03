@@ -14,12 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import timber.log.Timber
-import kotlin.coroutines.resume
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
@@ -67,8 +65,7 @@ class SplashActivity : AppCompatActivity() {
     private fun setPostRegisterUserStateObserver() {
         viewModel.postRegisterUserState.flowWithLifecycle(lifecycle).onEach { state ->
             when (state) {
-                is UiState.Loading -> {
-                }
+                is UiState.Loading -> Unit
 
                 is UiState.Success -> {
                     Timber.d("Success : Register ")
@@ -79,8 +76,7 @@ class SplashActivity : AppCompatActivity() {
                     Timber.d("Failure : ${state.msg}")
                 }
 
-                is UiState.Empty -> {
-                }
+                is UiState.Empty -> Unit
             }
         }.launchIn(lifecycleScope)
     }
