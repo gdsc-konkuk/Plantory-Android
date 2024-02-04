@@ -32,7 +32,8 @@ data class ResponseGetAllPlantsDto(
             imageUrl = data.imageUrl,
             name = data.name,
             nickname = data.nickname,
-            shortDescription = data.shortDescription
+            shortDescription = data.shortDescription,
+            dDay = -1
         )
     }
 }

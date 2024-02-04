@@ -46,7 +46,8 @@ class HomeViewModel @Inject constructor(
         imageUrl = "R.drawable.img_home_new",
         name = "",
         nickname = "",
-        shortDescription = ""
+        shortDescription = "",
+        dDay = -1
     )
 
 }

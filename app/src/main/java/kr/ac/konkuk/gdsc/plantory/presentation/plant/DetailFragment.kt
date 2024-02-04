@@ -152,9 +152,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         viewModel.getPlantDetailState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    binding.data = state.data
+                    binding.data = initDday(state.data)
                     viewModel.updateClickedPlantNickname(state.data.nickname)
-                    initDday(state.data)
                 }
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
@@ -163,10 +162,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun initDday(plant: Plant) {
+    private fun initDday(plant: Plant) : Plant{
         val targetDate = LocalDate.parse(plant.birthDate, DateTimeFormatter.ISO_DATE)
-        val daysPassed = ChronoUnit.DAYS.between(targetDate, LocalDate.now())
-        binding.tvDetailDday.text = "${daysPassed+1}일"
+        val daysPassed = ChronoUnit.DAYS.between(targetDate, LocalDate.now())+1
+        return plant.copy(dDay = daysPassed.toInt())
     }
 
     /*getPlantHistory*/

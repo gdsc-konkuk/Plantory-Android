@@ -7,4 +7,5 @@ data class Plant(
     val shortDescription: String,
     val birthDate: String,
     val name: String,
+    val dDay: Int
 )
