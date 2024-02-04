@@ -105,7 +105,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun addListener() {
         initAddButtonClickListener()
-        initNotificationButtonClickListener()
     }
 
     private fun initAddButtonClickListener() {
@@ -113,13 +112,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
             PopupMenu(it.context, onAddButtonClick = {
                 navigateToAdd()
             }).showAsDropDown(it, -55, 0)
-        }
-    }
-
-
-    private fun initNotificationButtonClickListener() {
-        binding.ivHomeNotification.setOnClickListener {
-            navigateToNotification()
         }
     }
 
@@ -183,10 +175,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
             ViewPager2.SCROLL_STATE_SETTLING -> {}
         }
-    }
-
-    private fun navigateToNotification() {
-        navigateTo<NotificationFragment>()
     }
 
     private fun navigateToAdd() {
