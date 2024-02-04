@@ -64,12 +64,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
-            parentFragmentManager.commit {
-                replace<UploadFragment>(
-                    R.id.fcv_main,
-                    UploadFragment::class.simpleName
-                ).addToBackStack("DetailToUpload")
-            }
+            navigateToWithBundle<UploadFragment>(bundleOf("plantId" to viewModel.clickedPlantId.value,
+                "plantNickname" to viewModel.clickedPlantNickname.value))
         }
     }
 
@@ -124,7 +120,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
                     detailAdapter = DetailAdapter(currMonth, plantHistories, onDateClick = { date ->
-                        navigateTo<DiaryFragment>(bundleOf("selectedDate" to date))
+                        navigateToWithBundle<DiaryFragment>(bundleOf("selectedDate" to date))
                     })
                     binding.rvDetailCalendar.adapter = detailAdapter
 
@@ -152,6 +148,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     binding.data = state.data
+                    viewModel.clickedPlantNickname.value = state.data.nickname
                 }
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
@@ -196,7 +193,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }.launchIn(viewLifeCycleScope)
     }
 
-    private inline fun <reified T : Fragment> navigateTo(args: Bundle) {
+    private inline fun <reified T : Fragment> navigateToWithBundle(args: Bundle) {
         parentFragmentManager.commit {
             replace<T>(
                 R.id.fcv_main,

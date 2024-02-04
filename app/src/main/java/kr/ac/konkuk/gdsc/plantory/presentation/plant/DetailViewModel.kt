@@ -37,6 +37,9 @@ class DetailViewModel @Inject constructor(
     private val _clickedPlantId = MutableStateFlow<Int>(0)
     val clickedPlantId: MutableStateFlow<Int> get() = _clickedPlantId
 
+    private val _clickedPlantNickname = MutableStateFlow<String>("")
+    val clickedPlantNickname: MutableStateFlow<String> get() = _clickedPlantNickname
+
     init {
         calendar.time = Date()
         _currentYear.value = calendar.get(Calendar.YEAR)
@@ -48,6 +51,10 @@ class DetailViewModel @Inject constructor(
 
     fun updateClickedPlantId(id: Int) {
         _clickedPlantId.value = id
+    }
+
+    fun updateClickedPlantNickname(nickname: String) {
+        _clickedPlantNickname.value = nickname
     }
 
     fun updateCalendarDayList(currYear: Int, currMonth: Int): MutableList<Date> {
