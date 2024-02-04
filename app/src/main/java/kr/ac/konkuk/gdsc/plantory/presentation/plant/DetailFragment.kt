@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
+import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
@@ -29,6 +30,9 @@ import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -150,12 +154,19 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Success -> {
                     binding.data = state.data
                     viewModel.updateClickedPlantNickname(state.data.nickname)
+                    initDday(state.data)
                 }
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
         }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun initDday(plant: Plant) {
+        val targetDate = LocalDate.parse(plant.birthDate, DateTimeFormatter.ISO_DATE)
+        val daysPassed = ChronoUnit.DAYS.between(targetDate, LocalDate.now())
+        binding.tvDetailDday.text = "${daysPassed+1}일"
     }
 
     /*getPlantHistory*/
