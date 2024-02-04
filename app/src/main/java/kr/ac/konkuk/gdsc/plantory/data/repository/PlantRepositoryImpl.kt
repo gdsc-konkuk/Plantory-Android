@@ -54,4 +54,11 @@ class PlantRepositoryImpl @Inject constructor(
         runCatching {
             plantDataSource.getAllPlants().convertToPlant()
         }
+
+    override suspend fun deletePlant(
+        companionPlantId: Int
+    ): Result<Unit> =
+        runCatching {
+            plantDataSource.deletePlant(companionPlantId)
+        }
 }

@@ -27,4 +27,8 @@ interface PlantRepository {
     suspend fun getPlantDailyRecord(): Result<ResponseGetPlantDailyRecord>
 
     suspend fun getAllPlants(): Result<List<Plant>>
+
+    suspend fun deletePlant(
+        companionPlantId: Int
+    ): Result<Unit>
 }
