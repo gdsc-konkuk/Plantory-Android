@@ -1,6 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.data.source
 
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
+import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRecordDto
 import kr.ac.konkuk.gdsc.plantory.data.service.PlantService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -25,4 +26,10 @@ class PlantDataSource @Inject constructor(
         companionPlantId: Int,
         requestPostHistoryDto: RequestPostPlantHistoryDto
     ) = plantService.postPlantHistory(companionPlantId, requestPostHistoryDto)
+
+    suspend fun postPlantRecord(
+        companionPlantId: Int,
+        request: HashMap<String, RequestBody>,
+        image: MultipartBody.Part?
+    ) = plantService.postPlantRecord(companionPlantId, request, image)
 }

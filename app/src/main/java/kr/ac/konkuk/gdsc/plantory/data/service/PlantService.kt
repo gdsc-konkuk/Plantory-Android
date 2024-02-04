@@ -2,6 +2,7 @@ package kr.ac.konkuk.gdsc.plantory.data.service
 
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetAllPlantsDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
+import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRecordDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantHistoriesDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -35,5 +36,12 @@ interface PlantService {
     suspend fun postPlantHistory(
         @Path("companionPlantId") companionPlantId: Int,
         @Body requestPostHistoryDto: RequestPostPlantHistoryDto
+    )
+
+    @POST("api/v1/plants/{companionPlantId}/records")
+    suspend fun postPlantRecord(
+        @Path("companionPlantId") companionPlantId: Int,
+        @PartMap request: HashMap<String, RequestBody>,
+        @Part image: MultipartBody.Part?
     )
 }
