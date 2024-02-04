@@ -12,7 +12,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -41,11 +40,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         firstCallCalendar = true
-        val plantId = arguments?.getInt("plantId", -1) ?: -1
-        if (plantId != -1) {
-            viewModel.updateClickedPlantId(plantId)
-        }
 
+        initPlantInfo()
         getPlantHistoryStateObserver()
         getPlantDetailStateObserver()
         postPlantWateredStateObserver()
@@ -62,6 +58,13 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         updateWaterButton()
     }
 
+    private fun initPlantInfo() {
+        val plantId = arguments?.getInt("plantId", -1) ?: -1
+        if (plantId != -1) {
+            viewModel.updateClickedPlantId(plantId)
+        }
+    }
+
     private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
             navigateToWithBundle<UploadFragment>(bundleOf("plantId" to viewModel.clickedPlantId.value,
@@ -70,7 +73,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun initWaterButton(plantHistories: List<PlantHistory>) {
-        //오늘 물 줬는지 시작때 파악
         plantHistories.forEach { plantHistory ->
             if (plantHistory.date.takeLast(2).toInt() == viewModel.currentDay.value) {
                 if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
@@ -82,7 +84,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun updateWaterButton() {
-        //한번 물 주면 취소 불가
         binding.ivDetailPlantGiveWater.setOnSingleClickListener {
             val isWatered = viewModel.isWatered.value
             if (!isWatered) {
@@ -148,7 +149,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     binding.data = state.data
-                    viewModel.clickedPlantNickname.value = state.data.nickname
+                    viewModel.updateClickedPlantNickname(state.data.nickname)
                 }
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit

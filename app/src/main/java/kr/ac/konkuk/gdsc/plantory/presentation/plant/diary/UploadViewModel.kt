@@ -81,7 +81,6 @@ class UploadViewModel @Inject constructor(
                     val errorResponse = t.response()?.errorBody()?.string()
                     Timber.e("HTTP 실패: $errorResponse")
                 }
-                Timber.e("${t.message}")
                 _postPlantRecordState.value = UiState.Failure("${t.message}")
             }
         }
@@ -100,14 +99,12 @@ class UploadViewModel @Inject constructor(
         val plainTextRequestBody = hashMapOf(
             "request" to plantInfoJsonString.toRequestBody("application/json".toMediaTypeOrNull())
         )
-        return Pair(plainTextRequestBody, imageFormData)
+        return plainTextRequestBody to imageFormData
     }
 
     fun getCurrentDate(): String {
         val calendar = Calendar.getInstance()
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
         return dateFormat.format(calendar.time)
     }
 }

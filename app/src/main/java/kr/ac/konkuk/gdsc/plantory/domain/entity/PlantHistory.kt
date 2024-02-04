@@ -8,5 +8,5 @@ data class PlantHistory(
     val date: String
 )
 enum class PlantHistoryType {
-    WATER_CHANGE, POT_CHANGE, RECORDING;
+    WATER_CHANGE, POT_CHANGE, RECORDING
 }

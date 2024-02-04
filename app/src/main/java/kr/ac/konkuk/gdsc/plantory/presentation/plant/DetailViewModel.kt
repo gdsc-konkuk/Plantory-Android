@@ -14,8 +14,10 @@ import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import retrofit2.HttpException
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +43,6 @@ class DetailViewModel @Inject constructor(
     val clickedPlantNickname: MutableStateFlow<String> get() = _clickedPlantNickname
 
     init {
-        calendar.time = Date()
         _currentYear.value = calendar.get(Calendar.YEAR)
         _currentMonth.value = calendar.get(Calendar.MONTH)
         _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
@@ -112,7 +113,6 @@ class DetailViewModel @Inject constructor(
                     val clickedPlant = response.find { plant ->
                         plant.id == clickedPlantId.value
                     }
-
                     if (clickedPlant != null) {
                         UiState.Success(clickedPlant)
                     } else {
@@ -133,8 +133,7 @@ class DetailViewModel @Inject constructor(
 
     fun getPlantHistories() {
         viewModelScope.launch {
-            val month = formatDateToAddZero(currentMonth.value + 1)
-            val targetMonth = "${currentYear.value}-${month}"
+            val targetMonth = returnDateFormat(currentYear.value, currentMonth.value)
             plantRepository.getPlantHistories(clickedPlantId.value, targetMonth)
                 .onSuccess { response ->
                     if (response!= null) {
@@ -167,17 +166,16 @@ class DetailViewModel @Inject constructor(
                         val errorResponse = t.response()?.errorBody()?.string()
                         Timber.e("HTTP 실패: $errorResponse")
                     }
-                    Timber.e("${t.message}")
                     _postPlantWateredState.value = UiState.Failure("${t.message}")
                 }
         }
     }
 
-    private fun formatDateToAddZero(date: Int): String {
-        if (date < 10) {
-            return String.format("%02d", date)
-        }
-        return date.toString()
+    private fun returnDateFormat(year: Int, month: Int): String {
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 
     companion object {

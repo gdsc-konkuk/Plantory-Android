@@ -32,12 +32,8 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val clickedPlantId = arguments?.getInt("plantId", -1) ?: -1
-        val clickedPlantNickname = arguments?.getString("plantNickname", "") ?: ""
-        Log.d("ABCDE", "id = ${clickedPlantId}, nickname = ${clickedPlantNickname}")
         binding.vm = viewModel
-        viewModel.updateClickedPlantId(clickedPlantId)
-        viewModel.updateClickedPlantNickname(clickedPlantNickname)
+        initPlantInfo()
         addListener()
         setPostPlantRecordStateObserver()
     }
@@ -56,6 +52,13 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
                 viewModel.updateProfileImage(uri)
             }
         }
+
+    private fun initPlantInfo() {
+        val clickedPlantId = arguments?.getInt("plantId", -1) ?: -1
+        val clickedPlantNickname = arguments?.getString("plantNickname", "") ?: ""
+        viewModel.updateClickedPlantId(clickedPlantId)
+        viewModel.updateClickedPlantNickname(clickedPlantNickname)
+    }
 
     private fun initImageUriChangeListener() {
         viewLifeCycleScope.launch {
