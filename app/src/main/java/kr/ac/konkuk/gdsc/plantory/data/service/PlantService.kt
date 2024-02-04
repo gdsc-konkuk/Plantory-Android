@@ -14,8 +14,9 @@ import retrofit2.http.PartMap
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 interface PlantService {
+    @GET("api/v1/plants")
+    suspend fun getAllPlants(): ResponseGetAllPlantsDto
 
     @Multipart
     @POST("api/v1/plants")
@@ -35,7 +36,4 @@ interface PlantService {
         @Path("companionPlantId") companionPlantId: Int,
         @Body requestPostHistoryDto: RequestPostPlantHistoryDto
     )
-
-    @GET("api/v1/plants")
-    suspend fun getAllPlants(): ResponseGetAllPlantsDto
 }

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
+import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeViewModel
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
@@ -106,16 +107,14 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun initNicknameTextChangeListener() {
         binding.etAddplantNickname.doAfterTextChanged {
-            val newPlantInfo = viewModel.plantRegisterItem.value.copy(nickname = it.toString())
-            viewModel.updatePlantInfo(newPlantInfo)
+            viewModel.updatePlantInfo(viewModel.plantRegisterItem.value.copy(nickname = it.toString()))
             updateRegisterBtnState()
         }
     }
 
     private fun initSpeciesTextChangeListener() {
         binding.tvAddplantSpecies.doAfterTextChanged {
-            val newPlantInfo = viewModel.plantRegisterItem.value.copy(species = it.toString())
-            viewModel.updatePlantInfo(newPlantInfo)
+            viewModel.updatePlantInfo(viewModel.plantRegisterItem.value.copy(species = it.toString()))
             updatePlantSpeciesLength()
             updateRegisterBtnState()
         }
@@ -123,8 +122,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun initDescriptionTextChangeListener() {
         binding.etAddplantShortDescription.doAfterTextChanged {
-            val newPlantInfo = viewModel.plantRegisterItem.value.copy(shortDescription = it.toString())
-            viewModel.updatePlantInfo(newPlantInfo)
+            viewModel.updatePlantInfo(viewModel.plantRegisterItem.value.copy(shortDescription = it.toString()))
             updateRegisterBtnState()
         }
     }

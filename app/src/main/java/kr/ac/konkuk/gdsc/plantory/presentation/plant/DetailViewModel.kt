@@ -118,7 +118,6 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-
     /*getHistory*/
     private val _getPlantHistoryState =
         MutableStateFlow<UiState<List<PlantHistory>>>(UiState.Loading)
