@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import PopupMenu
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
@@ -27,6 +28,7 @@ import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.PopupDeleteMenu
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
@@ -57,9 +59,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun addListener() {
         updatePreviousMonth()
         updateNextMonth()
+        updateWaterButton()
         initBackButton()
         initUploadButton()
-        updateWaterButton()
+        initAddButtonClickListener()
     }
 
     private fun initUploadButton() {
@@ -82,6 +85,14 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateIsWatered(true)
                 }
             }
+        }
+    }
+
+    private fun initAddButtonClickListener() {
+        binding.ivDetailAdd.setOnSingleClickListener {
+            PopupDeleteMenu(it.context, onAddButtonClick = {
+                //TODO 식물 delete
+            }).showAsDropDown(it, -55, 0)
         }
     }
 
