@@ -46,7 +46,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: '#60E0C5'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_TITLE: 'Plantory PR Checker have passed ✅'
           MSG_MINIMAL: true
           SLACK_USERNAME: Plantory Android
@@ -57,7 +57,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: '#ff0000'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_TITLE: 'Plantory PR Checker have failed ✅'
           MSG_MINIMAL: true
           SLACK_USERNAME: Plantory Android
