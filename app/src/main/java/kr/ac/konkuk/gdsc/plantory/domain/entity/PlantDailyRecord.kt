@@ -11,5 +11,5 @@ data class PlantDailyRecord (
 
 data class PlantCheckRecord(
     val isWatered: Boolean,
-    val isRepoted: Boolean
+    val isRecorded: Boolean
 )

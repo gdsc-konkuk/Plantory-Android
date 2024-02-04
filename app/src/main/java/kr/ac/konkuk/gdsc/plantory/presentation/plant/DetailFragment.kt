@@ -2,27 +2,32 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
-import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
 import java.util.Calendar
@@ -32,16 +37,21 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private val viewModel: DetailViewModel by viewModels()
     private lateinit var detailAdapter: DetailAdapter
-
+    private var firstCallCalendar = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.data = viewModel.plantInfo
-        initView()
-        addListener()
-    }
+        firstCallCalendar = true
+        val plantId = arguments?.getInt("plantId", -1) ?: -1
+        if (plantId != -1) {
+            viewModel.updateClickedPlantId(plantId)
+        }
 
-    private fun initView() {
-        initCalendar()
+        getPlantHistoryStateObserver()
+        getPlantDetailStateObserver()
+        postPlantWateredStateObserver()
+        addListener()
+
+        viewModel.getPlantHistories()
     }
 
     private fun addListener() {
@@ -49,7 +59,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         updateNextMonth()
         initBackButton()
         initUploadButton()
-        initWaterButton()
         updateWaterButton()
     }
 
@@ -64,17 +73,24 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }
     }
 
-    private fun initWaterButton() {
-        binding.ivDetailPlantGiveWater.setOnSingleClickListener {
-            viewModel.updateIsWatered()
+    private fun initWaterButton(plantHistories: List<PlantHistory>) {
+        //오늘 물 줬는지 시작때 파악
+        plantHistories.forEach { plantHistory ->
+            if (plantHistory.date.takeLast(2).toInt() == viewModel.currentDay.value) {
+                if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
+                    binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
+                    viewModel.updateIsWatered(true)
+                }
+            }
         }
     }
 
     private fun updateWaterButton() {
-        viewLifeCycleScope.launch {
-            viewModel.isWatered.collectLatest { isWatered ->
-                if (isWatered) binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
-                else binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_not_watered)
+        //한번 물 주면 취소 불가
+        binding.ivDetailPlantGiveWater.setOnSingleClickListener {
+            val isWatered = viewModel.isWatered.value
+            if (!isWatered) {
+                viewModel.postPlantWatered()
             }
         }
     }
@@ -93,10 +109,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun updatePreviousNextMonth(isPrevious: Boolean) {
         viewModel.updateMonthAndYear(isPrevious)
-        updateCalendar()
+        viewModel.getPlantHistories()
     }
 
-    private fun updateCalendar() {
+    private fun updateCalendar(plantHistories: List<PlantHistory>) {
         viewLifeCycleScope.launch {
             viewModel.currentYear.combine(viewModel.currentMonth) { year, month ->
                 Pair(year, month)
@@ -105,23 +121,19 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 .collect { (currYear, currMonth) ->
 
                     val dayList = viewModel.updateCalendarDayList(currYear, currMonth)
-                    val dummyInfo = viewModel.plantRecord
-
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
-                    detailAdapter = DetailAdapter(currMonth, dummyInfo, onDateClick = { date ->
+                    detailAdapter = DetailAdapter(currMonth, plantHistories, onDateClick = { date ->
                         navigateTo<DiaryFragment>(bundleOf("selectedDate" to date))
                     })
                     binding.rvDetailCalendar.adapter = detailAdapter
 
                     binding.tvDetailCalendarTitle.text = "${currYear}년 ${currMonth + 1}월"
                     detailAdapter.submitList(dayList)
+
+                    firstCallCalendar = false
                 }
         }
-    }
-
-    private fun initCalendar() {
-        updateCalendar()
     }
 
     private fun initBackButton() {
@@ -134,13 +146,63 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         parentFragmentManager.popBackStack()
     }
 
+    /*getPlantById*/
+    private fun getPlantDetailStateObserver() {
+        viewModel.getPlantDetailState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    binding.data = state.data
+                }
+                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
+            }
+        }.launchIn(viewLifeCycleScope)
+    }
+
+    /*getPlantHistory*/
+    private fun getPlantHistoryStateObserver() {
+        viewModel.getPlantHistoryState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    if (state.data.isEmpty() && !firstCallCalendar) {
+                    }else {
+                        initWaterButton(state.data)
+                        updateCalendar(state.data)
+                    }
+                }
+                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
+            }
+
+        }.launchIn(viewLifeCycleScope)
+    }
+
+    /*postPlantWatered*/
+    private fun postPlantWateredStateObserver() {
+        viewModel.postPlantWateredState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
+                    viewModel.updateIsWatered(true)
+                    viewModel.getPlantHistories()
+                }
+                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
+            }
+
+        }.launchIn(viewLifeCycleScope)
+    }
+
     private inline fun <reified T : Fragment> navigateTo(args: Bundle) {
         parentFragmentManager.commit {
             replace<T>(
                 R.id.fcv_main,
                 T::class.simpleName,
                 args
-            ).addToBackStack("DiaryFragement")
+            ).addToBackStack("DiaryFragment")
         }
     }
 }

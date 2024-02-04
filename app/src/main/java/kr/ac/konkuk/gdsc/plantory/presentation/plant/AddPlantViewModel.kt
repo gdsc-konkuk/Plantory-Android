@@ -1,6 +1,8 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import android.content.Context
 import android.net.Uri
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -82,10 +84,6 @@ class AddPlantViewModel @Inject constructor(
         }
     }
 
-    fun updateRequestBody(requestBody: ContentUriRequestBody) {
-        this.imageRequestBody = requestBody
-    }
-
     private fun createRequestBody(
         plant: PlantRegisterItem
     ): Pair<HashMap<String, RequestBody>, MultipartBody.Part?> {
@@ -116,8 +114,15 @@ class AddPlantViewModel @Inject constructor(
         _plantRegisterItem.value = newPlantRegisterItem
     }
 
-    fun updatePlantImage(uri: Uri) {
+    fun updatePlantImage(uri: Uri, context: Context) {
         _plantImage.value = uri
+        val imageUri = plantImage.value ?: return
+        val requestBody = ContentUriRequestBody(context, imageUri)
+        updateRequestBody(requestBody)
+    }
+
+    fun updateRequestBody(requestBody: ContentUriRequestBody) {
+        this.imageRequestBody = requestBody
     }
 
     fun updatePlantSpeciesLength(): Int {

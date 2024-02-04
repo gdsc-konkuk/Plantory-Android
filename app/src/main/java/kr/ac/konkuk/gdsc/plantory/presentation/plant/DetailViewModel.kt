@@ -1,31 +1,53 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDetail
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
+import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
+import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
+import retrofit2.HttpException
+import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
+import javax.inject.Inject
 
-class DetailViewModel : ViewModel() {
-    val plantRecord: MutableList<PlantDailyRecord> = generateMockData()
-    val plantInfo: PlantDetail = generatePlantMockData()
+@HiltViewModel
+class DetailViewModel @Inject constructor(
+    private val plantRepository: PlantRepository
+) : ViewModel() {
 
     private var calendar = Calendar.getInstance()
     private val _currentYear = MutableStateFlow<Int>(-1)
     val currentYear: StateFlow<Int> get() = _currentYear
     private val _currentMonth = MutableStateFlow<Int>(-1)
     val currentMonth: StateFlow<Int> get() = _currentMonth
+    private val _currentDay = MutableStateFlow<Int>(-1)
+    val currentDay: StateFlow<Int> get() = _currentDay
 
     private val _isWatered = MutableStateFlow<Boolean>(false)
     val isWatered: MutableStateFlow<Boolean> get() = _isWatered
+
+    private val _clickedPlantId = MutableStateFlow<Int>(0)
+    val clickedPlantId: MutableStateFlow<Int> get() = _clickedPlantId
 
     init {
         calendar.time = Date()
         _currentYear.value = calendar.get(Calendar.YEAR)
         _currentMonth.value = calendar.get(Calendar.MONTH)
+        _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
+        getPlantById()
+        getPlantHistories()
+    }
+
+    fun updateClickedPlantId(id: Int) {
+        _clickedPlantId.value = id
     }
 
     fun updateCalendarDayList(currYear: Int, currMonth: Int): MutableList<Date> {
@@ -64,78 +86,91 @@ class DetailViewModel : ViewModel() {
         }
     }
 
-    fun updateIsWatered() {
-        _isWatered.value = !_isWatered.value
+    fun updateIsWatered(watered: Boolean) {
+        _isWatered.value = watered
     }
 
-    private fun generateMockData(): MutableList<PlantDailyRecord> {
+    /*getPlantById*/
+    private val _getPlantDetailState =
+        MutableStateFlow<UiState<Plant>>(UiState.Loading)
+    val getPlantDetailState: StateFlow<UiState<Plant>> =
+        _getPlantDetailState.asStateFlow()
 
-        val dailyRecordList = mutableListOf<PlantDailyRecord>()
+    private fun getPlantById() {
+        viewModelScope.launch {
+            plantRepository.getAllPlants().onSuccess { response ->
+                _getPlantDetailState.value = if (response.isEmpty()) {
+                    UiState.Empty
+                } else {
+                    val clickedPlant = response.find { plant ->
+                        plant.id == clickedPlantId.value
+                    }
 
-        val record1 = PlantDailyRecord(
-            id = 1,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/17",
-            nickname = "초록이",
-            comment = "자고 일어나니까 그새 좀 푸릇해진 것 같은 느낌이 들어서 몹시 뿌듯했당.... 우리초록이너무귀여워사랑해너는세상에서가장멋진다육이야 기죽지마어깨펴니가짱이야",
-            checkRecord = PlantCheckRecord(
-                isRepoted = true,
-                isWatered = false
-            )
-        )
-        dailyRecordList.add(record1)
-
-        val record2 = PlantDailyRecord(
-            id = 2,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/18",
-            nickname = "초록이",
-            comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkRecord = PlantCheckRecord(
-                isRepoted = false,
-                isWatered = true
-            )
-        )
-        dailyRecordList.add(record2)
-
-        val record3 = PlantDailyRecord(
-            id = 3,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/20",
-            nickname = "초록이",
-            comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkRecord = PlantCheckRecord(
-                isRepoted = true,
-                isWatered = true
-            )
-        )
-        dailyRecordList.add(record3)
-
-        val record4 = PlantDailyRecord(
-            id = 4,
-            imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-            date = "2024/01/24",
-            nickname = "초록이",
-            comment = "오늘은 좀 더 따뜻한 날씨에 얼굴을 내민 것 같아서 기분이 좋았어요!",
-            checkRecord = PlantCheckRecord(
-                isRepoted = true,
-                isWatered = true
-            )
-        )
-        dailyRecordList.add(record4)
-
-        return dailyRecordList
+                    if (clickedPlant != null) {
+                        UiState.Success(clickedPlant)
+                    } else {
+                        UiState.Empty
+                    }
+                }
+            }.onFailure { t ->
+                _getPlantDetailState.value = UiState.Failure("${t.message}")
+            }
+        }
     }
 
-    private fun generatePlantMockData(): PlantDetail {
-        return PlantDetail(
-            id = 1,
-            dday = 2,
-            nickname = "식물1",
-            species = "선인장",
-            description = "하이하이",
-            createdAt = "2023/12/31"
-        )
+    /*getHistory*/
+    private val _getPlantHistoryState =
+        MutableStateFlow<UiState<List<PlantHistory>>>(UiState.Loading)
+    val getPlantHistoryState: StateFlow<UiState<List<PlantHistory>>> =
+        _getPlantHistoryState.asStateFlow()
+
+    fun getPlantHistories() {
+        viewModelScope.launch {
+            val month = formatDateToAddZero(currentMonth.value + 1)
+            val targetMonth = "${currentYear.value}-${month}"
+            plantRepository.getPlantHistories(clickedPlantId.value, targetMonth)
+                .onSuccess { response ->
+                    if (response!= null) {
+                        _getPlantHistoryState.value =
+                            UiState.Success(response)
+                    } else {
+                        _getPlantHistoryState.value = UiState.Success(emptyList())
+                    }
+                }.onFailure { t ->
+                    _getPlantHistoryState.value = UiState.Failure("${t.message}")
+                }
+        }
+    }
+
+    /*post Watered*/
+    private val _postPlantWateredState =
+        MutableStateFlow<UiState<Unit>>(UiState.Loading)
+    val postPlantWateredState: StateFlow<UiState<Unit>> =
+        _postPlantWateredState.asStateFlow()
+
+    fun postPlantWatered() {
+        viewModelScope.launch {
+            _postPlantWateredState.value = UiState.Loading
+            plantRepository.postPlantHistory(clickedPlantId.value, RequestPostPlantHistoryDto("WATER_CHANGE"))
+                .onSuccess { response ->
+                    _postPlantWateredState.value = UiState.Success(response)
+                    Timber.e("성공 $response")
+                }.onFailure { t ->
+                    if (t is HttpException) {
+                        val errorResponse = t.response()?.errorBody()?.string()
+                        Timber.e("HTTP 실패: $errorResponse")
+                    }
+                    Timber.e("${t.message}")
+                    _postPlantWateredState.value = UiState.Failure("${t.message}")
+                }
+        }
+    }
+
+    private fun formatDateToAddZero(date: Int): String {
+        if (date < 10) {
+            return String.format("%02d", date)
+        }
+        return date.toString()
     }
 
     companion object {
