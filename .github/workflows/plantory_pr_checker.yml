@@ -41,4 +41,27 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: If Success, Send notification on Slack
+        if: ${{success()}}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: '#60E0C5'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: 'Plantory PR Checker have passed ✅'
+          MSG_MINIMAL: true
+          SLACK_USERNAME: Plantory Android
+          SLACK_MESSAGE: 'Plantory Android PR Check Success 🎉'
+
+      - name: If Fail, Send notification on Slack
+        if: ${{failure()}}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: '#ff0000'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: 'Plantory PR Checker have failed ✅'
+          MSG_MINIMAL: true
+          SLACK_USERNAME: Plantory Android
+          SLACK_MESSAGE: 'Plantory Android PR Check Failure - Should Check Up'
+
+
 
