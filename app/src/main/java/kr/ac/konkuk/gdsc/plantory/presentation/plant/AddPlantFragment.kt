@@ -85,14 +85,12 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         viewModel.postRegisterPlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    Timber.d("Success : Register ")
                     parentFragmentManager.popBackStack()
                 }
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 
