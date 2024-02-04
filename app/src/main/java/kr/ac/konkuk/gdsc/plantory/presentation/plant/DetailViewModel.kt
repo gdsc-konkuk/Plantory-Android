@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import retrofit2.HttpException
@@ -23,8 +22,6 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val plantRepository: PlantRepository
 ) : ViewModel() {
-    private val _plantInfo = MutableStateFlow<Plant>(Plant(0, "", "", "", "", ""))
-    val plantInfo: StateFlow<Plant> get() = _plantInfo
 
     private var calendar = Calendar.getInstance()
     private val _currentYear = MutableStateFlow<Int>(-1)
@@ -89,24 +86,20 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    fun updatePlantInfo(plant: Plant) {
-        _plantInfo.value = plant
-    }
-
     fun updateIsWatered(watered: Boolean) {
         _isWatered.value = watered
     }
 
     /*getPlantById*/
-    private val _getPlantByIdState =
+    private val _getPlantDetailState =
         MutableStateFlow<UiState<Plant>>(UiState.Loading)
-    val getPlantByIdState: StateFlow<UiState<Plant>> =
-        _getPlantByIdState.asStateFlow()
+    val getPlantDetailState: StateFlow<UiState<Plant>> =
+        _getPlantDetailState.asStateFlow()
 
     private fun getPlantById() {
         viewModelScope.launch {
             plantRepository.getAllPlants().onSuccess { response ->
-                _getPlantByIdState.value = if (response.isEmpty()) {
+                _getPlantDetailState.value = if (response.isEmpty()) {
                     UiState.Empty
                 } else {
                     val clickedPlant = response.find { plant ->
@@ -120,7 +113,7 @@ class DetailViewModel @Inject constructor(
                     }
                 }
             }.onFailure { t ->
-                _getPlantByIdState.value = UiState.Failure("${t.message}")
+                _getPlantDetailState.value = UiState.Failure("${t.message}")
             }
         }
     }
@@ -138,15 +131,9 @@ class DetailViewModel @Inject constructor(
             val targetMonth = "${currentYear.value}-${month}"
             plantRepository.getPlantHistories(clickedPlantId.value, targetMonth)
                 .onSuccess { response ->
-                    if (response.histories != null) {
+                    if (response!= null) {
                         _getPlantHistoryState.value =
-                            UiState.Success(response.histories.map { plantHistoryDto ->
-                                PlantHistory(
-                                    id = plantHistoryDto.id,
-                                    type = PlantHistoryType.fromString(plantHistoryDto.type),
-                                    date = plantHistoryDto.date
-                                )
-                            })
+                            UiState.Success(response)
                     } else {
                         _getPlantHistoryState.value = UiState.Success(emptyList())
                     }

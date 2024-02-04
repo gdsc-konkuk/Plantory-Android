@@ -7,6 +7,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import javax.inject.Inject
 
@@ -24,9 +25,9 @@ class PlantRepositoryImpl @Inject constructor(
     override suspend fun getPlantHistories(
         companionPlantId: Int,
         targetMonth: String
-    ): Result<ResponseGetPlantHistoriesDto> =
+    ): Result<List<PlantHistory>?> =
         runCatching {
-            plantDataSource.getPlantHistories(companionPlantId, targetMonth)
+            plantDataSource.getPlantHistories(companionPlantId, targetMonth).convertToPlantHistory()
         }
 
     override suspend fun postPlantHistory(

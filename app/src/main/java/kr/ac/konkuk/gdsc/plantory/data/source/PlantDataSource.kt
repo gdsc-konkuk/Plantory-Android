@@ -23,6 +23,7 @@ class PlantDataSource @Inject constructor(
         companionPlantId: Int,
         requestPostHistoryDto: RequestPostPlantHistoryDto
     ) = plantService.postPlantHistory(companionPlantId, requestPostHistoryDto)
+
     suspend fun getAllPlants() =
         plantService.getAllPlants()
 }

@@ -4,6 +4,7 @@ import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantHistoriesDto
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
@@ -17,7 +18,7 @@ interface PlantRepository {
     suspend fun getPlantHistories(
         companionPlantId: Int,
         targetMonth: String
-    ): Result<ResponseGetPlantHistoriesDto>
+    ): Result<List<PlantHistory>?>
 
     suspend fun postPlantHistory(
         companionPlantId: Int,

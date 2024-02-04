@@ -77,7 +77,7 @@ class DetailAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.currMonth = currMonth
         val currentDate = getItem(position)
-        val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val formattedCurrentDate = dateFormat.format(currentDate)
 
         val plantDailyRecordsForDate = plantHistories.filter {

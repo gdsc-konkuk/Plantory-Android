@@ -36,7 +36,7 @@ class HomeAdapter(
                 binding.root.setOnClickListener { }
                 binding.ivPlantUpload.setOnClickListener { onAddPlantButtonClick.invoke() }
             } else {
-                binding.root.setOnClickListener { onItemClick.invoke(data.id) }
+                binding.root.setOnClickListener { onItemClick(data.id) }
                 binding.ivPlantUpload.setOnClickListener { onUploadDiaryButtonClick.invoke() }
             }
             binding.executePendingBindings()

@@ -2,7 +2,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -21,10 +20,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
-import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
-import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
@@ -34,7 +31,6 @@ import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
 import java.util.Calendar
-import java.util.Date
 
 @AndroidEntryPoint
 class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
@@ -44,13 +40,14 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private var firstCallCalendar = true
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        firstCallCalendar = true
         val plantId = arguments?.getInt("plantId", -1) ?: -1
         if (plantId != -1) {
             viewModel.updateClickedPlantId(plantId)
         }
 
         getPlantHistoryStateObserver()
-        getPlantByIdStateObserver()
+        getPlantDetailStateObserver()
         postPlantWateredStateObserver()
         addListener()
 
@@ -91,12 +88,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun updateWaterButton() {
         //한번 물 주면 취소 불가
         binding.ivDetailPlantGiveWater.setOnSingleClickListener {
-            viewLifeCycleScope.launch {
-                viewModel.isWatered.collectLatest { isWatered ->
-                    if (!isWatered) {
-                        viewModel.postPlantWatered()
-                    }
-                }
+            val isWatered = viewModel.isWatered.value
+            if (!isWatered) {
+                viewModel.postPlantWatered()
             }
         }
     }
@@ -153,23 +147,15 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     /*getPlantById*/
-    private fun getPlantByIdStateObserver() {
-        viewModel.getPlantByIdState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+    private fun getPlantDetailStateObserver() {
+        viewModel.getPlantDetailState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    Log.d("ABCDE", state.data.toString())
                     binding.data = state.data
                 }
-
-                is UiState.Failure -> {
-                    Timber.d("Failure : ${state.msg}")
-                }
-
-                is UiState.Empty -> {
-                }
-
-                is UiState.Loading -> {
-                }
+                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
             }
         }.launchIn(viewLifeCycleScope)
     }
@@ -180,23 +166,14 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     if (state.data.isEmpty() && !firstCallCalendar) {
-
                     }else {
                         initWaterButton(state.data)
                         updateCalendar(state.data)
                     }
-
                 }
-
-                is UiState.Failure -> {
-                    Timber.d("Failure : ${state.msg}")
-                }
-
-                is UiState.Empty -> {
-                }
-
-                is UiState.Loading -> {
-                }
+                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
             }
 
         }.launchIn(viewLifeCycleScope)
@@ -211,16 +188,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateIsWatered(true)
                     viewModel.getPlantHistories()
                 }
-
-                is UiState.Failure -> {
-                    Timber.d("Failure : ${state.msg}")
-                }
-
-                is UiState.Empty -> {
-                }
-
-                is UiState.Loading -> {
-                }
+                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
             }
 
         }.launchIn(viewLifeCycleScope)

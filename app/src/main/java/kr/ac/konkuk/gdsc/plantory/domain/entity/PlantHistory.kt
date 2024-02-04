@@ -9,16 +9,4 @@ data class PlantHistory(
 )
 enum class PlantHistoryType {
     WATER_CHANGE, POT_CHANGE, RECORDING;
-
-    companion object {
-        fun fromString(value: String): PlantHistoryType {
-            return when (value) {
-                "WATER_CHANGE" -> WATER_CHANGE
-                "POT_CHANGE" -> POT_CHANGE
-                "RECORDING" -> RECORDING
-                else -> throw IllegalArgumentException("Unknown PlantHistoryType: $value")
-            }
-        }
-    }
 }
-

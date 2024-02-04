@@ -28,6 +28,9 @@ import kr.ac.konkuk.gdsc.plantory.util.multipart.ContentUriRequestBody
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragment_add_plant) {
@@ -67,16 +70,13 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                viewModel.updatePlantImage(uri)
-                updateRequestBody()
+                viewModel.updatePlantImage(uri, requireContext())
             }
         }
 
     private fun initRegisterButtonClickListener() {
         binding.btnAddplantUpload.setOnSingleClickListener {
-            viewModel.viewModelScope.launch {
-                viewModel.postRegisterPlant()
-            }
+            viewModel.postRegisterPlant()
         }
     }
 
@@ -87,16 +87,9 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                     Timber.d("Success : Register ")
                     parentFragmentManager.popBackStack()
                 }
-
-                is UiState.Failure -> {
-                    Timber.d("Failure : ${state.msg}")
-                }
-
-                is UiState.Empty -> {
-                }
-
-                is UiState.Loading -> {
-                }
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
             }
 
         }.launchIn(viewLifeCycleScope)
@@ -136,12 +129,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         }
     }
 
-    private fun updateRequestBody() {
-        val imageUri = viewModel.plantImage.value ?: return
-        val requestBody = ContentUriRequestBody(requireContext(), imageUri)
-        viewModel.updateRequestBody(requestBody)
-    }
-
     private fun updateRegisterBtnState() {
         val isFieldsNotEmpty = viewModel.checkIsNotEmpty()
 
@@ -156,16 +143,13 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun initDatePickerToCurrent() {
-        binding.tvAddplantBirthday.text = returnDateFormat(
+        val currentDate = returnDateFormat(
             viewModel.currentYear.value,
             viewModel.currentMonth.value,
             viewModel.currentDay.value
         )
-        binding.tvAddplantLastWatered.text = returnDateFormat(
-            viewModel.currentYear.value,
-            viewModel.currentMonth.value,
-            viewModel.currentDay.value
-        )
+        binding.tvAddplantBirthday.text = currentDate
+        binding.tvAddplantLastWatered.text = currentDate
     }
 
     private fun updateBirthdayDatePicker() {
@@ -239,13 +223,10 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun returnDateFormat(year: Int, month: Int, day: Int): String {
-        return "${year}-${formatDateToAddZero(month+1)}-${formatDateToAddZero(day)}"
-    }
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-    private fun formatDateToAddZero(date: Int): String {
-        if (date < 10){
-            return String.format("%02d", date)
-        }
-        return date.toString()
+        return dateFormat.format(calendar.time)
     }
 }
