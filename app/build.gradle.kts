@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -117,8 +118,7 @@ dependencies {
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
 
-    //hilt
+    // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
 }
