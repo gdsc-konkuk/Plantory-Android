@@ -73,7 +73,10 @@ class PlantoryMessagingService : FirebaseMessagingService() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         return PendingIntent.getActivity(
-            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource
 ) : UserRepository {
-    override suspend fun postRegisterUser(requestPostRegisterUserDto: RequestPostRegisterUserDto) : Result<Unit> =
+    override suspend fun postRegisterUser(requestPostRegisterUserDto: RequestPostRegisterUserDto): Result<Unit> =
         runCatching {
             userDataSource.postRegisterUser(requestPostRegisterUserDto)
         }

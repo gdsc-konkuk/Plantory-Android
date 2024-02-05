@@ -23,8 +23,7 @@ class HomeViewModel @Inject constructor(
 
     fun getAllPlants() {
         viewModelScope.launch {
-            plantRepository.getAllPlants(
-            ).onSuccess { response ->
+            plantRepository.getAllPlants().onSuccess { response ->
                 _getAllPlantsState.value = if (response.isEmpty()) {
                     UiState.Empty
                 } else {
@@ -48,5 +47,4 @@ class HomeViewModel @Inject constructor(
         nickname = "",
         shortDescription = ""
     )
-
 }

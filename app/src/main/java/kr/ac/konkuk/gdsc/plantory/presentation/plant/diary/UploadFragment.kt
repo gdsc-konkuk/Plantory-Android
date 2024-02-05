@@ -6,7 +6,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -67,7 +66,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     }
 
     private fun initTextChangeListener() {
-        binding.etUploadDiary.doAfterTextChanged {text ->
+        binding.etUploadDiary.doAfterTextChanged { text ->
             viewModel.updateDiaryInput(text.toString())
             updateRegisterButtonState()
         }

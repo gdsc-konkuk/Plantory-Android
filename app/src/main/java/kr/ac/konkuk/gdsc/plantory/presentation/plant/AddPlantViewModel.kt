@@ -2,7 +2,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.content.Context
 import android.net.Uri
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,12 +56,20 @@ class AddPlantViewModel @Inject constructor(
         _currentMonth.value = calendar.get(Calendar.MONTH)
         _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
         _plantRegisterItem.value = PlantRegisterItem(
-            "",
-            "",
-            "",
-            "${currentYear.value}-${formatDateToAddZero(currentMonth.value+1)}-${formatDateToAddZero(currentDay.value)}",
-            "${currentYear.value}-${formatDateToAddZero(currentMonth.value+1)}-${formatDateToAddZero(currentDay.value)}",
+            species = "",
+            nickname = "",
+            shortDescription = "",
+            birthDate = "${currentYear.value}-${formatDateToAddZero(currentMonth.value + 1)}-${
+            formatDateToAddZero(
+                currentDay.value
             )
+            }",
+            lastWaterDate = "${currentYear.value}-${formatDateToAddZero(currentMonth.value + 1)}-${
+            formatDateToAddZero(
+                currentDay.value
+            )
+            }"
+        )
     }
 
     fun postRegisterPlant() {
@@ -95,7 +102,6 @@ class AddPlantViewModel @Inject constructor(
             birthDate = plant.birthDate,
             lastWaterDate = plant.lastWaterDate
         )
-
 
         val plantInfoJsonString =
             Json.encodeToString(RequestPostRegisterPlantDto.serializer(), plantDto)
@@ -136,7 +142,7 @@ class AddPlantViewModel @Inject constructor(
     }
 
     private fun formatDateToAddZero(date: Int): String {
-        if (date < 10){
+        if (date < 10) {
             return String.format("%02d", date)
         }
         return date.toString()

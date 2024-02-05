@@ -127,10 +127,10 @@ class DetailViewModel @Inject constructor(
     fun getPlantHistories() {
         viewModelScope.launch {
             val month = formatDateToAddZero(currentMonth.value + 1)
-            val targetMonth = "${currentYear.value}-${month}"
+            val targetMonth = "${currentYear.value}-$month"
             plantRepository.getPlantHistories(clickedPlantId.value, targetMonth)
                 .onSuccess { response ->
-                    if (response!= null) {
+                    if (response != null) {
                         _getPlantHistoryState.value =
                             UiState.Success(response)
                     } else {

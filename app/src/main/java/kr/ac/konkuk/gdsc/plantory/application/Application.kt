@@ -6,9 +6,9 @@ import kr.ac.konkuk.gdsc.plantory.BuildConfig
 import timber.log.Timber
 
 @HiltAndroidApp
-class Application : Application(){
+class Application : Application() {
 
-    init{
+    init {
         setupTimber()
     }
 

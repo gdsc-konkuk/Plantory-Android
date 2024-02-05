@@ -12,7 +12,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -74,7 +73,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun initWaterButton(plantHistories: List<PlantHistory>) {
-        //오늘 물 줬는지 시작때 파악
+        // 오늘 물 줬는지 시작때 파악
         plantHistories.forEach { plantHistory ->
             if (plantHistory.date.takeLast(2).toInt() == viewModel.currentDay.value) {
                 if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
@@ -86,7 +85,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun updateWaterButton() {
-        //한번 물 주면 취소 불가
+        // 한번 물 주면 취소 불가
         binding.ivDetailPlantGiveWater.setOnSingleClickListener {
             val isWatered = viewModel.isWatered.value
             if (!isWatered) {
@@ -166,7 +165,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     if (state.data.isEmpty() && !firstCallCalendar) {
-                    }else {
+                    } else {
                         initWaterButton(state.data)
                         updateCalendar(state.data)
                     }
@@ -175,7 +174,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -192,7 +190,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 

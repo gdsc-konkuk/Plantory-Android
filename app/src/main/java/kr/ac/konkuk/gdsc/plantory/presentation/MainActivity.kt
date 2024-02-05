@@ -21,8 +21,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
     private fun navigateToHome() {
         navigateTo<HomeFragment>()
     }
-
-
     private inline fun <reified T : Fragment> navigateTo() {
         supportFragmentManager.commit {
             replace<T>(R.id.fcv_main, T::class.simpleName)
