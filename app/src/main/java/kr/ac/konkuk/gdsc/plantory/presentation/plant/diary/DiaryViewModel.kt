@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
+import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantRecordDto
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import retrofit2.HttpException
@@ -20,17 +20,20 @@ class DiaryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _getPlantDailyRecordState =
-        MutableStateFlow<UiState<ResponseGetPlantDailyRecord>>(UiState.Loading)
-    val getPlantDailyRecordState: StateFlow<UiState<ResponseGetPlantDailyRecord>> =
+        MutableStateFlow<UiState<ResponseGetPlantRecordDto>>(UiState.Loading)
+    val getPlantDailyRecordState: StateFlow<UiState<ResponseGetPlantRecordDto>> =
         _getPlantDailyRecordState.asStateFlow()
 
-    init {
-        getPlantDailyRecord()
-    }
 
-    private fun getPlantDailyRecord() {
+    fun getPlantDailyRecord(
+        companionPlantId: Int,
+        recordDate: String
+    ) {
         viewModelScope.launch {
-            plantRepository.getPlantDailyRecord()
+            plantRepository.getPlantRecord(
+                companionPlantId = companionPlantId,
+                recordDate = recordDate
+            )
                 .onSuccess { response ->
                     _getPlantDailyRecordState.value = UiState.Success(response)
                     Timber.e("성공 $response")

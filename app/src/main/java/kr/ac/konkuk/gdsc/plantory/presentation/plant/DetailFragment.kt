@@ -30,10 +30,12 @@ import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
@@ -129,7 +131,14 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
                     detailAdapter = DetailAdapter(currMonth, plantHistories, onDateClick = { date ->
-                        navigateToWithBundle<DiaryFragment>(bundleOf("selectedDate" to date))
+                        navigateToWithBundle<DiaryFragment>(
+                            bundleOf(
+                                "selectedDate" to SimpleDateFormat(
+                                    "yyyy-MM-dd",
+                                    Locale.getDefault()
+                                ).format(date), "plantId" to viewModel.clickedPlantId.value
+                            )
+                        )
                     })
                     binding.rvDetailCalendar.adapter = detailAdapter
 

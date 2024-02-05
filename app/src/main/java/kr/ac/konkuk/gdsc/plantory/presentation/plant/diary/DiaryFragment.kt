@@ -15,7 +15,6 @@ import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import java.util.Date
 
 @AndroidEntryPoint
 class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_diary) {
@@ -23,7 +22,12 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val selectedDate = arguments?.getSerializable("selectedDate") as Date
+        val date = arguments?.getString("selectedDate") as String
+        val plantId = arguments?.getInt("plantId") as Int
+        viewModel.getPlantDailyRecord(
+            companionPlantId = plantId,
+            recordDate = date
+        )
         initBackButton()
         setGetPantDailyRecordStateObserver()
     }
@@ -34,6 +38,7 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
                 is UiState.Success -> {
                     binding.data = state.data
                 }
+
                 is UiState.Failure -> snackBar(binding.root) { state.msg }
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit

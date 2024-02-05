@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="data"
-            type="kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord" />
+            type="kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantRecordDto" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,30 +54,30 @@
                 android:id="@+id/tv_diary_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="2024-02-06"
                 android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
                 android:textColor="@color/gray_300"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@{data.date}" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_diary_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:text="@{@string/diary_nickname(data.nickname)}"
                 android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_24"
                 android:textColor="@color/gray_800"
-                android:text="@{@string/diary_nickname(data.nickname)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_diary_date" />
 
             <ImageView
                 android:id="@+id/iv_diary_watered"
+                setCheckBoxImage="@{data.water}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                setCheckBoxImage="@{data.isWatered}"
                 app:layout_constraintTop_toBottomOf="@id/tv_diary_title" />
 
             <TextView
@@ -88,17 +87,17 @@
                 android:text="@string/diary_watered"
                 android:textAppearance="@style/TextAppearance.PLANTORY.body_m_12"
                 android:textColor="@color/gray_800"
+                app:layout_constraintBottom_toBottomOf="@id/iv_diary_watered"
                 app:layout_constraintStart_toEndOf="@id/iv_diary_watered"
-                app:layout_constraintTop_toTopOf="@id/iv_diary_watered"
-                app:layout_constraintBottom_toBottomOf="@id/iv_diary_watered"/>
+                app:layout_constraintTop_toTopOf="@id/iv_diary_watered" />
 
             <ImageView
                 android:id="@+id/iv_diary_image"
-                setImageUrl="@{data.imageUrl}"
-                app:layout_constraintDimensionRatio="H,4:3"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="21dp"
+                android:src="@drawable/img_plant_sample"
+                app:layout_constraintDimensionRatio="H,4:3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_diary_watered" />
@@ -117,10 +116,10 @@
                 android:id="@+id/tv_diary_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{data.comment}"
                 android:textAppearance="@style/TextAppearance.PLANTORY.body_r_12"
                 android:textColor="@color/gray_800"
-                android:text="@{data.comment}"
-                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/v_diary_divider_2" />
 
