@@ -26,20 +26,20 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var calendar = Calendar.getInstance()
-    private val _currentYear = MutableStateFlow<Int>(-1)
+    private val _currentYear = MutableStateFlow(-1)
     val currentYear: StateFlow<Int> get() = _currentYear
-    private val _currentMonth = MutableStateFlow<Int>(-1)
+    private val _currentMonth = MutableStateFlow(-1)
     val currentMonth: StateFlow<Int> get() = _currentMonth
-    private val _currentDay = MutableStateFlow<Int>(-1)
+    private val _currentDay = MutableStateFlow(-1)
     val currentDay: StateFlow<Int> get() = _currentDay
 
-    private val _isWatered = MutableStateFlow<Boolean>(false)
+    private val _isWatered = MutableStateFlow(false)
     val isWatered: MutableStateFlow<Boolean> get() = _isWatered
 
-    private val _clickedPlantId = MutableStateFlow<Int>(0)
+    private val _clickedPlantId = MutableStateFlow(0)
     val clickedPlantId: MutableStateFlow<Int> get() = _clickedPlantId
 
-    private val _clickedPlantNickname = MutableStateFlow<String>("")
+    private val _clickedPlantNickname = MutableStateFlow("")
     val clickedPlantNickname: MutableStateFlow<String> get() = _clickedPlantNickname
 
     init {
@@ -157,7 +157,10 @@ class DetailViewModel @Inject constructor(
     fun postPlantWatered() {
         viewModelScope.launch {
             _postPlantWateredState.value = UiState.Loading
-            plantRepository.postPlantHistory(clickedPlantId.value, RequestPostPlantHistoryDto("WATER_CHANGE"))
+            plantRepository.postPlantHistory(
+                clickedPlantId.value,
+                RequestPostPlantHistoryDto("WATER_CHANGE")
+            )
                 .onSuccess { response ->
                     _postPlantWateredState.value = UiState.Success(response)
                     Timber.e("성공 $response")

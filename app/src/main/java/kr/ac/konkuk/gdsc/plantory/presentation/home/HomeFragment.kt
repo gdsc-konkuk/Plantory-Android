@@ -70,8 +70,10 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
             },
             onAddPlantButtonClick = { navigateToAdd() },
             onUploadDiaryButtonClick = { plant ->
-                val bundle = bundleOf("plantId" to plant.id,
-                    "plantNickname" to plant.nickname)
+                val bundle = bundleOf(
+                    "plantId" to plant.id,
+                    "plantNickname" to plant.nickname
+                )
                 navigateToUploadWithBundle(bundle)
             }
         ).apply {

@@ -106,7 +106,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
 
     private fun setPostPlantRecordStateObserver() {
         viewModel.postPlantRecordState.flowWithLifecycle(viewLifeCycle).onEach { state ->
-            when(state) {
+            when (state) {
                 is UiState.Success -> {
                     navigateToHome()
                 }

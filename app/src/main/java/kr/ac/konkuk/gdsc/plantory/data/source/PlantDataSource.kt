@@ -1,7 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.data.source
 
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
-import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRecordDto
 import kr.ac.konkuk.gdsc.plantory.data.service.PlantService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

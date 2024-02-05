@@ -28,17 +28,17 @@ import javax.inject.Inject
 @HiltViewModel
 class UploadViewModel @Inject constructor(
     private val plantRepository: PlantRepository
-): ViewModel() {
-    private val _clickedPlantId = MutableStateFlow<Int>(0)
-    val clickedPlantId: StateFlow<Int> get() = _clickedPlantId
+) : ViewModel() {
+    private val _clickedPlantId = MutableStateFlow(0)
+    private val clickedPlantId: StateFlow<Int> get() = _clickedPlantId
 
-    private val _clickedPlantNickname = MutableStateFlow<String>("")
+    private val _clickedPlantNickname = MutableStateFlow("")
     val clickedPlantNickname: StateFlow<String> get() = _clickedPlantNickname
 
     private val _imageUri = MutableStateFlow<Uri?>(null)
     val imageUri: StateFlow<Uri?> get() = _imageUri
 
-    private val _plantRecord = MutableStateFlow<PlantRecord>(PlantRecord(""))
+    private val _plantRecord = MutableStateFlow(PlantRecord(""))
     val plantRecord: StateFlow<PlantRecord> get() = _plantRecord
 
     private var imageRequestBody: ContentUriRequestBody? = null

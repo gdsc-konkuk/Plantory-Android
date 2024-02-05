@@ -62,7 +62,7 @@ class AddPlantViewModel @Inject constructor(
             "",
             "",
             returnDateFormat(currentYear.value, currentMonth.value, currentDay.value),
-            returnDateFormat(currentYear.value, currentMonth.value, currentDay.value),
+            returnDateFormat(currentYear.value, currentMonth.value, currentDay.value)
         )
     }
 

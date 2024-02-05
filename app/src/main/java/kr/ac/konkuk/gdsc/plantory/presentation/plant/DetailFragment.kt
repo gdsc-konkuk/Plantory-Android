@@ -71,8 +71,12 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
-            navigateToWithBundle<UploadFragment>(bundleOf("plantId" to viewModel.clickedPlantId.value,
-                "plantNickname" to viewModel.clickedPlantNickname.value))
+            navigateToWithBundle<UploadFragment>(
+                bundleOf(
+                    "plantId" to viewModel.clickedPlantId.value,
+                    "plantNickname" to viewModel.clickedPlantNickname.value
+                )
+            )
         }
     }
 
@@ -155,6 +159,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     binding.data = initDday(state.data)
                     viewModel.updateClickedPlantNickname(state.data.nickname)
                 }
+
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -162,9 +167,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun initDday(plant: Plant) : Plant{
+    private fun initDday(plant: Plant): Plant {
         val targetDate = LocalDate.parse(plant.birthDate, DateTimeFormatter.ISO_DATE)
-        val daysPassed = ChronoUnit.DAYS.between(targetDate, LocalDate.now())+1
+        val daysPassed = ChronoUnit.DAYS.between(targetDate, LocalDate.now()) + 1
         return plant.copy(dDay = daysPassed.toInt())
     }
 
@@ -179,6 +184,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                         updateCalendar(state.data)
                     }
                 }
+
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -195,6 +201,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateIsWatered(true)
                     viewModel.getPlantHistories()
                 }
+
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
