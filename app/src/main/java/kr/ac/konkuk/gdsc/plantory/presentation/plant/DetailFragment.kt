@@ -140,7 +140,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                                     "selectedDate" to SimpleDateFormat(
                                         "yyyy-MM-dd",
                                         Locale.getDefault()
-                                    ).format(date), "plantId" to viewModel.clickedPlantId.value
+                                    ).format(date),
+                                    "plantId" to viewModel.clickedPlantId.value
                                 )
                             )
                         },

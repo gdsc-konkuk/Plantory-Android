@@ -24,7 +24,6 @@ class DiaryViewModel @Inject constructor(
     val getPlantDailyRecordState: StateFlow<UiState<ResponseGetPlantRecordDto>> =
         _getPlantDailyRecordState.asStateFlow()
 
-
     fun getPlantDailyRecord(
         companionPlantId: Int,
         recordDate: String

@@ -138,18 +138,18 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun registerPlantPageChangeCallback() {
         binding.vpHomePlant.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                updatePlantPosition(position)
-            }
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    updatePlantPosition(position)
+                }
 
-            override fun onPageScrollStateChanged(state: Int) {
-                super.onPageScrollStateChanged(state)
-                setPlantScrollJobState(state)
-                binding.lHomeRefresh.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
-            }
-        })
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+                    setPlantScrollJobState(state)
+                    binding.lHomeRefresh.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
+                }
+            })
     }
 
     private fun createPlantScrollJob() {
