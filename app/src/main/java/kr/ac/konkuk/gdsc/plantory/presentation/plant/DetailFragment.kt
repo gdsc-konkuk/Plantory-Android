@@ -26,6 +26,7 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.PopupDeleteMenu
@@ -51,6 +52,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         getPlantHistoryStateObserver()
         getPlantDetailStateObserver()
         postPlantWateredStateObserver()
+        deletePlantObserver()
         addListener()
 
         viewModel.getPlantHistories()
@@ -91,7 +93,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun initAddButtonClickListener() {
         binding.ivDetailAdd.setOnSingleClickListener {
             PopupDeleteMenu(it.context, onAddButtonClick = {
-                //TODO 식물 delete
+                viewModel.deletePlant()
             }).showAsDropDown(it, -55, 0)
         }
     }
@@ -199,6 +201,19 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateIsWatered(true)
                     viewModel.getPlantHistories()
                 }
+                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
+            }
+
+        }.launchIn(viewLifeCycleScope)
+    }
+
+    /*deletePlant*/
+    private fun deletePlantObserver() {
+        viewModel.deletePlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> navigateToHome()
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
