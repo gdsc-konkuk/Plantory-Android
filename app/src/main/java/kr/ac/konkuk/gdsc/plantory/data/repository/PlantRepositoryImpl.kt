@@ -30,7 +30,7 @@ class PlantRepositoryImpl @Inject constructor(
             plantDataSource.getPlantHistories(companionPlantId, targetMonth).convertToPlantHistory()
         }
 
-    override suspend fun getPlantInformations(): Result<List<PlantInformation>>  =
+    override suspend fun getPlantInformations(): Result<List<PlantInformation>> =
         runCatching {
             plantDataSource.getPlantInformations().convertToPlantInformation()
         }

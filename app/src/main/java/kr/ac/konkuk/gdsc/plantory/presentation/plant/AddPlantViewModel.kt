@@ -69,8 +69,10 @@ class AddPlantViewModel @Inject constructor(
         )
     }
 
-    private val _getPlantInformationState = MutableStateFlow<UiState<List<PlantInformation>>>(UiState.Loading)
-    val getPlantInformationState: StateFlow<UiState<List<PlantInformation>>> = _getPlantInformationState.asStateFlow()
+    private val _getPlantInformationState =
+        MutableStateFlow<UiState<List<PlantInformation>>>(UiState.Loading)
+    val getPlantInformationState: StateFlow<UiState<List<PlantInformation>>> =
+        _getPlantInformationState.asStateFlow()
 
     fun getPlantInformations() {
         viewModelScope.launch {
@@ -124,7 +126,7 @@ class AddPlantViewModel @Inject constructor(
 
     private fun findPlantInformationId(species: String): Int {
         val findPlant = plantInformationList.value.find { it.species == species }
-        //서버에 등록된 식물 없으면 임의로 1로 설정
+        // 서버에 등록된 식물 없으면 임의로 1로 설정
         return findPlant?.id ?: 1
     }
 

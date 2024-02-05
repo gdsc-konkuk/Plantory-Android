@@ -1,6 +1,5 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
-import PopupMenu
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
@@ -26,7 +25,6 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
-import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.PopupDeleteMenu
@@ -231,7 +229,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 

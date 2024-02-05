@@ -46,6 +46,7 @@ interface PlantService {
     suspend fun deletePlant(
         @Path("companionPlantId") companionPlantId: Int
     )
+
     @Multipart
     @POST("api/v1/plants/{companionPlantId}/records")
     suspend fun postPlantRecord(
