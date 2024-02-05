@@ -19,5 +19,4 @@ interface PlantService {
         @PartMap request: HashMap<String, RequestBody>,
         @Part image: MultipartBody.Part?
     )
-
 }

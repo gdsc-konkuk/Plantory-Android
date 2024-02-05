@@ -33,7 +33,7 @@ class PlantRepositoryImpl @Inject constructor(
     override suspend fun postRegisterPlant(
         request: HashMap<String, RequestBody>,
         image: MultipartBody.Part?
-    ) : Result<Unit> =
+    ): Result<Unit> =
         runCatching {
             plantDataSource.postRegisterPlant(request, image)
         }

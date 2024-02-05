@@ -2,11 +2,10 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
-import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantCheckRecord
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDailyRecord
 
 class UploadViewModel : ViewModel() {
     private fun generateMockData(): PlantDailyRecord {

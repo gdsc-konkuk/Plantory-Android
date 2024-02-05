@@ -3,7 +3,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.home
 import androidx.lifecycle.ViewModel
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Notification
 
-
 class NotificationViewModel : ViewModel() {
     val notificationList: List<Notification> = generateMockData()
 

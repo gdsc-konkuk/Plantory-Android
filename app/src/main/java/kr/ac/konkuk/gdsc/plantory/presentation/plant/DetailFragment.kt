@@ -2,7 +2,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -18,13 +17,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
-import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import timber.log.Timber
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -73,8 +70,11 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun updateWaterButton() {
         viewLifeCycleScope.launch {
             viewModel.isWatered.collectLatest { isWatered ->
-                if (isWatered) binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
-                else binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_not_watered)
+                if (isWatered) {
+                    binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
+                } else {
+                    binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_not_watered)
+                }
             }
         }
     }

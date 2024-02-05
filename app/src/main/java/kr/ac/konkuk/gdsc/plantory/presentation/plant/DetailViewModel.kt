@@ -69,9 +69,7 @@ class DetailViewModel : ViewModel() {
     }
 
     private fun generateMockData(): MutableList<PlantDailyRecord> {
-
         val dailyRecordList = mutableListOf<PlantDailyRecord>()
-
         val record1 = PlantDailyRecord(
             id = 1,
             imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",

@@ -51,7 +51,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
-
     private fun initPlantViewPager(plants: List<Plant>) {
         createPlantScrollJob()
         initViewPagerDecoration(
@@ -116,7 +115,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
-
     private fun initNotificationButtonClickListener() {
         binding.ivHomeNotification.setOnClickListener {
             navigateToNotification()
@@ -125,17 +123,17 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun registerPlantPageChangeCallback() {
         binding.vpHomePlant.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                updatePlantPosition(position)
-            }
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    updatePlantPosition(position)
+                }
 
-            override fun onPageScrollStateChanged(state: Int) {
-                super.onPageScrollStateChanged(state)
-                setPlantScrollJobState(state)
-            }
-        })
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+                    setPlantScrollJobState(state)
+                }
+            })
     }
 
     private fun createPlantScrollJob() {

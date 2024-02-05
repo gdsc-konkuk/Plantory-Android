@@ -60,11 +60,8 @@ class PlantoryMessagingService : FirebaseMessagingService() {
         val body = remoteMessage.notification?.body ?: ""
         val pendingIntent = createPendingIntent()
 
-        return NotificationCompat.Builder(this, "Channel ID")
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(title)
-            .setContentText(body)
-            .setAutoCancel(true)
+        return NotificationCompat.Builder(this, "Channel ID").setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(title).setContentText(body).setAutoCancel(true)
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
             .setContentIntent(pendingIntent)
     }
@@ -73,7 +70,10 @@ class PlantoryMessagingService : FirebaseMessagingService() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         return PendingIntent.getActivity(
-            this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 }

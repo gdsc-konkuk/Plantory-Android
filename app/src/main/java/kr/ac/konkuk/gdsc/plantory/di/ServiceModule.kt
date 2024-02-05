@@ -23,6 +23,3 @@ object ServiceModule {
     fun providePlantService(retrofit: Retrofit): PlantService =
         retrofit.create(PlantService::class.java)
 }
-
-
-

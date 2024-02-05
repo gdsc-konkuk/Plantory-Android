@@ -17,8 +17,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import javax.inject.Singleton
-
-
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
@@ -48,7 +46,6 @@ object RetrofitModule {
         coerceInputValues = true
     }
 
-
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -58,7 +55,6 @@ object RetrofitModule {
         .addInterceptor(loggingInterceptor)
         .addInterceptor(interceptor)
         .build()
-
 
     @Provides
     @Singleton
@@ -71,5 +67,3 @@ object RetrofitModule {
         .addConverterFactory(factory)
         .build()
 }
-
-

@@ -46,5 +46,4 @@ class NotificationFragment :
     private fun navigateToNotification() {
         activity?.supportFragmentManager?.popBackStack()
     }
-
 }

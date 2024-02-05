@@ -11,7 +11,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
-import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeViewModel
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
@@ -97,15 +95,17 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 is UiState.Loading -> {
                 }
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 
     private fun initImageUriChangeListener() {
         viewLifeCycleScope.launch {
             viewModel.plantImage.collectLatest { plantImage ->
-                if (plantImage == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
-                else binding.ivAddplantProfile.setImageUrl(plantImage.toString())
+                if (plantImage == null) {
+                    binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
+                } else {
+                    binding.ivAddplantProfile.setImageUrl(plantImage.toString())
+                }
             }
         }
     }
@@ -177,16 +177,19 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         viewLifeCycleScope.launch {
             val date = DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 view.text = returnDateFormat(year, month, day)
-                if (view == binding.tvAddplantBirthday) viewModel.updatePlantInfo(
-                    viewModel.plantRegisterItem.value.copy(
-                        birthDate = returnDateFormat(year, month, day)
+                if (view == binding.tvAddplantBirthday) {
+                    viewModel.updatePlantInfo(
+                        viewModel.plantRegisterItem.value.copy(
+                            birthDate = returnDateFormat(year, month, day)
+                        )
                     )
-                )
-                else if (view == binding.tvAddplantLastWatered) viewModel.updatePlantInfo(
-                    viewModel.plantRegisterItem.value.copy(
-                        lastWaterDate = returnDateFormat(year, month, day)
+                } else if (view == binding.tvAddplantLastWatered) {
+                    viewModel.updatePlantInfo(
+                        viewModel.plantRegisterItem.value.copy(
+                            lastWaterDate = returnDateFormat(year, month, day)
+                        )
                     )
-                )
+                }
             }
             DatePickerDialog(
                 requireContext(),
@@ -232,7 +235,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun returnDateFormat(year: Int, month: Int, day: Int): String {
-        return "${year}-${formatDateToAddZero(month + 1)}-${formatDateToAddZero(day)}"
+        return "$year-${formatDateToAddZero(month + 1)}-${formatDateToAddZero(day)}"
     }
 
     private fun formatDateToAddZero(date: Int): String {

@@ -16,4 +16,3 @@ interface PlantRepository {
 
     suspend fun getAllPlants(): Result<List<Plant>>
 }
-
