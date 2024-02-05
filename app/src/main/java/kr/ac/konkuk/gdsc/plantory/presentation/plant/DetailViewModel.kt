@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantInformation
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import retrofit2.HttpException
