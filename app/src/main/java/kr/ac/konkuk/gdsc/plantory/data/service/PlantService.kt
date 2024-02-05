@@ -36,4 +36,12 @@ interface PlantService {
         @Path("companionPlantId") companionPlantId: Int,
         @Body requestPostHistoryDto: RequestPostPlantHistoryDto
     )
+
+    @Multipart
+    @POST("api/v1/plants/{companionPlantId}/records")
+    suspend fun postPlantRecord(
+        @Path("companionPlantId") companionPlantId: Int,
+        @PartMap request: HashMap<String, RequestBody>,
+        @Part image: MultipartBody.Part?
+    )
 }

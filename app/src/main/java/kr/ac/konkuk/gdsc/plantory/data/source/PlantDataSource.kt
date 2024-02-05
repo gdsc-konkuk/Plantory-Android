@@ -25,4 +25,10 @@ class PlantDataSource @Inject constructor(
         companionPlantId: Int,
         requestPostHistoryDto: RequestPostPlantHistoryDto
     ) = plantService.postPlantHistory(companionPlantId, requestPostHistoryDto)
+
+    suspend fun postPlantRecord(
+        companionPlantId: Int,
+        request: HashMap<String, RequestBody>,
+        image: MultipartBody.Part?
+    ) = plantService.postPlantRecord(companionPlantId, request, image)
 }

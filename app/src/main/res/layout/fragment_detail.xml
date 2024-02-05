@@ -116,7 +116,7 @@
                             style="@style/TextAppearance.PLANTORY.Headline_b_36_xxl"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="7일"
+                            android:text="@{@string/detail_dday(data.dDay)}"
                             android:textColor="@color/gray_0"
                             app:layout_constraintBottom_toTopOf="@id/tv_detail_plant_species"
                             app:layout_constraintStart_toStartOf="parent" />

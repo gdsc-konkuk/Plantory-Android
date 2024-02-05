@@ -24,6 +24,12 @@ interface PlantRepository {
         requestPostHistoryDto: RequestPostPlantHistoryDto
     ): Result<Unit>
 
+    suspend fun postPlantRecord(
+        companionPlantId: Int,
+        request: HashMap<String, RequestBody>,
+        image: MultipartBody.Part?
+    ): Result<Unit>
+
     suspend fun getPlantDailyRecord(): Result<ResponseGetPlantDailyRecord>
 
     suspend fun getAllPlants(): Result<List<Plant>>

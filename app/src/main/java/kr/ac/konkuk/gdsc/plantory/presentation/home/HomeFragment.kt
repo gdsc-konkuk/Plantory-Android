@@ -69,7 +69,13 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
                 navigateToDetailWithBundle(bundle)
             },
             onAddPlantButtonClick = { navigateToAdd() },
-            onUploadDiaryButtonClick = { navigateToUpload() }
+            onUploadDiaryButtonClick = { plant ->
+                val bundle = bundleOf(
+                    "plantId" to plant.id,
+                    "plantNickname" to plant.nickname
+                )
+                navigateToUploadWithBundle(bundle)
+            }
         ).apply {
             binding.vpHomePlant.adapter = this
             submitList(plants)
@@ -188,8 +194,8 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         navigateTo<DetailFragment>(bundle)
     }
 
-    private fun navigateToUpload() {
-        navigateTo<UploadFragment>()
+    private fun navigateToUploadWithBundle(bundle: Bundle) {
+        navigateTo<UploadFragment>(bundle)
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
