@@ -25,6 +25,7 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
+import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
@@ -130,16 +131,23 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     val dayList = viewModel.updateCalendarDayList(currYear, currMonth)
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
-                    detailAdapter = DetailAdapter(currMonth, plantHistories, onDateClick = { date ->
-                        navigateToWithBundle<DiaryFragment>(
-                            bundleOf(
-                                "selectedDate" to SimpleDateFormat(
-                                    "yyyy-MM-dd",
-                                    Locale.getDefault()
-                                ).format(date), "plantId" to viewModel.clickedPlantId.value
+                    detailAdapter = DetailAdapter(
+                        currMonth = currMonth,
+                        plantHistories = plantHistories,
+                        onDateClick = { date ->
+                            navigateToWithBundle<DiaryFragment>(
+                                bundleOf(
+                                    "selectedDate" to SimpleDateFormat(
+                                        "yyyy-MM-dd",
+                                        Locale.getDefault()
+                                    ).format(date), "plantId" to viewModel.clickedPlantId.value
+                                )
                             )
-                        )
-                    })
+                        },
+                        onEmptyDateClick = {
+                            snackBar(binding.root) { getString(R.string.detail_empty_record_message) }
+                        }
+                    )
                     binding.rvDetailCalendar.adapter = detailAdapter
 
                     binding.tvDetailCalendarTitle.text = "${currYear}년 ${currMonth + 1}월"
