@@ -84,6 +84,7 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
                 is UiState.Success -> {
                     parentFragmentManager.popBackStack()
                 }
+
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -94,8 +95,11 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private fun initImageUriChangeListener() {
         viewLifeCycleScope.launch {
             viewModel.plantImage.collectLatest { plantImage ->
-                if (plantImage == null) binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
-                else binding.ivAddplantProfile.setImageUrl(plantImage.toString())
+                if (plantImage == null) {
+                    binding.ivAddplantProfile.setImageResource(R.drawable.ic_addplant_profile)
+                } else {
+                    binding.ivAddplantProfile.setImageUrl(plantImage.toString())
+                }
             }
         }
     }
@@ -160,16 +164,19 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         viewLifeCycleScope.launch {
             val date = DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 view.text = returnDateFormat(year, month, day)
-                if (view == binding.tvAddplantBirthday) viewModel.updatePlantInfo(
-                    viewModel.plantRegisterItem.value.copy(
-                        birthDate = returnDateFormat(year, month, day)
+                if (view == binding.tvAddplantBirthday) {
+                    viewModel.updatePlantInfo(
+                        viewModel.plantRegisterItem.value.copy(
+                            birthDate = returnDateFormat(year, month, day)
+                        )
                     )
-                )
-                else if (view == binding.tvAddplantLastWatered) viewModel.updatePlantInfo(
-                    viewModel.plantRegisterItem.value.copy(
-                        lastWaterDate = returnDateFormat(year, month, day)
+                } else if (view == binding.tvAddplantLastWatered) {
+                    viewModel.updatePlantInfo(
+                        viewModel.plantRegisterItem.value.copy(
+                            lastWaterDate = returnDateFormat(year, month, day)
+                        )
                     )
-                )
+                }
             }
             DatePickerDialog(
                 requireContext(),

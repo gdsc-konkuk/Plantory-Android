@@ -2,7 +2,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
@@ -23,7 +22,6 @@ import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
-import timber.log.Timber
 
 @AndroidEntryPoint
 class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_upload) {
@@ -90,7 +88,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     }
 
     private fun initTextChangeListener() {
-        binding.etUploadDiary.doAfterTextChanged {text ->
+        binding.etUploadDiary.doAfterTextChanged { text ->
             viewModel.updateDiaryInput(text.toString())
             updateRegisterButtonState()
         }

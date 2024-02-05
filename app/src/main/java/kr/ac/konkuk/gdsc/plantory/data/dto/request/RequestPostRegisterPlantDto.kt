@@ -14,5 +14,5 @@ data class RequestPostRegisterPlantDto(
     @SerialName("birthDate")
     val birthDate: String,
     @SerialName("lastWaterDate")
-    val lastWaterDate: String,
+    val lastWaterDate: String
 )

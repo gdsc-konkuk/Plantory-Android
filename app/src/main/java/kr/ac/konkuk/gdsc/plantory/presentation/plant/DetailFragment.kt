@@ -174,7 +174,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     if (state.data.isEmpty() && !firstCallCalendar) {
-                    }else {
+                    } else {
                         initWaterButton(state.data)
                         updateCalendar(state.data)
                     }
@@ -183,7 +183,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -200,7 +199,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 

@@ -6,7 +6,7 @@ import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 
 @Serializable
-data class ResponseGetPlantHistoriesDto (
+data class ResponseGetPlantHistoriesDto(
     @SerialName("histories")
     val histories: List<PlantHistoryDto>?
 ) {

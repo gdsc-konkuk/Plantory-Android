@@ -53,12 +53,13 @@ class DetailAdapter(
 
             recordsByDate.forEach { (date, records) ->
                 binding.apply {
-
-                    val waterChangeVisible = records.any { it.type == PlantHistoryType.WATER_CHANGE }
+                    val waterChangeVisible =
+                        records.any { it.type == PlantHistoryType.WATER_CHANGE }
                     val recordingVisible = records.any { it.type == PlantHistoryType.RECORDING }
-
-                    ivCalendarWateredStamp.visibility = if (waterChangeVisible) View.VISIBLE else View.GONE
-                    ivCalendarRecordedStamp.visibility = if (recordingVisible) View.VISIBLE else View.GONE
+                    ivCalendarWateredStamp.visibility =
+                        if (waterChangeVisible) View.VISIBLE else View.GONE
+                    ivCalendarRecordedStamp.visibility =
+                        if (recordingVisible) View.VISIBLE else View.GONE
                 }
             }
             binding.llCalendarDay.setOnSingleClickListener {
@@ -81,8 +82,8 @@ class DetailAdapter(
 
         val plantDailyRecordsForDate = plantHistories.filter {
             it.date.substring(0, 4) == formattedCurrentDate.substring(0, 4) &&
-                    it.date.substring(5, 7) == formattedCurrentDate.substring(5, 7) &&
-                    it.date.takeLast(2) == formattedCurrentDate.takeLast(2)
+                it.date.substring(5, 7) == formattedCurrentDate.substring(5, 7) &&
+                it.date.takeLast(2) == formattedCurrentDate.takeLast(2)
         }
         holder.onBind(currentDate, plantDailyRecordsForDate)
     }

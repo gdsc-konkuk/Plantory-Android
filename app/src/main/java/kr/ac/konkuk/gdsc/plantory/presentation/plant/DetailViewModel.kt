@@ -136,7 +136,7 @@ class DetailViewModel @Inject constructor(
             val targetMonth = returnDateFormat(currentYear.value, currentMonth.value)
             plantRepository.getPlantHistories(clickedPlantId.value, targetMonth)
                 .onSuccess { response ->
-                    if (response!= null) {
+                    if (response != null) {
                         _getPlantHistoryState.value =
                             UiState.Success(response)
                     } else {

@@ -1,6 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.domain.entity
 
-data class PlantDetail (
+data class PlantDetail(
     val id: Long,
     val dday: Int,
     val nickname: String,

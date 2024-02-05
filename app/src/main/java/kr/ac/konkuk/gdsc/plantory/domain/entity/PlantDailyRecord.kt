@@ -1,6 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.domain.entity
 
-data class PlantDailyRecord (
+data class PlantDailyRecord(
     val id: Long,
     val date: String,
     val nickname: String,

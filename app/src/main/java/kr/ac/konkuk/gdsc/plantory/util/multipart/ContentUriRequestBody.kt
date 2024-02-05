@@ -12,7 +12,7 @@ import okio.source
 
 class ContentUriRequestBody(
     context: Context,
-    private val uri: Uri,
+    private val uri: Uri
 ) : RequestBody() {
     private val contentResolver = context.contentResolver
 
@@ -25,10 +25,11 @@ class ContentUriRequestBody(
             arrayOf(MediaStore.Images.Media.SIZE, MediaStore.Images.Media.DISPLAY_NAME),
             null,
             null,
-            null,
+            null
         )?.use { cursor ->
             if (cursor.moveToFirst()) {
-                fileSize = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE))
+                fileSize =
+                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE))
                 fileName =
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
             }
