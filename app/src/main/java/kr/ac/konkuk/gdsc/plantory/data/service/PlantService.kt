@@ -42,4 +42,11 @@ interface PlantService {
     suspend fun deletePlant(
         @Path("companionPlantId") companionPlantId: Int
     )
+    @Multipart
+    @POST("api/v1/plants/{companionPlantId}/records")
+    suspend fun postPlantRecord(
+        @Path("companionPlantId") companionPlantId: Int,
+        @PartMap request: HashMap<String, RequestBody>,
+        @Part image: MultipartBody.Part?
+    )
 }

@@ -21,7 +21,9 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,19 +58,11 @@ class AddPlantViewModel @Inject constructor(
         _currentMonth.value = calendar.get(Calendar.MONTH)
         _currentDay.value = calendar.get(Calendar.DAY_OF_MONTH)
         _plantRegisterItem.value = PlantRegisterItem(
-            species = "",
-            nickname = "",
-            shortDescription = "",
-            birthDate = "${currentYear.value}-${formatDateToAddZero(currentMonth.value + 1)}-${
-            formatDateToAddZero(
-                currentDay.value
-            )
-            }",
-            lastWaterDate = "${currentYear.value}-${formatDateToAddZero(currentMonth.value + 1)}-${
-            formatDateToAddZero(
-                currentDay.value
-            )
-            }"
+            "",
+            "",
+            "",
+            returnDateFormat(currentYear.value, currentMonth.value, currentDay.value),
+            returnDateFormat(currentYear.value, currentMonth.value, currentDay.value)
         )
     }
 
@@ -85,7 +79,6 @@ class AddPlantViewModel @Inject constructor(
                     val errorResponse = t.response()?.errorBody()?.string()
                     Timber.e("HTTP 실패: $errorResponse")
                 }
-                Timber.e("${t.message}")
                 _postRegisterPlantState.value = UiState.Failure("${t.message}")
             }
         }
@@ -109,7 +102,7 @@ class AddPlantViewModel @Inject constructor(
         val plainTextRequestBody = hashMapOf(
             "request" to plantInfoJsonString.toRequestBody("application/json".toMediaTypeOrNull())
         )
-        return Pair(plainTextRequestBody, imageFormData)
+        return plainTextRequestBody to imageFormData
     }
 
     private fun findPlantInformationId(species: String): Int {
@@ -127,7 +120,7 @@ class AddPlantViewModel @Inject constructor(
         updateRequestBody(requestBody)
     }
 
-    fun updateRequestBody(requestBody: ContentUriRequestBody) {
+    private fun updateRequestBody(requestBody: ContentUriRequestBody) {
         this.imageRequestBody = requestBody
     }
 
@@ -141,11 +134,11 @@ class AddPlantViewModel @Inject constructor(
         }
     }
 
-    private fun formatDateToAddZero(date: Int): String {
-        if (date < 10) {
-            return String.format("%02d", date)
-        }
-        return date.toString()
+    private fun returnDateFormat(year: Int, month: Int, day: Int): String {
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 
     private fun generateMockData(): List<String> {

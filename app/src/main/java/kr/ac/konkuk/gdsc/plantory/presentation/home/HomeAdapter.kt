@@ -11,7 +11,7 @@ import kr.ac.konkuk.gdsc.plantory.util.view.ItemDiffCallback
 class HomeAdapter(
     private val onItemClick: (Int) -> Unit,
     private val onAddPlantButtonClick: () -> Unit,
-    private val onUploadDiaryButtonClick: () -> Unit
+    private val onUploadDiaryButtonClick: (Plant) -> Unit
 ) :
     ListAdapter<Plant, HomeAdapter.HomeViewHolder>(
         ItemDiffCallback<Plant>(
@@ -29,7 +29,7 @@ class HomeAdapter(
             itemCount: Int,
             onItemClick: (Int) -> Unit,
             onAddPlantButtonClick: () -> Unit,
-            onUploadDiaryButtonClick: () -> Unit
+            onUploadDiaryButtonClick: (Plant) -> Unit
         ) {
             binding.data = data
             if (position == itemCount - 1) {
@@ -37,7 +37,7 @@ class HomeAdapter(
                 binding.ivPlantUpload.setOnClickListener { onAddPlantButtonClick.invoke() }
             } else {
                 binding.root.setOnClickListener { onItemClick(data.id) }
-                binding.ivPlantUpload.setOnClickListener { onUploadDiaryButtonClick.invoke() }
+                binding.ivPlantUpload.setOnClickListener { onUploadDiaryButtonClick(data) }
             }
             binding.executePendingBindings()
         }

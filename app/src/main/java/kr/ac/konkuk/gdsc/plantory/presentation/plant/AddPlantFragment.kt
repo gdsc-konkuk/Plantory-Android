@@ -82,7 +82,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         viewModel.postRegisterPlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    Timber.d("Success : Register ")
                     parentFragmentManager.popBackStack()
                 }
 
@@ -129,7 +128,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     private fun updateRegisterBtnState() {
         val isFieldsNotEmpty = viewModel.checkIsNotEmpty()
-
         binding.btnAddplantUpload.isEnabled = isFieldsNotEmpty
         binding.btnAddplantUpload.setRegisterBackgroundResource(isFieldsNotEmpty)
     }
@@ -227,7 +225,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
         return dateFormat.format(calendar.time)
     }
 }

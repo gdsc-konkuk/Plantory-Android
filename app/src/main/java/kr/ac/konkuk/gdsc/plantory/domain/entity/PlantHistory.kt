@@ -7,5 +7,5 @@ data class PlantHistory(
 )
 
 enum class PlantHistoryType {
-    WATER_CHANGE, POT_CHANGE, RECORDING;
+    WATER_CHANGE, POT_CHANGE, RECORDING
 }

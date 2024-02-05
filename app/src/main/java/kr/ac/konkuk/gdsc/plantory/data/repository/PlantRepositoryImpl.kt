@@ -37,6 +37,15 @@ class PlantRepositoryImpl @Inject constructor(
             plantDataSource.postPlantHistory(companionPlantId, requestPostHistoryDto)
         }
 
+    override suspend fun postPlantRecord(
+        companionPlantId: Int,
+        request: HashMap<String, RequestBody>,
+        image: MultipartBody.Part?
+    ): Result<Unit> =
+        runCatching {
+            plantDataSource.postPlantRecord(companionPlantId, request, image)
+        }
+
     override suspend fun getPlantDailyRecord(): Result<ResponseGetPlantDailyRecord> {
         return runCatching {
             ResponseGetPlantDailyRecord(

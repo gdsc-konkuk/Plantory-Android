@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
+import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
@@ -32,6 +33,9 @@ import kr.ac.konkuk.gdsc.plantory.util.view.PopupDeleteMenu
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -43,11 +47,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         firstCallCalendar = true
-        val plantId = arguments?.getInt("plantId", -1) ?: -1
-        if (plantId != -1) {
-            viewModel.updateClickedPlantId(plantId)
-        }
 
+        initPlantInfo()
         getPlantHistoryStateObserver()
         getPlantDetailStateObserver()
         postPlantWateredStateObserver()
@@ -66,19 +67,25 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         initAddButtonClickListener()
     }
 
+    private fun initPlantInfo() {
+        val plantId = arguments?.getInt("plantId", -1) ?: -1
+        if (plantId != -1) {
+            viewModel.updateClickedPlantId(plantId)
+        }
+    }
+
     private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
-            parentFragmentManager.commit {
-                replace<UploadFragment>(
-                    R.id.fcv_main,
-                    UploadFragment::class.simpleName
-                ).addToBackStack("DetailToUpload")
-            }
+            navigateToWithBundle<UploadFragment>(
+                bundleOf(
+                    "plantId" to viewModel.clickedPlantId.value,
+                    "plantNickname" to viewModel.clickedPlantNickname.value
+                )
+            )
         }
     }
 
     private fun initWaterButton(plantHistories: List<PlantHistory>) {
-        // 오늘 물 줬는지 시작때 파악
         plantHistories.forEach { plantHistory ->
             if (plantHistory.date.takeLast(2).toInt() == viewModel.currentDay.value) {
                 if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
@@ -98,7 +105,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun updateWaterButton() {
-        // 한번 물 주면 취소 불가
         binding.ivDetailPlantGiveWater.setOnSingleClickListener {
             val isWatered = viewModel.isWatered.value
             if (!isWatered) {
@@ -136,7 +142,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     binding.rvDetailCalendar.layoutManager =
                         GridLayoutManager(context, Calendar.DAY_OF_WEEK)
                     detailAdapter = DetailAdapter(currMonth, plantHistories, onDateClick = { date ->
-                        navigateTo<DiaryFragment>(bundleOf("selectedDate" to date))
+                        navigateToWithBundle<DiaryFragment>(bundleOf("selectedDate" to date))
                     })
                     binding.rvDetailCalendar.adapter = detailAdapter
 
@@ -163,13 +169,21 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         viewModel.getPlantDetailState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    binding.data = state.data
+                    binding.data = initDday(state.data)
+                    viewModel.updateClickedPlantNickname(state.data.nickname)
                 }
+
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
         }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun initDday(plant: Plant): Plant {
+        val targetDate = LocalDate.parse(plant.birthDate, DateTimeFormatter.ISO_DATE)
+        val daysPassed = ChronoUnit.DAYS.between(targetDate, LocalDate.now()) + 1
+        return plant.copy(dDay = daysPassed.toInt())
     }
 
     /*getPlantHistory*/
@@ -183,6 +197,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                         updateCalendar(state.data)
                     }
                 }
+
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -199,6 +214,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateIsWatered(true)
                     viewModel.getPlantHistories()
                 }
+
                 is UiState.Failure -> Timber.d("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -219,7 +235,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }.launchIn(viewLifeCycleScope)
     }
 
-    private inline fun <reified T : Fragment> navigateTo(args: Bundle) {
+    private inline fun <reified T : Fragment> navigateToWithBundle(args: Bundle) {
         parentFragmentManager.commit {
             replace<T>(
                 R.id.fcv_main,

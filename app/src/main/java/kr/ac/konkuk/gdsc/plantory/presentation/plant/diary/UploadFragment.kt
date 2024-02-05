@@ -6,15 +6,21 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentUploadBinding
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
+import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
+import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 
 @AndroidEntryPoint
@@ -24,8 +30,10 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.vm = viewModel
+        initPlantInfo()
         addListener()
+        setPostPlantRecordStateObserver()
     }
 
     private fun addListener() {
@@ -33,6 +41,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
         openGallery()
         initTextChangeListener()
         initBackListener()
+        initRegisterButtonClickListener()
     }
 
     private val getContent =
@@ -41,6 +50,13 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
                 viewModel.updateProfileImage(uri)
             }
         }
+
+    private fun initPlantInfo() {
+        val clickedPlantId = arguments?.getInt("plantId", -1) ?: -1
+        val clickedPlantNickname = arguments?.getString("plantNickname", "") ?: ""
+        viewModel.updateClickedPlantId(clickedPlantId)
+        viewModel.updateClickedPlantNickname(clickedPlantNickname)
+    }
 
     private fun initImageUriChangeListener() {
         viewLifeCycleScope.launch {
@@ -52,10 +68,16 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
 
     private fun updateRegisterButtonState() {
         viewLifeCycleScope.launch {
-            viewModel.diaryInput.collectLatest { input ->
-                val isFieldNotEmpty = input.isNotEmpty()
+            viewModel.plantRecord.collectLatest { input ->
+                val isFieldNotEmpty = input.comment.isNotEmpty()
                 binding.btnDiaryUpload.setRegisterBackgroundResource(isFieldNotEmpty)
             }
+        }
+    }
+
+    private fun initRegisterButtonClickListener() {
+        binding.btnDiaryUpload.setOnSingleClickListener {
+            viewModel.postPlantRecord()
         }
     }
 
@@ -80,5 +102,21 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
 
     private fun navigateToHome() {
         parentFragmentManager.popBackStack()
+    }
+
+    private fun setPostPlantRecordStateObserver() {
+        viewModel.postPlantRecordState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    navigateToHome()
+                }
+                is UiState.Failure -> {
+                    snackBar(requireView()) { "이미 기록이 등록되어 있습니다." }
+                    navigateToHome()
+                }
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
+            }
+        }.launchIn(viewLifeCycleScope)
     }
 }

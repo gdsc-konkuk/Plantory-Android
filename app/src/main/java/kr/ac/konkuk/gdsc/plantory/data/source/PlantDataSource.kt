@@ -29,4 +29,10 @@ class PlantDataSource @Inject constructor(
     suspend fun deletePlant(
         companionPlantId: Int
     ) = plantService.deletePlant(companionPlantId)
+
+    suspend fun postPlantRecord(
+        companionPlantId: Int,
+        request: HashMap<String, RequestBody>,
+        image: MultipartBody.Part?
+    ) = plantService.postPlantRecord(companionPlantId, request, image)
 }

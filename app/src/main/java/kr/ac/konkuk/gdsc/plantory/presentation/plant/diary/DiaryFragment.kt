@@ -34,16 +34,9 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
                 is UiState.Success -> {
                     binding.data = state.data
                 }
-
-                is UiState.Failure -> {
-                    snackBar(binding.root) { state.msg }
-                }
-
-                is UiState.Empty -> {
-                }
-
-                is UiState.Loading -> {
-                }
+                is UiState.Failure -> snackBar(binding.root) { state.msg }
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
             }
         }.launchIn(viewLifeCycleScope)
     }
