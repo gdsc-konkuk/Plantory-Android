@@ -49,7 +49,7 @@ class PlantoryMessagingService : FirebaseMessagingService() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel =
-            NotificationChannel("Channel ID", "Notice", NotificationManager.IMPORTANCE_HIGH)
+            NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
 
         notificationManager.createNotificationChannel(channel)
         notificationManager.notify(0, notificationBuilder.build())
@@ -60,7 +60,7 @@ class PlantoryMessagingService : FirebaseMessagingService() {
         val body = remoteMessage.notification?.body ?: ""
         val pendingIntent = createPendingIntent()
 
-        return NotificationCompat.Builder(this, "Channel ID")
+        return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(body)
@@ -75,5 +75,10 @@ class PlantoryMessagingService : FirebaseMessagingService() {
         return PendingIntent.getActivity(
             this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
         )
+    }
+
+    companion object {
+        private const val CHANNEL_ID = "WATER_ALERT"
+        private const val CHANNEL_NAME = "WATER_ALERT"
     }
 }
