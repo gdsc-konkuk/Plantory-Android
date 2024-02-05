@@ -21,6 +21,9 @@ class PlantDataSource @Inject constructor(
         targetMonth: String
     ) = plantService.getPlantHistories(companionPlantId, targetMonth)
 
+    suspend fun getPlantInformations() =
+        plantService.getPlantInformations()
+
     suspend fun postPlantHistory(
         companionPlantId: Int,
         requestPostHistoryDto: RequestPostPlantHistoryDto

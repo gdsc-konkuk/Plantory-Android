@@ -3,6 +3,7 @@ package kr.ac.konkuk.gdsc.plantory.data.service
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetAllPlantsDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantHistoriesDto
+import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantInformationsDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -31,6 +32,9 @@ interface PlantService {
         @Path("companionPlantId") companionPlantId: Int,
         @Query("targetMonth") targetMonth: String
     ): ResponseGetPlantHistoriesDto
+
+    @GET("api/v1/plantInformations")
+    suspend fun getPlantInformations(): ResponseGetPlantInformationsDto
 
     @POST("api/v1/plants/{companionPlantId}/histories")
     suspend fun postPlantHistory(
