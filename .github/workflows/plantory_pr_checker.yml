@@ -41,6 +41,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+
       - name: If Success, Send notification on Slack
         if: ${{success()}}
         uses: rtCamp/action-slack-notify@v2
