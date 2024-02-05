@@ -49,6 +49,13 @@ class DetailAdapter(
                 dayText.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red))
             }
 
+            val isToday = dateFormat.format(date) == dateFormat.format(Date())
+
+            binding.llCalendarDay.apply {
+                if (isToday) setBackgroundResource(R.drawable.oval_gray_100_fill)
+                else setBackgroundResource(0)
+            }
+
             val recordsByDate = plantDailyRecords.groupBy { it.date.takeLast(2) }
 
             recordsByDate.forEach { (date, records) ->
