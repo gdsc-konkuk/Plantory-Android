@@ -2,7 +2,6 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
 import android.content.Context
 import android.net.Uri
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel

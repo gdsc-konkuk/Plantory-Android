@@ -1,13 +1,13 @@
 package kr.ac.konkuk.gdsc.plantory.data.repository
 
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
-import kr.ac.konkuk.gdsc.plantory.data.source.PlantDataSource
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
+import kr.ac.konkuk.gdsc.plantory.data.source.PlantDataSource
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class PlantRepositoryImpl @Inject constructor(
@@ -53,13 +53,5 @@ class PlantRepositoryImpl @Inject constructor(
     override suspend fun getAllPlants(): Result<List<Plant>> =
         runCatching {
             plantDataSource.getAllPlants().convertToPlant()
-        }
-
-    override suspend fun postRegisterPlant(
-        request: HashMap<String, RequestBody>,
-        image: MultipartBody.Part?
-    ): Result<Unit> =
-        runCatching {
-            plantDataSource.postRegisterPlant(request, image)
         }
 }

@@ -1,6 +1,5 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,12 +53,13 @@ class DetailAdapter(
 
             recordsByDate.forEach { (date, records) ->
                 binding.apply {
-
-                    val waterChangeVisible = records.any { it.type == PlantHistoryType.WATER_CHANGE }
+                    val waterChangeVisible =
+                        records.any { it.type == PlantHistoryType.WATER_CHANGE }
                     val recordingVisible = records.any { it.type == PlantHistoryType.RECORDING }
-
-                    ivCalendarWateredStamp.visibility = if (waterChangeVisible) View.VISIBLE else View.GONE
-                    ivCalendarRecordedStamp.visibility = if (recordingVisible) View.VISIBLE else View.GONE
+                    ivCalendarWateredStamp.visibility =
+                        if (waterChangeVisible) View.VISIBLE else View.GONE
+                    ivCalendarRecordedStamp.visibility =
+                        if (recordingVisible) View.VISIBLE else View.GONE
                 }
             }
             binding.llCalendarDay.setOnSingleClickListener {
