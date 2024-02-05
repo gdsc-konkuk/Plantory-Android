@@ -7,7 +7,7 @@
 
         <variable
             name="data"
-            type="kr.ac.konkuk.gdsc.plantory.domain.entity.PlantDetail" />
+            type="kr.ac.konkuk.gdsc.plantory.domain.entity.Plant" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -76,7 +76,7 @@
                     android:layout_height="0dp"
                     android:layout_margin="24dp"
                     android:layout_marginTop="24dp"
-                    android:background="@drawable/shape_gray_200_fill_10"
+                    android:background="@drawable/plant"
                     app:layout_constraintDimensionRatio="H,4:3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="6dp"
-                            android:text="@{data.createdAt}"
+                            android:text="@{data.birthDate}"
                             android:textAppearance="@style/TextAppearance.PLANTORY.body_r_10"
                             android:textColor="@color/gray_0"
                             app:layout_constraintBottom_toTopOf="@id/tv_detail_dday"
@@ -116,7 +116,7 @@
                             style="@style/TextAppearance.PLANTORY.Headline_b_36_xxl"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{@string/detail_dday(data.dday)}"
+                            android:text="7일"
                             android:textColor="@color/gray_0"
                             app:layout_constraintBottom_toTopOf="@id/tv_detail_plant_species"
                             app:layout_constraintStart_toStartOf="parent" />
@@ -137,7 +137,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="24dp"
-                            android:text="@{data.species}"
+                            android:text="@{data.name}"
                             android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
                             android:textColor="@color/gray_0"
                             app:layout_constraintBottom_toBottomOf="@id/tv_detail_plant_species"
@@ -163,7 +163,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
-                            android:text="@{data.description}"
+                            android:text="@{data.shortDescription}"
                             android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_11"
                             android:textColor="@color/gray_0"
                             app:layout_constraintBottom_toBottomOf="@id/tv_detail_plant_description"

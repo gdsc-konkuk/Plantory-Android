@@ -1,8 +1,10 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import PopupMenu
+import android.icu.lang.UCharacter
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -63,7 +65,10 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun initPlantViewPagerAdapter(plants: List<Plant>) {
         homeAdapter = HomeAdapter(
-            onItemClick = { navigateToDetail() },
+            onItemClick = { plantId ->
+                val bundle = bundleOf("plantId" to plantId)
+                navigateToDetailWithBundle(bundle)
+            },
             onAddPlantButtonClick = { navigateToAdd() },
             onUploadDiaryButtonClick = { navigateToUpload() }
         ).apply {
@@ -104,7 +109,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun addListener() {
         initAddButtonClickListener()
-        initNotificationButtonClickListener()
     }
 
     private fun initAddButtonClickListener() {
@@ -112,12 +116,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
             PopupMenu(it.context, onAddButtonClick = {
                 navigateToAdd()
             }).showAsDropDown(it, -55, 0)
-        }
-    }
-
-    private fun initNotificationButtonClickListener() {
-        binding.ivHomeNotification.setOnClickListener {
-            navigateToNotification()
         }
     }
 
@@ -183,16 +181,12 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
-    private fun navigateToNotification() {
-        navigateTo<NotificationFragment>()
-    }
-
     private fun navigateToAdd() {
         navigateTo<AddPlantFragment>()
     }
 
-    private fun navigateToDetail() {
-        navigateTo<DetailFragment>()
+    private fun navigateToDetailWithBundle(bundle: Bundle) {
+        navigateTo<DetailFragment>(bundle)
     }
 
     private fun navigateToUpload() {
@@ -202,6 +196,16 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     private inline fun <reified T : Fragment> navigateTo() {
         activity?.supportFragmentManager?.commit {
             replace<T>(R.id.fcv_main, T::class.simpleName).addToBackStack(ROOT_FRAGMENT_HOME)
+        }
+    }
+
+    private inline fun <reified T : Fragment> navigateTo(args: Bundle) {
+        parentFragmentManager.commit {
+            replace<T>(
+                R.id.fcv_main,
+                T::class.simpleName,
+                args
+            ).addToBackStack("HomeToDetail")
         }
     }
 
