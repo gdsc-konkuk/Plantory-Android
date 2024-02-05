@@ -173,7 +173,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateClickedPlantNickname(state.data.nickname)
                 }
 
-                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
@@ -198,7 +198,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     }
                 }
 
-                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
@@ -215,7 +215,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.getPlantHistories()
                 }
 
-                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
@@ -227,7 +227,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         viewModel.deletePlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> navigateToHome()
-                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }

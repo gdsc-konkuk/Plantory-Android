@@ -36,5 +36,5 @@ interface PlantRepository {
 
     suspend fun deletePlant(
         companionPlantId: Int
-    ): Result<Unit?>
+    ): Result<Unit>
 }

@@ -175,22 +175,22 @@ class DetailViewModel @Inject constructor(
     }
 
     /*deletePlant*/
-    private val _deletePlantState = MutableStateFlow<UiState<Unit?>>(UiState.Loading)
-    val deletePlantState: StateFlow<UiState<Unit?>> = _deletePlantState.asStateFlow()
+    private val _deletePlantState = MutableStateFlow<UiState<Unit>>(UiState.Loading)
+    val deletePlantState: StateFlow<UiState<Unit>> = _deletePlantState.asStateFlow()
 
     fun deletePlant() {
         viewModelScope.launch {
             _deletePlantState.value = UiState.Loading
-            plantRepository.deletePlant(clickedPlantId.value)
-                .onSuccess { response ->
-                    _deletePlantState.value = UiState.Success(null)
-                }.onFailure { t ->
-                    if (t is HttpException) {
-                        val errorResponse = t.response()?.errorBody()?.string()
-                        Timber.e("HTTP 실패: $errorResponse")
-                    }
-                    _deletePlantState.value = UiState.Failure("${t.message}")
+            try {
+                plantRepository.deletePlant(clickedPlantId.value)
+                _deletePlantState.value = UiState.Success(Unit)
+            } catch (t: Throwable) {
+                if (t is HttpException) {
+                    val errorResponse = t.response()?.errorBody()?.string()
+                    Timber.e("HTTP 실패: $errorResponse")
                 }
+                _deletePlantState.value = UiState.Failure("${t.message}")
+            }
         }
     }
 
