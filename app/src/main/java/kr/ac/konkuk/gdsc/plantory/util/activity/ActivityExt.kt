@@ -6,4 +6,3 @@ import kr.ac.konkuk.gdsc.plantory.util.context.hideKeyboard
 fun Activity.hideKeyboard() {
     hideKeyboard(currentFocus ?: View(this))
 }
-

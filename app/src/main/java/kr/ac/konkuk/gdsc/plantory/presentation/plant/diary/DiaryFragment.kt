@@ -45,7 +45,6 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
                 is UiState.Loading -> {
                 }
             }
-
         }.launchIn(viewLifeCycleScope)
     }
 

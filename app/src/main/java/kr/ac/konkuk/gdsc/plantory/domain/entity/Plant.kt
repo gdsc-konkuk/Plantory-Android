@@ -6,5 +6,5 @@ data class Plant(
     val nickname: String,
     val shortDescription: String,
     val birthDate: String,
-    val name: String,
+    val name: String
 )

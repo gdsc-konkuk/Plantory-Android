@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RequestPostRegisterUserDto (
+data class RequestPostRegisterUserDto(
     @SerialName("deviceToken")
     val deviceToken: String
 )

@@ -5,5 +5,5 @@ data class PlantRegisterItem(
     val nickname: String,
     val shortDescription: String,
     val birthDate: String,
-    val lastWaterDate: String,
-    )
+    val lastWaterDate: String
+)
