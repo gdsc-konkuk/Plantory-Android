@@ -11,6 +11,12 @@ class PlantDataSource @Inject constructor(
 ) {
     suspend fun getAllPlants() =
         plantService.getAllPlants()
+
+    suspend fun getPlantRecord(
+        companionPlantId: Int,
+        recordDate: String
+    ) = plantService.getPlantRecord(companionPlantId, recordDate)
+
     suspend fun postRegisterPlant(
         request: HashMap<String, RequestBody>,
         image: MultipartBody.Part?
