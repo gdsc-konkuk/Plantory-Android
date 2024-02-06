@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(
     val emptyItemForAddPlant = Plant(
         birthDate = "",
         id = Int.MAX_VALUE,
-        imageUrl = "R.drawable.img_home_new",
+        imageUrl = "R.drawable.img_home_add_new",
         name = "",
         nickname = "",
         shortDescription = "",

@@ -18,7 +18,7 @@ fun ImageView.setImageUrl(imageUrl: String) {
         setImageResource(drawableResId)
     } else {
         load(imageUrl) {
-            transformations(RoundedCornersTransformation(8F))
+            transformations(RoundedCornersTransformation(20F))
         }
     }
 }
