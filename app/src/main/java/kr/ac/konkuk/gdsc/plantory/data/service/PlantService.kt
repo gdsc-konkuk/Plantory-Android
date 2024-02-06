@@ -3,10 +3,12 @@ package kr.ac.konkuk.gdsc.plantory.data.service
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetAllPlantsDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantHistoriesDto
+import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantInformationsDto
 import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantRecordDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -32,10 +34,18 @@ interface PlantService {
         @Query("targetMonth") targetMonth: String
     ): ResponseGetPlantHistoriesDto
 
+    @GET("api/v1/plantInformations")
+    suspend fun getPlantInformations(): ResponseGetPlantInformationsDto
+
     @POST("api/v1/plants/{companionPlantId}/histories")
     suspend fun postPlantHistory(
         @Path("companionPlantId") companionPlantId: Int,
         @Body requestPostHistoryDto: RequestPostPlantHistoryDto
+    )
+
+    @DELETE("api/v1/plants/{companionPlantId}")
+    suspend fun deletePlant(
+        @Path("companionPlantId") companionPlantId: Int
     )
 
     @Multipart
