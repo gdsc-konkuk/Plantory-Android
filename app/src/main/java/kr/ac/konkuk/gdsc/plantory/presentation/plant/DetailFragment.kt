@@ -5,6 +5,7 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -12,6 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -23,6 +26,7 @@ import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
+import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
@@ -79,12 +83,24 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
-            navigateToWithBundle<UploadFragment>(
-                bundleOf(
-                    "plantId" to viewModel.clickedPlantId.value,
-                    "plantNickname" to viewModel.clickedPlantNickname.value
+            if (viewModel.isRecoreded.value) {
+                snackBar(requireView()) { "이미 기록이 있습니다." }
+            } else {
+                navigateToWithBundle<UploadFragment>(
+                    bundleOf(
+                        "plantId" to viewModel.clickedPlantId.value,
+                        "plantNickname" to viewModel.clickedPlant.value.nickname
+                    )
                 )
-            )
+            }
+        }
+    }
+
+    private fun initImage() {
+        viewModel.clickedPlant.value.let { plant ->
+            binding.ivDetailImg.load(plant.imageUrl) {
+                transformations(RoundedCornersTransformation(20f))
+            }
         }
     }
 
@@ -94,6 +110,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
                     binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
                     viewModel.updateIsWatered(true)
+                } else if (plantHistory.type == PlantHistoryType.RECORDING) {
+                    binding.ivDetailPlantUpload.setImageResource(R.drawable.ic_detail_record_complete)
+                    viewModel.updateIsRecorded(true)
                 }
             }
         }
@@ -200,9 +219,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     binding.data = initDday(state.data)
-                    viewModel.updateClickedPlantNickname(state.data.nickname)
+                    viewModel.updateClickedPlant(state.data)
+                    initImage()
                 }
-
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -223,6 +242,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Success -> {
                     if (state.data.isEmpty() && !firstCallCalendar) {
                     } else {
+                        deactivateLoadingProgressBar()
                         initWaterButton(state.data)
                         updateCalendar(state.data)
                     }
@@ -230,7 +250,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
-                is UiState.Loading -> Unit
+                is UiState.Loading -> {
+                    activateLoadingProgressBar()
+                }
             }
         }.launchIn(viewLifeCycleScope)
     }
@@ -256,12 +278,36 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun deletePlantObserver() {
         viewModel.deletePlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
-                is UiState.Success -> navigateToHome()
+                is UiState.Success -> {
+                    navigateToHomeWithMessage(KEY_FROM_DETAIL_DELETE, MSG_FROM_DETAIL_DELETE)
+                }
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
         }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun activateLoadingProgressBar() {
+        binding.clDetail.isVisible = false
+        binding.pbDetailLoading.isVisible = true
+    }
+
+    private fun deactivateLoadingProgressBar() {
+        binding.clDetail.isVisible = true
+        binding.pbDetailLoading.isVisible = false
+    }
+
+    private fun navigateToHomeWithMessage(key: String, message: String) {
+        val fragment = HomeFragment().apply {
+            arguments = Bundle().apply {
+                putString(key, message)
+            }
+        }
+
+        activity?.supportFragmentManager?.commit {
+            replace(R.id.fcv_main, fragment)
+        }
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
@@ -278,5 +324,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 args
             ).addToBackStack("DetailFragment")
         }
+    }
+
+    companion object {
+        private const val KEY_FROM_DETAIL_DELETE = "KEY_FROM_DETAIL_DELETE"
+        private const val MSG_FROM_DETAIL_DELETE = "식물을 성공적으로 삭제했습니다"
     }
 }

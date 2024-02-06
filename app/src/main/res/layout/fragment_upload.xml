@@ -149,7 +149,7 @@
                 android:layout_height="50dp"
                 android:layout_marginBottom="29dp"
                 android:background="@drawable/shape_gray_200_fill_10"
-                android:text="@string/base_addbtn_text"
+                android:text="@{@string/upload_btn(vm.clickedPlantNickname)}"
                 android:gravity="center"
                 android:textColor="@color/gray_0"
                 android:textSize="14sp"

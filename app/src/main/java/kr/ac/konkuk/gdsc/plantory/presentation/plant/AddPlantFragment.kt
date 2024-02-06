@@ -7,7 +7,9 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
@@ -18,6 +20,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.databinding.FragmentAddPlantBinding
+import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.setImageUrl
 import kr.ac.konkuk.gdsc.plantory.util.binding.setRegisterBackgroundResource
@@ -82,7 +85,9 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private fun setPostRegisterPlantStateObserver() {
         viewModel.postRegisterPlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
-                is UiState.Success -> parentFragmentManager.popBackStack()
+                is UiState.Success -> {
+                    navigateToHomeWithMessage(KEY_FROM_ADD, MSG_FROM_ADD)
+                }
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -223,6 +228,11 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             val item = parent.getItemAtPosition(position).toString()
             binding.tvAddplantSpecies.setText(item)
         }
+        binding.tvAddplantSpecies.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && view is AppCompatAutoCompleteTextView) {
+                view.showDropDown()
+            }
+        }
     }
 
     private fun initBackButtonClickListener() {
@@ -235,10 +245,27 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         parentFragmentManager.popBackStack()
     }
 
+    private fun navigateToHomeWithMessage(key: String, message: String) {
+        val fragment = HomeFragment().apply {
+            arguments = Bundle().apply {
+                putString(key, message)
+            }
+        }
+
+        activity?.supportFragmentManager?.commit {
+            replace(R.id.fcv_main, fragment)
+        }
+    }
+
     private fun returnDateFormat(year: Int, month: Int, day: Int): String {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(calendar.time)
+    }
+
+    companion object {
+        private const val KEY_FROM_ADD = "KEY_FROM_ADD"
+        private const val MSG_FROM_ADD = "식물을 성공적으로 등록했습니다"
     }
 }

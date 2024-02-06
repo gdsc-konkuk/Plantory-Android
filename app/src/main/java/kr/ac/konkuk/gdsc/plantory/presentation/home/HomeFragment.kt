@@ -22,10 +22,10 @@ import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.DetailFragment
-import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
+import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
@@ -35,7 +35,6 @@ import timber.log.Timber
 class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var plantScrollJob: Job
-    private var isDecorationAdded: Boolean = false
     private var currentPlantPosition = 0
     private var plantItemCount = 0
     private val viewModel by viewModels<HomeViewModel>()
@@ -47,13 +46,21 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         addCallback()
         addListener()
         viewModel.getAllPlants()
-        binding.ivHomeLogo.setOnClickListener {
-            navigateTo<DiaryFragment>()
+
+        getArgumentsAndShowAction(KEY_FROM_ADD, view)
+        getArgumentsAndShowAction(KEY_FROM_DETAIL_DELETE, view)
+    }
+
+    private fun getArgumentsAndShowAction(key: String, view: View) {
+        arguments?.getString(key)?.let { message ->
+            snackBar(view) { message }
+            arguments?.putString(key, null)
         }
     }
 
     private fun initPlantViewPager(plants: List<Plant>) {
         createPlantScrollJob()
+        removeViewPagerDecorations(binding.vpHomePlant)
         initViewPagerDecoration(
             previewWidth = VIEWPAGER_PREVIEW_WIDTH,
             itemMargin = VIEWPAGER_ITEM_MARGIN
@@ -102,19 +109,16 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     }
 
     private fun initViewPagerDecoration(previewWidth: Int, itemMargin: Int) {
-        if (!isDecorationAdded) {
-            val decoMargin = previewWidth + itemMargin
-            val pageTransX = decoMargin + previewWidth
-            val decoration = ViewPagerDecoration(decoMargin)
+        val decoMargin = previewWidth + itemMargin
+        val pageTransX = decoMargin + previewWidth
+        val decoration = ViewPagerDecoration(decoMargin)
 
-            binding.vpHomePlant.also {
-                it.offscreenPageLimit = 1
-                it.addItemDecoration(decoration)
-                it.setPageTransformer { page, position ->
-                    page.translationX = position * -pageTransX
-                }
+        binding.vpHomePlant.also {
+            it.offscreenPageLimit = 1
+            it.addItemDecoration(decoration)
+            it.setPageTransformer { page, position ->
+                page.translationX = position * -pageTransX
             }
-            isDecorationAdded = true
         }
         return
     }
@@ -150,6 +154,12 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
                     binding.lHomeRefresh.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
                 }
             })
+    }
+
+    private fun removeViewPagerDecorations(viewPager: ViewPager2) {
+        repeat(viewPager.itemDecorationCount) {
+            viewPager.removeItemDecorationAt(0)
+        }
     }
 
     private fun createPlantScrollJob() {
@@ -233,5 +243,8 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         private const val VIEWPAGER_ITEM_MARGIN = 50
 
         private const val ROOT_FRAGMENT_HOME = "homeFragment"
+
+        private const val KEY_FROM_DETAIL_DELETE = "KEY_FROM_DETAIL_DELETE"
+        private const val KEY_FROM_ADD = "KEY_FROM_ADD"
     }
 }
