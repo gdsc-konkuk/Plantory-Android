@@ -13,6 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -87,9 +89,17 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 navigateToWithBundle<UploadFragment>(
                     bundleOf(
                         "plantId" to viewModel.clickedPlantId.value,
-                        "plantNickname" to viewModel.clickedPlantNickname.value
+                        "plantNickname" to viewModel.clickedPlant.value.nickname
                     )
                 )
+            }
+        }
+    }
+
+    private fun initImage() {
+        viewModel.clickedPlant.value.let { plant ->
+            binding.ivDetailImg.load(plant.imageUrl) {
+                transformations(RoundedCornersTransformation(20f))
             }
         }
     }
@@ -209,9 +219,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             when (state) {
                 is UiState.Success -> {
                     binding.data = initDday(state.data)
-                    viewModel.updateClickedPlantNickname(state.data.nickname)
+                    viewModel.updateClickedPlant(state.data)
+                    initImage()
                 }
-
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
