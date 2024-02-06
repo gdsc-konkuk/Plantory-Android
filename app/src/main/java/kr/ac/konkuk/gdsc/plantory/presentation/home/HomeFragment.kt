@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -47,6 +48,10 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         addCallback()
         addListener()
         viewModel.getAllPlants()
+
+        arguments?.getString(KEY_FROM_DETAIL_DELETE)?.let { message ->
+            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     private fun initPlantViewPager(plants: List<Plant>) {
@@ -230,5 +235,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         private const val VIEWPAGER_ITEM_MARGIN = 50
 
         private const val ROOT_FRAGMENT_HOME = "homeFragment"
+
+        private const val KEY_FROM_DETAIL_DELETE = "KEY_FROM_DETAIL_DELETE"
     }
 }

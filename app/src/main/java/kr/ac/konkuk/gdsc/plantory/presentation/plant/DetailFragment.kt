@@ -24,6 +24,7 @@ import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
+import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
@@ -267,7 +268,17 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun deletePlantObserver() {
         viewModel.deletePlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
-                is UiState.Success -> navigateToHome()
+                is UiState.Success -> {
+                    val fragment = HomeFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(KEY_FROM_DETAIL_DELETE, MSG_FROM_DETAIL_DELETE)
+                        }
+                    }
+                    activity?.supportFragmentManager?.commit {
+                        replace(R.id.fcv_main, fragment)
+                    }
+                }
+
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -299,5 +310,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 args
             ).addToBackStack("DetailFragment")
         }
+    }
+
+    companion object {
+        private const val KEY_FROM_DETAIL_DELETE = "KEY_FROM_DETAIL_DELETE"
+        private const val MSG_FROM_DETAIL_DELETE = "식물을 삭제했습니다"
     }
 }
