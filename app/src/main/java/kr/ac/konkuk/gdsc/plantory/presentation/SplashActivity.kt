@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import kr.ac.konkuk.gdsc.plantory.util.activity.applyScreenEnterAnimation
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import timber.log.Timber
 
@@ -83,11 +84,12 @@ class SplashActivity : AppCompatActivity() {
 
     private fun navigateToMain() {
         navigateTo<MainActivity>()
+        applyScreenEnterAnimation()
     }
 
     private inline fun <reified T : Activity> navigateTo() {
         Intent(this, T::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(this)
         }
     }
