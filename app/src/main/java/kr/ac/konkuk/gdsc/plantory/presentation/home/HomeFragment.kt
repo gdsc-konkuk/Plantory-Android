@@ -48,11 +48,14 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         addListener()
         viewModel.getAllPlants()
 
-        arguments?.getString(KEY_FROM_ADD)?.let { message ->
+        getArgumentsAndShowAction(KEY_FROM_ADD, view)
+        getArgumentsAndShowAction(KEY_FROM_DETAIL_DELETE, view)
+    }
+
+    private fun getArgumentsAndShowAction(key: String, view: View) {
+        arguments?.getString(key)?.let { message ->
             snackBar(view) { message }
-        }
-        arguments?.getString(KEY_FROM_DETAIL_DELETE)?.let { message ->
-            snackBar(view) { message }
+            arguments?.putString(key, null)
         }
     }
 
