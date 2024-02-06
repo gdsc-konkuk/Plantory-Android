@@ -2,6 +2,7 @@ package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,13 +38,16 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
         viewModel.getPlantDailyRecordState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
+                    deactivateLoadingProgressBar()
                     binding.data = state.data
                     binding.tvDiaryDate.text = date
                 }
 
                 is UiState.Failure -> snackBar(binding.root) { state.msg }
                 is UiState.Empty -> Unit
-                is UiState.Loading -> Unit
+                is UiState.Loading -> {
+                    activateLoadingProgressBar()
+                }
             }
         }.launchIn(viewLifeCycleScope)
     }
@@ -53,6 +57,17 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
             navigateToHome()
         }
     }
+
+    private fun activateLoadingProgressBar() {
+        binding.clDiary.isVisible = false
+        binding.pbDiaryLoading.isVisible = true
+    }
+
+    private fun deactivateLoadingProgressBar() {
+        binding.clDiary.isVisible = true
+        binding.pbDiaryLoading.isVisible = false
+    }
+
 
     private fun navigateToHome() {
         parentFragmentManager.popBackStack()
