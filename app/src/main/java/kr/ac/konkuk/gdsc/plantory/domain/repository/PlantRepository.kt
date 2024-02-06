@@ -1,7 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.domain.repository
 
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
-import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
+import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantRecordDto
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantInformation
@@ -22,6 +22,11 @@ interface PlantRepository {
 
     suspend fun getPlantInformations(): Result<List<PlantInformation>>
 
+    suspend fun getPlantRecord(
+        companionPlantId: Int,
+        recordDate: String
+    ): Result<ResponseGetPlantRecordDto>
+
     suspend fun postPlantHistory(
         companionPlantId: Int,
         requestPostHistoryDto: RequestPostPlantHistoryDto
@@ -32,8 +37,6 @@ interface PlantRepository {
         request: HashMap<String, RequestBody>,
         image: MultipartBody.Part?
     ): Result<Unit>
-
-    suspend fun getPlantDailyRecord(): Result<ResponseGetPlantDailyRecord>
 
     suspend fun getAllPlants(): Result<List<Plant>>
 

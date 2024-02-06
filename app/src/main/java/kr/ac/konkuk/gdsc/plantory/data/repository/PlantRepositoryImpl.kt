@@ -1,7 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.data.repository
 
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostPlantHistoryDto
-import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
+import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantRecordDto
 import kr.ac.konkuk.gdsc.plantory.data.source.PlantDataSource
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
@@ -52,16 +52,12 @@ class PlantRepositoryImpl @Inject constructor(
             plantDataSource.postPlantRecord(companionPlantId, request, image)
         }
 
-    override suspend fun getPlantDailyRecord(): Result<ResponseGetPlantDailyRecord> {
+    override suspend fun getPlantRecord(
+        companionPlantId: Int,
+        recordDate: String
+    ): Result<ResponseGetPlantRecordDto> {
         return runCatching {
-            ResponseGetPlantDailyRecord(
-                id = 1,
-                imageUrl = "https://plchldr.co/i/400x700?&bg=D4E1E4&fc=46AEA1&text=hihiplantory",
-                comment = "싹이 났다",
-                nickname = "식물1",
-                isWatered = true,
-                date = "2024-01-24"
-            )
+            plantDataSource.getPlantRecord(companionPlantId, recordDate)
         }
     }
 

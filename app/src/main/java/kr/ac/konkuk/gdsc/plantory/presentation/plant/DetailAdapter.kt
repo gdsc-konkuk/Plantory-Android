@@ -20,7 +20,8 @@ import java.util.Locale
 class DetailAdapter(
     private val currMonth: Int,
     private val plantHistories: List<PlantHistory>,
-    private val onDateClick: (Date) -> Unit
+    private val onDateClick: (Date) -> Unit,
+    private val onEmptyDateClick: () -> Unit
 ) : ListAdapter<Date, DetailAdapter.ViewHolder>(
     ItemDiffCallback<Date>(
         onItemsTheSame = { old, new -> old == new },
@@ -30,7 +31,8 @@ class DetailAdapter(
 
     class ViewHolder(
         private val binding: ItemDetailCalendarBinding,
-        private val onDateClick: (Date) -> Unit
+        private val onDateClick: (Date) -> Unit,
+        private val onEmptyDateClick: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         var currMonth: Int = 0
         private val dayText: TextView = binding.tvCalenderDate
@@ -60,9 +62,11 @@ class DetailAdapter(
             }
 
             val recordsByDate = plantDailyRecords.groupBy { it.date.takeLast(2) }
+            val dateKey = dateFormat.format(date)
+            val records = recordsByDate[dateKey]
 
-            recordsByDate.forEach { (date, records) ->
-                binding.apply {
+            binding.apply {
+                if (records != null) {
                     val waterChangeVisible =
                         records.any { it.type == PlantHistoryType.WATER_CHANGE }
                     val recordingVisible = records.any { it.type == PlantHistoryType.RECORDING }
@@ -70,10 +74,23 @@ class DetailAdapter(
                         if (waterChangeVisible) View.VISIBLE else View.GONE
                     ivCalendarRecordedStamp.visibility =
                         if (recordingVisible) View.VISIBLE else View.GONE
+
+                    if (recordingVisible) {
+                        llCalendarDay.setOnSingleClickListener {
+                            onDateClick(date)
+                        }
+                    } else {
+                        llCalendarDay.setOnSingleClickListener {
+                            onEmptyDateClick()
+                        }
+                    }
+                } else {
+                    ivCalendarWateredStamp.visibility = View.GONE
+                    ivCalendarRecordedStamp.visibility = View.GONE
+                    llCalendarDay.setOnSingleClickListener {
+                        onEmptyDateClick()
+                    }
                 }
-            }
-            binding.llCalendarDay.setOnSingleClickListener {
-                onDateClick(date)
             }
         }
     }
@@ -81,7 +98,7 @@ class DetailAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemDetailCalendarBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, onDateClick)
+        return ViewHolder(binding, onDateClick, onEmptyDateClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

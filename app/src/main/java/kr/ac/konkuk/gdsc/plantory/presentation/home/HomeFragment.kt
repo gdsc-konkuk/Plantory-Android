@@ -62,6 +62,17 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         initPlantViewPagerIndicator(plants = plants)
     }
 
+    private fun initSwipeRefreshListener() {
+        binding.lHomeRefresh.setOnRefreshListener {
+            refreshAllPlants()
+            binding.lHomeRefresh.isRefreshing = false
+        }
+    }
+
+    private fun refreshAllPlants() {
+        viewModel.getAllPlants()
+    }
+
     private fun initPlantViewPagerAdapter(plants: List<Plant>) {
         homeAdapter = HomeAdapter(
             onItemClick = { plantId ->
@@ -114,6 +125,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun addListener() {
         initAddButtonClickListener()
+        initSwipeRefreshListener()
     }
 
     private fun initAddButtonClickListener() {
@@ -135,6 +147,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
                     setPlantScrollJobState(state)
+                    binding.lHomeRefresh.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
                 }
             })
     }

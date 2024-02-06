@@ -33,5 +33,6 @@
     <string name="detail_plant_species">식물종</string>
     <string name="detail_description">한줄소개</string>
     <string name="detail_text">%s의 성장일기</string>
+    <string name="detail_empty_record_message">기록을 작성해주세요</string>
 
 </resources>

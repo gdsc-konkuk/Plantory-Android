@@ -13,7 +13,7 @@
             android:id="@+id/tv_plant_dday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="50dp"
             android:text="@{data.nickname.isEmpty() ? @string/home_plant_add_plant_item : @string/home_plant_dday(data.nickname,5)}"
             android:textAppearance="@style/TextAppearance.PLANTORY.Headline_b_24"
             android:textColor="@color/gray_800"
