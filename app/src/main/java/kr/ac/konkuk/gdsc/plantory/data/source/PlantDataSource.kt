@@ -21,10 +21,17 @@ class PlantDataSource @Inject constructor(
         targetMonth: String
     ) = plantService.getPlantHistories(companionPlantId, targetMonth)
 
+    suspend fun getPlantInformations() =
+        plantService.getPlantInformations()
+
     suspend fun postPlantHistory(
         companionPlantId: Int,
         requestPostHistoryDto: RequestPostPlantHistoryDto
     ) = plantService.postPlantHistory(companionPlantId, requestPostHistoryDto)
+
+    suspend fun deletePlant(
+        companionPlantId: Int
+    ) = plantService.deletePlant(companionPlantId)
 
     suspend fun postPlantRecord(
         companionPlantId: Int,

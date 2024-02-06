@@ -5,6 +5,7 @@ import kr.ac.konkuk.gdsc.plantory.data.dto.response.ResponseGetPlantDailyRecord
 import kr.ac.konkuk.gdsc.plantory.data.source.PlantDataSource
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantInformation
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -27,6 +28,11 @@ class PlantRepositoryImpl @Inject constructor(
     ): Result<List<PlantHistory>?> =
         runCatching {
             plantDataSource.getPlantHistories(companionPlantId, targetMonth).convertToPlantHistory()
+        }
+
+    override suspend fun getPlantInformations(): Result<List<PlantInformation>> =
+        runCatching {
+            plantDataSource.getPlantInformations().convertToPlantInformation()
         }
 
     override suspend fun postPlantHistory(
@@ -62,5 +68,12 @@ class PlantRepositoryImpl @Inject constructor(
     override suspend fun getAllPlants(): Result<List<Plant>> =
         runCatching {
             plantDataSource.getAllPlants().convertToPlant()
+        }
+
+    override suspend fun deletePlant(
+        companionPlantId: Int
+    ): Result<Unit> =
+        runCatching {
+            plantDataSource.deletePlant(companionPlantId)
         }
 }

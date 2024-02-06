@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kr.ac.konkuk.gdsc.plantory.data.dto.request.RequestPostRegisterPlantDto
+import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantInformation
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantRegisterItem
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
 import kr.ac.konkuk.gdsc.plantory.util.multipart.ContentUriRequestBody
@@ -31,7 +32,6 @@ class AddPlantViewModel @Inject constructor(
     private val plantRepository: PlantRepository
 ) : ViewModel() {
     private var calendar: Calendar = Calendar.getInstance()
-    val plantSpeciesList: List<String> = generateMockData()
 
     private val _currentYear = MutableStateFlow<Int>(0)
     val currentYear: StateFlow<Int> get() = _currentYear
@@ -51,6 +51,9 @@ class AddPlantViewModel @Inject constructor(
     private val _plantImage = MutableStateFlow<Uri?>(null)
     val plantImage: StateFlow<Uri?> = _plantImage.asStateFlow()
 
+    private val _plantInformationList = MutableStateFlow<List<PlantInformation>>(emptyList())
+    val plantInformationList: MutableStateFlow<List<PlantInformation>> get() = _plantInformationList
+
     private var imageRequestBody: ContentUriRequestBody? = null
 
     init {
@@ -64,6 +67,22 @@ class AddPlantViewModel @Inject constructor(
             returnDateFormat(currentYear.value, currentMonth.value, currentDay.value),
             returnDateFormat(currentYear.value, currentMonth.value, currentDay.value)
         )
+    }
+
+    private val _getPlantInformationState =
+        MutableStateFlow<UiState<List<PlantInformation>>>(UiState.Loading)
+    val getPlantInformationState: StateFlow<UiState<List<PlantInformation>>> =
+        _getPlantInformationState.asStateFlow()
+
+    fun getPlantInformations() {
+        viewModelScope.launch {
+            plantRepository.getPlantInformations()
+                .onSuccess { response ->
+                    _getPlantInformationState.value = UiState.Success(response)
+                }.onFailure { t ->
+                    _getPlantInformationState.value = UiState.Failure("${t.message}")
+                }
+        }
     }
 
     fun postRegisterPlant() {
@@ -106,7 +125,13 @@ class AddPlantViewModel @Inject constructor(
     }
 
     private fun findPlantInformationId(species: String): Int {
-        return 1
+        val findPlant = plantInformationList.value.find { it.species == species }
+        // 서버에 등록된 식물 없으면 임의로 1로 설정
+        return findPlant?.id ?: 1
+    }
+
+    fun updatePlantInformation(InformationList: List<PlantInformation>) {
+        _plantInformationList.value = InformationList
     }
 
     fun updatePlantInfo(newPlantRegisterItem: PlantRegisterItem) {
@@ -139,19 +164,5 @@ class AddPlantViewModel @Inject constructor(
         calendar.set(year, month, day)
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(calendar.time)
-    }
-
-    private fun generateMockData(): List<String> {
-        return mutableListOf(
-            "Cactus",
-            "Cymbidium Orchid",
-            "Chrysanthemum",
-            "Calla Lily",
-            "Carnation",
-            "Cyrilla",
-            "Cyphostemma",
-            "Cydista",
-            "Cyperus"
-        )
     }
 }

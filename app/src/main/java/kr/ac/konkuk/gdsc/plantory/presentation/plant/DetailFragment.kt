@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import PopupMenu
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
@@ -27,6 +28,7 @@ import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycle
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
+import kr.ac.konkuk.gdsc.plantory.util.view.PopupDeleteMenu
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
 import timber.log.Timber
@@ -49,6 +51,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         getPlantHistoryStateObserver()
         getPlantDetailStateObserver()
         postPlantWateredStateObserver()
+        deletePlantObserver()
         addListener()
 
         viewModel.getPlantHistories()
@@ -57,9 +60,11 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun addListener() {
         updatePreviousMonth()
         updateNextMonth()
+        updateWaterButton()
         initBackButton()
         initUploadButton()
-        updateWaterButton()
+        initAddButtonClickListener()
+        initMenuButtonClickListener()
     }
 
     private fun initPlantInfo() {
@@ -88,6 +93,22 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateIsWatered(true)
                 }
             }
+        }
+    }
+
+    private fun initAddButtonClickListener() {
+        binding.ivDetailAdd.setOnSingleClickListener {
+            PopupMenu(it.context, onAddButtonClick = {
+                navigateToAdd()
+            }).showAsDropDown(it, -55, 0)
+        }
+    }
+
+    private fun initMenuButtonClickListener() {
+        binding.ivDetailMenu.setOnSingleClickListener {
+            PopupDeleteMenu(it.context, onMenuButtonClick = {
+                viewModel.deletePlant()
+            }).showAsDropDown(it, -55, 0)
         }
     }
 
@@ -151,6 +172,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         parentFragmentManager.popBackStack()
     }
 
+    private fun navigateToAdd() {
+        navigateTo<AddPlantFragment>()
+    }
+
     /*getPlantById*/
     private fun getPlantDetailStateObserver() {
         viewModel.getPlantDetailState.flowWithLifecycle(viewLifeCycle).onEach { state ->
@@ -160,7 +185,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateClickedPlantNickname(state.data.nickname)
                 }
 
-                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
@@ -185,7 +210,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     }
                 }
 
-                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
@@ -202,11 +227,29 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.getPlantHistories()
                 }
 
-                is UiState.Failure -> Timber.d("Failure : ${state.msg}")
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
             }
         }.launchIn(viewLifeCycleScope)
+    }
+
+    /*deletePlant*/
+    private fun deletePlantObserver() {
+        viewModel.deletePlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> navigateToHome()
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
+            }
+        }.launchIn(viewLifeCycleScope)
+    }
+
+    private inline fun <reified T : Fragment> navigateTo() {
+        activity?.supportFragmentManager?.commit {
+            replace<T>(R.id.fcv_main, T::class.simpleName).addToBackStack("DetailFragment")
+        }
     }
 
     private inline fun <reified T : Fragment> navigateToWithBundle(args: Bundle) {
@@ -215,7 +258,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 R.id.fcv_main,
                 T::class.simpleName,
                 args
-            ).addToBackStack("DiaryFragment")
+            ).addToBackStack("DetailFragment")
         }
     }
 }

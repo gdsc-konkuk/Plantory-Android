@@ -38,14 +38,15 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getPlantInformations()
         initView()
         addListener()
         setPostRegisterPlantStateObserver()
+        setGetPlantInformationsStateObserver()
     }
 
     private fun initView() {
         initDatePickerToCurrent()
-        initAutoCompleteAdapter()
     }
 
     private fun addListener() {
@@ -81,10 +82,21 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     private fun setPostRegisterPlantStateObserver() {
         viewModel.postRegisterPlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
-                is UiState.Success -> {
-                    parentFragmentManager.popBackStack()
-                }
+                is UiState.Success -> parentFragmentManager.popBackStack()
+                is UiState.Failure -> Timber.e("Failure : ${state.msg}")
+                is UiState.Empty -> Unit
+                is UiState.Loading -> Unit
+            }
+        }.launchIn(viewLifeCycleScope)
+    }
 
+    private fun setGetPlantInformationsStateObserver() {
+        viewModel.getPlantInformationState.flowWithLifecycle(viewLifeCycle).onEach { state ->
+            when (state) {
+                is UiState.Success -> {
+                    viewModel.updatePlantInformation(state.data)
+                    initAutoCompleteAdapter()
+                }
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -198,7 +210,9 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
             adapter = ArrayAdapter<String>(
                 requireContext(),
                 R.layout.simple_dropdown_item,
-                viewModel.plantSpeciesList
+                viewModel.plantInformationList.value.map { plantInformation ->
+                    plantInformation.species
+                }
             )
             binding.tvAddplantSpecies.setAdapter(adapter)
         }
