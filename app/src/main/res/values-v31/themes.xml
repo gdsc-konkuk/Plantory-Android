@@ -3,7 +3,6 @@
 
     <style name="Theme.SplashScreen" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowSplashScreenBackground">@color/mint</item>
-        <item name="android:windowSplashScreenAnimationDuration">2000</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
 
     </style>
