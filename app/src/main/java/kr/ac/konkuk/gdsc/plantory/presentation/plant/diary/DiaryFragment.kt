@@ -68,7 +68,6 @@ class DiaryFragment : BindingFragment<FragmentDiaryBinding>(R.layout.fragment_di
         binding.pbDiaryLoading.isVisible = false
     }
 
-
     private fun navigateToHome() {
         parentFragmentManager.popBackStack()
     }

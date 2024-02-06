@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,10 +22,10 @@ import kr.ac.konkuk.gdsc.plantory.databinding.FragmentHomeBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.AddPlantFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.DetailFragment
-import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
 import kr.ac.konkuk.gdsc.plantory.util.decoration.ViewPagerDecoration
+import kr.ac.konkuk.gdsc.plantory.util.fragment.snackBar
 import kr.ac.konkuk.gdsc.plantory.util.fragment.viewLifeCycleScope
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import kr.ac.konkuk.gdsc.plantory.util.view.setOnSingleClickListener
@@ -49,8 +48,11 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         addListener()
         viewModel.getAllPlants()
 
+        arguments?.getString(KEY_FROM_ADD)?.let { message ->
+            snackBar(view) { message }
+        }
         arguments?.getString(KEY_FROM_DETAIL_DELETE)?.let { message ->
-            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+            snackBar(view) { message }
         }
     }
 
@@ -237,5 +239,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         private const val ROOT_FRAGMENT_HOME = "homeFragment"
 
         private const val KEY_FROM_DETAIL_DELETE = "KEY_FROM_DETAIL_DELETE"
+        private const val KEY_FROM_ADD = "KEY_FROM_ADD"
     }
 }

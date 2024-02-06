@@ -269,16 +269,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         viewModel.deletePlantState.flowWithLifecycle(viewLifeCycle).onEach { state ->
             when (state) {
                 is UiState.Success -> {
-                    val fragment = HomeFragment().apply {
-                        arguments = Bundle().apply {
-                            putString(KEY_FROM_DETAIL_DELETE, MSG_FROM_DETAIL_DELETE)
-                        }
-                    }
-                    activity?.supportFragmentManager?.commit {
-                        replace(R.id.fcv_main, fragment)
-                    }
+                    navigateToHomeWithMessage(KEY_FROM_DETAIL_DELETE, MSG_FROM_DETAIL_DELETE)
                 }
-
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -294,6 +286,18 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun deactivateLoadingProgressBar() {
         binding.clDetail.isVisible = true
         binding.pbDetailLoading.isVisible = false
+    }
+
+    private fun navigateToHomeWithMessage(key: String, message: String) {
+        val fragment = HomeFragment().apply {
+            arguments = Bundle().apply {
+                putString(key, message)
+            }
+        }
+
+        activity?.supportFragmentManager?.commit {
+            replace(R.id.fcv_main, fragment)
+        }
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
@@ -314,6 +318,6 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     companion object {
         private const val KEY_FROM_DETAIL_DELETE = "KEY_FROM_DETAIL_DELETE"
-        private const val MSG_FROM_DETAIL_DELETE = "식물을 삭제했습니다"
+        private const val MSG_FROM_DETAIL_DELETE = "식물을 성공적으로 삭제했습니다"
     }
 }
