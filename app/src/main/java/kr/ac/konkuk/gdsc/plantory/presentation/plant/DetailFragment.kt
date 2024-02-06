@@ -13,6 +13,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -79,12 +80,16 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
-            navigateToWithBundle<UploadFragment>(
-                bundleOf(
-                    "plantId" to viewModel.clickedPlantId.value,
-                    "plantNickname" to viewModel.clickedPlantNickname.value
+            if (viewModel.isRecoreded.value) {
+                snackBar(requireView()) {"이미 기록이 있습니다."}
+            } else {
+                navigateToWithBundle<UploadFragment>(
+                    bundleOf(
+                        "plantId" to viewModel.clickedPlantId.value,
+                        "plantNickname" to viewModel.clickedPlantNickname.value
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -94,6 +99,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
                     binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
                     viewModel.updateIsWatered(true)
+                } else if(plantHistory.type == PlantHistoryType.RECORDING) {
+                    binding.ivDetailPlantUpload.setImageResource(R.drawable.ic_detail_record_complete)
+                    viewModel.updateIsRecorded(true)
                 }
             }
         }

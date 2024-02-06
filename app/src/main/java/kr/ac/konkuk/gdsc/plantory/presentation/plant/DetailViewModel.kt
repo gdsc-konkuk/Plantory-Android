@@ -36,6 +36,9 @@ class DetailViewModel @Inject constructor(
     private val _isWatered = MutableStateFlow(false)
     val isWatered: MutableStateFlow<Boolean> get() = _isWatered
 
+    private val _isRecoreded = MutableStateFlow(false)
+    val isRecoreded: MutableStateFlow<Boolean> get() = _isRecoreded
+
     private val _clickedPlantId = MutableStateFlow(0)
     val clickedPlantId: MutableStateFlow<Int> get() = _clickedPlantId
 
@@ -96,6 +99,10 @@ class DetailViewModel @Inject constructor(
 
     fun updateIsWatered(watered: Boolean) {
         _isWatered.value = watered
+    }
+
+    fun updateIsRecorded(recorded: Boolean) {
+        _isRecoreded.value = recorded
     }
 
     /*getPlantById*/

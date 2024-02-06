@@ -28,6 +28,7 @@
     <string name="upload_nickname">%s의 기록</string>
     <string name="upload_hint">%s는 오늘 어땠나요? 기록을 작성해주세요.</string>
     <string name="upload_text">기록</string>
+    <string name="upload_btn">%s의 일지 기록하기</string>
 
     <string name="detail_dday">%d일</string>
     <string name="detail_plant_species">식물종</string>
