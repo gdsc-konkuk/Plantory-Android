@@ -5,6 +5,7 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -13,7 +14,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -81,7 +81,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun initUploadButton() {
         binding.ivDetailPlantUpload.setOnSingleClickListener {
             if (viewModel.isRecoreded.value) {
-                snackBar(requireView()) {"이미 기록이 있습니다."}
+                snackBar(requireView()) { "이미 기록이 있습니다." }
             } else {
                 navigateToWithBundle<UploadFragment>(
                     bundleOf(
@@ -99,7 +99,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 if (plantHistory.type == PlantHistoryType.WATER_CHANGE) {
                     binding.ivDetailPlantGiveWater.setImageResource(R.drawable.ic_detail_is_watered)
                     viewModel.updateIsWatered(true)
-                } else if(plantHistory.type == PlantHistoryType.RECORDING) {
+                } else if (plantHistory.type == PlantHistoryType.RECORDING) {
                     binding.ivDetailPlantUpload.setImageResource(R.drawable.ic_detail_record_complete)
                     viewModel.updateIsRecorded(true)
                 }
@@ -231,6 +231,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Success -> {
                     if (state.data.isEmpty() && !firstCallCalendar) {
                     } else {
+                        deactivateLoadingProgressBar()
                         initWaterButton(state.data)
                         updateCalendar(state.data)
                     }
@@ -238,7 +239,9 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
-                is UiState.Loading -> Unit
+                is UiState.Loading -> {
+                    activateLoadingProgressBar()
+                }
             }
         }.launchIn(viewLifeCycleScope)
     }
@@ -270,6 +273,16 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Loading -> Unit
             }
         }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun activateLoadingProgressBar() {
+        binding.clDetail.isVisible = false
+        binding.pbDetailLoading.isVisible = true
+    }
+
+    private fun deactivateLoadingProgressBar() {
+        binding.clDetail.isVisible = true
+        binding.pbDetailLoading.isVisible = false
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
