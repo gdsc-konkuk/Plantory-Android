@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
@@ -222,6 +223,11 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         binding.tvAddplantSpecies.setOnItemClickListener { parent, view, position, id ->
             val item = parent.getItemAtPosition(position).toString()
             binding.tvAddplantSpecies.setText(item)
+        }
+        binding.tvAddplantSpecies.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && view is AppCompatAutoCompleteTextView) {
+                view.showDropDown()
+            }
         }
     }
 
