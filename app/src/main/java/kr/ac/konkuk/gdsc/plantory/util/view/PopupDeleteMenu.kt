@@ -10,7 +10,7 @@ import kr.ac.konkuk.gdsc.plantory.databinding.MenuDetailBinding
 
 class PopupDeleteMenu(
     context: Context,
-    private val onAddButtonClick: () -> Unit
+    private val onMenuButtonClick: () -> Unit
 ) : PopupWindow(context) {
 
     private val binding: MenuDetailBinding by lazy {
@@ -27,7 +27,7 @@ class PopupDeleteMenu(
         height = ViewGroup.LayoutParams.WRAP_CONTENT
 
         binding.ivMenuAdd.setOnClickListener {
-            onAddButtonClick.invoke()
+            onMenuButtonClick.invoke()
             dismiss()
         }
     }

@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant
 
+import PopupMenu
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import android.view.View
@@ -22,6 +23,7 @@ import kr.ac.konkuk.gdsc.plantory.databinding.FragmentDetailBinding
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistory
 import kr.ac.konkuk.gdsc.plantory.domain.entity.PlantHistoryType
+import kr.ac.konkuk.gdsc.plantory.presentation.home.HomeFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.DiaryFragment
 import kr.ac.konkuk.gdsc.plantory.presentation.plant.diary.UploadFragment
 import kr.ac.konkuk.gdsc.plantory.util.binding.BindingFragment
@@ -63,6 +65,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         initBackButton()
         initUploadButton()
         initAddButtonClickListener()
+        initMenuButtonClickListener()
     }
 
     private fun initPlantInfo() {
@@ -96,7 +99,15 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun initAddButtonClickListener() {
         binding.ivDetailAdd.setOnSingleClickListener {
-            PopupDeleteMenu(it.context, onAddButtonClick = {
+            PopupMenu(it.context, onAddButtonClick = {
+                navigateToAdd()
+            }).showAsDropDown(it, -55, 0)
+        }
+    }
+
+    private fun initMenuButtonClickListener() {
+        binding.ivDetailMenu.setOnSingleClickListener {
+            PopupDeleteMenu(it.context, onMenuButtonClick = {
                 viewModel.deletePlant()
             }).showAsDropDown(it, -55, 0)
         }
@@ -160,6 +171,10 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
 
     private fun navigateToHome() {
         parentFragmentManager.popBackStack()
+    }
+
+    private fun navigateToAdd() {
+        navigateTo<AddPlantFragment>()
     }
 
     /*getPlantById*/
@@ -232,13 +247,19 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
         }.launchIn(viewLifeCycleScope)
     }
 
+    private inline fun <reified T : Fragment> navigateTo() {
+        activity?.supportFragmentManager?.commit {
+            replace<T>(R.id.fcv_main, T::class.simpleName).addToBackStack("DetailFragment")
+        }
+    }
+
     private inline fun <reified T : Fragment> navigateToWithBundle(args: Bundle) {
         parentFragmentManager.commit {
             replace<T>(
                 R.id.fcv_main,
                 T::class.simpleName,
                 args
-            ).addToBackStack("DiaryFragment")
+            ).addToBackStack("DetailFragment")
         }
     }
 }
