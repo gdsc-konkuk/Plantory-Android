@@ -47,9 +47,6 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         addCallback()
         addListener()
         viewModel.getAllPlants()
-        binding.ivHomeLogo.setOnClickListener {
-            navigateTo<DiaryFragment>()
-        }
     }
 
     private fun initPlantViewPager(plants: List<Plant>) {
