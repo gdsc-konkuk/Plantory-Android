@@ -39,6 +39,7 @@ class DetailAdapter(
 
         fun onBind(date: Date, plantDailyRecords: List<PlantHistory>) {
             val dateFormat = SimpleDateFormat("dd", Locale.getDefault())
+            val fullDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             dayText.text = dateFormat.format(date).toString()
 
             if (currMonth != date.month) {
@@ -51,7 +52,8 @@ class DetailAdapter(
                 dayText.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red))
             }
 
-            val isToday = dateFormat.format(date) == dateFormat.format(Date())
+            val today = Date()
+            val isToday = fullDateFormat.format(date) == fullDateFormat.format(today)
 
             binding.llCalendarDay.apply {
                 if (isToday) {
@@ -70,6 +72,7 @@ class DetailAdapter(
                     val waterChangeVisible =
                         records.any { it.type == PlantHistoryType.WATER_CHANGE }
                     val recordingVisible = records.any { it.type == PlantHistoryType.RECORDING }
+                    vEmptyView.visibility = if (waterChangeVisible && recordingVisible) View.VISIBLE else View.GONE
                     ivCalendarWateredStamp.visibility =
                         if (waterChangeVisible) View.VISIBLE else View.GONE
                     ivCalendarRecordedStamp.visibility =

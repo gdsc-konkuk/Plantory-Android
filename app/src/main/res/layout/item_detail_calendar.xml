@@ -44,11 +44,17 @@
                 android:src="@drawable/ic_detail_water"
                 android:visibility="gone" />
 
+            <View
+                android:id="@+id/v_emptyView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="2dp"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/iv_calendar_recorded_stamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_detail_record"
                 android:visibility="gone" />
         </LinearLayout>
