@@ -139,6 +139,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             val isWatered = viewModel.isWatered.value
             if (!isWatered) {
                 viewModel.postPlantWatered()
+            } else {
+                snackBar(requireView()) { "이미 물주기를 완료했습니다." }
             }
         }
     }
@@ -146,7 +148,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun updatePreviousMonth() {
         binding.ivDetailCalendarLeft.setOnSingleClickListener {
             updatePreviousNextMonth(true)
-        }
+        }ㄴㅇ
     }
 
     private fun updateNextMonth() {
