@@ -1,5 +1,6 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.plant.diary
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -52,6 +53,10 @@ class UploadViewModel @Inject constructor(
         _clickedPlantId.value = id
     }
 
+    private fun updateRequestBody(requestBody: ContentUriRequestBody) {
+        this.imageRequestBody = requestBody
+    }
+
     fun updateClickedPlantNickname(nickname: String) {
         _clickedPlantNickname.value = nickname
     }
@@ -60,8 +65,11 @@ class UploadViewModel @Inject constructor(
         _plantRecord.value.comment = currinput
     }
 
-    fun updateProfileImage(uri: Uri) {
+    fun updateProfileImage(uri: Uri, context: Context) {
         _imageUri.value = uri
+        val imageUri = imageUri.value ?: return
+        val requestBody = ContentUriRequestBody(context, imageUri)
+        updateRequestBody(requestBody)
     }
 
     /*postPlantRecord*/
