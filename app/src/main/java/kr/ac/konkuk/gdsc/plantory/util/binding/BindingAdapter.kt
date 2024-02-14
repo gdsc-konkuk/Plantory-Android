@@ -10,17 +10,19 @@ import kr.ac.konkuk.gdsc.plantory.R
 import kr.ac.konkuk.gdsc.plantory.util.date.DateUtil
 
 @BindingAdapter("setImageUrl")
-fun ImageView.setImageUrl(imageUrl: String) {
-    if (imageUrl.startsWith("R.drawable.")) {
-        val drawableResId = context.resources.getIdentifier(
-            imageUrl.removePrefix("R.drawable."),
-            "drawable",
-            context.packageName
-        )
-        setImageResource(drawableResId)
-    } else {
-        load(imageUrl) {
-            transformations(RoundedCornersTransformation(20F))
+fun ImageView.setImageUrl(imageUrl: String?) {
+    imageUrl?.let { url ->
+        if (url.startsWith("R.drawable.")) {
+            val drawableResId = context.resources.getIdentifier(
+                url.removePrefix("R.drawable."),
+                "drawable",
+                context.packageName
+            )
+            setImageResource(drawableResId)
+        } else {
+            load(url) {
+                transformations(RoundedCornersTransformation(20F))
+            }
         }
     }
 }
