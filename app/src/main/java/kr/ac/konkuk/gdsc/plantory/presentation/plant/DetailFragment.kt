@@ -148,7 +148,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     private fun updatePreviousMonth() {
         binding.ivDetailCalendarLeft.setOnSingleClickListener {
             updatePreviousNextMonth(true)
-        }ㄴㅇ
+        }
     }
 
     private fun updateNextMonth() {
