@@ -139,6 +139,8 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
             val isWatered = viewModel.isWatered.value
             if (!isWatered) {
                 viewModel.postPlantWatered()
+            } else {
+                snackBar(requireView()) { "이미 물주기를 완료했습니다." }
             }
         }
     }

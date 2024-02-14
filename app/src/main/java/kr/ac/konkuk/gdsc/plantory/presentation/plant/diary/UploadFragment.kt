@@ -47,7 +47,7 @@ class UploadFragment : BindingFragment<FragmentUploadBinding>(R.layout.fragment_
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                viewModel.updateProfileImage(uri)
+                viewModel.updateProfileImage(uri, requireContext())
             }
         }
 
