@@ -44,11 +44,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun calculateTotalCarbon(plants: List<Plant>) {
-        plants.forEach {plant ->
+        plants.forEach { plant ->
             val date = DateUtil.parseDate(plant.birthDate)
             if (date != null) {
                 val days = DateUtil.calculateDaysFromDate(date) + 1
-                updateTotalCarbon(totalCarbon.value + days*16.6)
+                updateTotalCarbon(totalCarbon.value + days * 16.6)
             }
         }
     }
