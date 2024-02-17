@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kr.ac.konkuk.gdsc.plantory.domain.entity.Plant
 import kr.ac.konkuk.gdsc.plantory.domain.repository.PlantRepository
+import kr.ac.konkuk.gdsc.plantory.util.date.DateUtil
 import kr.ac.konkuk.gdsc.plantory.util.view.UiState
 import javax.inject.Inject
 
@@ -16,6 +17,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val plantRepository: PlantRepository
 ) : ViewModel() {
+    private val _totalCarbon = MutableStateFlow(0.0)
+    val totalCarbon: StateFlow<Double> get() = _totalCarbon
+
     private val _getAllPlantsState =
         MutableStateFlow<UiState<List<Plant>>>(UiState.Loading)
     val getAllPlantsState: StateFlow<UiState<List<Plant>>> =
@@ -37,6 +41,20 @@ class HomeViewModel @Inject constructor(
 
     private fun addNewPlantItem(size: Int, list: List<Plant>): MutableList<Plant> {
         return list.toMutableList().apply { add(size, emptyItemForAddPlant) }
+    }
+
+    fun calculateTotalCarbon(plants: List<Plant>) {
+        plants.forEach {plant ->
+            val date = DateUtil.parseDate(plant.birthDate)
+            if (date != null) {
+                val days = DateUtil.calculateDaysFromDate(date) + 1
+                updateTotalCarbon(totalCarbon.value + days*16.6)
+            }
+        }
+    }
+
+    fun updateTotalCarbon(carbon: Double) {
+        _totalCarbon.value = carbon
     }
 
     val emptyItemForAddPlant = Plant(
