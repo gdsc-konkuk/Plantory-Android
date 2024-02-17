@@ -130,8 +130,7 @@
                     android:textColor="@color/gray_carbon"
                     android:layout_marginStart="3dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_home_carbon_content"
-                    app:layout_constraintStart_toEndOf="@id/tv_home_carbon_content_number"
-                    app:layout_constraintTop_toTopOf="@id/tv_home_carbon_content" />
+                    app:layout_constraintStart_toEndOf="@id/tv_home_carbon_content_number" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
