@@ -16,6 +16,10 @@
     <string name="home_plant_description">한줄소개</string>
     <string name="home_plant_add_plant_item">새로운 식물을\n추가해보세요</string>
     <string name="home_plant_blank"> </string>
+    <string name="home_carbon_title">식물 한개당 연간 6000mg의 탄소를 흡수할 수 있어요!</string>
+    <string name="home_carbon_body">현재 탄소 저감 중</string>
+    <string name="home_carbon_mg">mg</string>
+    <string name="home_carbon_empty">식물을 추가해 탄소를 저감해 보세요:)</string>
 
     <string name="notification_title">알림센터</string>
 

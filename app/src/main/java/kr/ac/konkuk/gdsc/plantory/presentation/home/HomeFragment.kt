@@ -76,6 +76,18 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         }
     }
 
+    private fun initReducedCarbon(plants: List<Plant>) {
+        viewModel.updateTotalCarbon(0.0)
+        binding.apply {
+            tvHomeCarbonContentEmpty.visibility = View.GONE
+            tvHomeCarbonContent.visibility = View.VISIBLE
+            tvHomeCarbonContentNumber.visibility = View.VISIBLE
+            tvHomeCarbonMg.visibility = View.VISIBLE
+            viewModel.calculateTotalCarbon(plants)
+            tvHomeCarbonContentNumber.text = viewModel.totalCarbon.value.toInt().toString()
+        }
+    }
+
     private fun refreshAllPlants() {
         viewModel.getAllPlants()
     }
@@ -182,6 +194,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
                 is UiState.Success -> {
                     Timber.d("Success : Get Plants ")
                     initPlantViewPager(state.data)
+                    initReducedCarbon(state.data)
                 }
 
                 is UiState.Failure -> {
@@ -190,6 +203,12 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
                 is UiState.Empty -> {
                     initPlantViewPager(listOf(viewModel.emptyItemForAddPlant))
+                    binding.apply {
+                        tvHomeCarbonContentEmpty.visibility = View.VISIBLE
+                        tvHomeCarbonContent.visibility = View.GONE
+                        tvHomeCarbonContentNumber.visibility = View.GONE
+                        tvHomeCarbonMg.visibility = View.GONE
+                    }
                 }
             }
         }.launchIn(lifecycleScope)
