@@ -19,6 +19,7 @@
     <string name="home_carbon_title">식물 한개당 연간 6000mg의 탄소를 흡수할 수 있어요!</string>
     <string name="home_carbon_body">현재 탄소 절감 중</string>
     <string name="home_carbon_mg">mg</string>
+    <string name="home_carbon_empty">식물을 추가해 탄소를 저감해 보세요:)</string>
 
     <string name="notification_title">알림센터</string>
 

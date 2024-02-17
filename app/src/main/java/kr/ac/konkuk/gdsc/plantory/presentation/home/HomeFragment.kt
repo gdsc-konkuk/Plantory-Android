@@ -1,6 +1,7 @@
 package kr.ac.konkuk.gdsc.plantory.presentation.home
 
 import PopupMenu
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -78,8 +79,14 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun initReducedCarbon(plants: List<Plant>) {
         viewModel.updateTotalCarbon(0.0)
-        viewModel.calculateTotalCarbon(plants)
-        binding.tvHomeCarbonContentNumber.text = viewModel.totalCarbon.value.toInt().toString()
+        binding.apply {
+            tvHomeCarbonContentEmpty.visibility = View.GONE
+            tvHomeCarbonContent.visibility = View.VISIBLE
+            tvHomeCarbonContentNumber.visibility = View.VISIBLE
+            tvHomeCarbonMg.visibility = View.VISIBLE
+            viewModel.calculateTotalCarbon(plants)
+            tvHomeCarbonContentNumber.text = viewModel.totalCarbon.value.toInt().toString()
+        }
     }
 
     private fun refreshAllPlants() {
@@ -197,6 +204,12 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
                 is UiState.Empty -> {
                     initPlantViewPager(listOf(viewModel.emptyItemForAddPlant))
+                    binding.apply {
+                        tvHomeCarbonContentEmpty.visibility = View.VISIBLE
+                        tvHomeCarbonContent.visibility = View.GONE
+                        tvHomeCarbonContentNumber.visibility = View.GONE
+                        tvHomeCarbonMg.visibility = View.GONE
+                    }
                 }
             }
         }.launchIn(lifecycleScope)
