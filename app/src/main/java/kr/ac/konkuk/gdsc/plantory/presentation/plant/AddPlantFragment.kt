@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
@@ -246,16 +245,13 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
     }
 
     private fun navigateToHomeWithMessage(key: String, message: String) {
-        val fragment = HomeFragment().apply {
-            arguments = Bundle().apply {
-                putString(key, message)
-            }
+        val fragment = parentFragmentManager.findFragmentByTag("HomeFragment") as HomeFragment
+        fragment.arguments = Bundle().apply {
+            putString(key, message)
         }
-
-        activity?.supportFragmentManager?.commit {
-            replace(R.id.fcv_main, fragment)
-        }
+        parentFragmentManager.popBackStack()
     }
+
 
     private fun returnDateFormat(year: Int, month: Int, day: Int): String {
         val calendar = Calendar.getInstance()

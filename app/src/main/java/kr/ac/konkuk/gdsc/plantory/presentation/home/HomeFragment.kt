@@ -46,13 +46,17 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         addCallback()
         addListener()
         viewModel.getAllPlants()
-
-        getArgumentsAndShowAction(KEY_FROM_ADD, view)
-        getArgumentsAndShowAction(KEY_FROM_DETAIL_DELETE, view)
     }
 
-    private fun getArgumentsAndShowAction(key: String, view: View) {
+    override fun onResume() {
+        super.onResume()
+        getArgumentsAndShowAction(KEY_FROM_ADD)
+        getArgumentsAndShowAction(KEY_FROM_DETAIL_DELETE)
+    }
+
+    private fun getArgumentsAndShowAction(key: String) {
         arguments?.getString(key)?.let { message ->
+            val view = requireView()
             snackBar(view) { message }
             arguments?.putString(key, null)
         }
@@ -154,18 +158,18 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
 
     private fun registerPlantPageChangeCallback() {
         binding.vpHomePlant.registerOnPageChangeCallback(object :
-                ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    updatePlantPosition(position)
-                }
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                updatePlantPosition(position)
+            }
 
-                override fun onPageScrollStateChanged(state: Int) {
-                    super.onPageScrollStateChanged(state)
-                    setPlantScrollJobState(state)
-                    binding.lHomeRefresh.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
-                }
-            })
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+                setPlantScrollJobState(state)
+                binding.lHomeRefresh.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
+            }
+        })
     }
 
     private fun removeViewPagerDecorations(viewPager: ViewPager2) {
@@ -241,7 +245,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
-        activity?.supportFragmentManager?.commit {
+        parentFragmentManager.commit {
             replace<T>(R.id.fcv_main, T::class.simpleName).addToBackStack(ROOT_FRAGMENT_HOME)
         }
     }

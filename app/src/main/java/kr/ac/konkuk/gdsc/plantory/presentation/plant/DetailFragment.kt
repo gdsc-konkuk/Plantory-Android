@@ -224,6 +224,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                     viewModel.updateClickedPlant(state.data)
                     initImage()
                 }
+
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -283,6 +284,7 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
                 is UiState.Success -> {
                     navigateToHomeWithMessage(KEY_FROM_DETAIL_DELETE, MSG_FROM_DETAIL_DELETE)
                 }
+
                 is UiState.Failure -> Timber.e("Failure : ${state.msg}")
                 is UiState.Empty -> Unit
                 is UiState.Loading -> Unit
@@ -301,15 +303,11 @@ class DetailFragment : BindingFragment<FragmentDetailBinding>(R.layout.fragment_
     }
 
     private fun navigateToHomeWithMessage(key: String, message: String) {
-        val fragment = HomeFragment().apply {
-            arguments = Bundle().apply {
-                putString(key, message)
-            }
+        val fragment = parentFragmentManager.findFragmentByTag("HomeFragment") as HomeFragment
+        fragment.arguments = Bundle().apply {
+            putString(key, message)
         }
-
-        activity?.supportFragmentManager?.commit {
-            replace(R.id.fcv_main, fragment)
-        }
+        parentFragmentManager.popBackStack()
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
