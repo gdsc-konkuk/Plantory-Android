@@ -152,7 +152,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         binding.ivHomeAdd.setOnSingleClickListener {
             PopupMenu(it.context, onAddButtonClick = {
                 navigateToAdd()
-            }).showAsDropDown(it, -55, 0)
+            }).showAsDropDown(it, -120, -15)
         }
     }
 
