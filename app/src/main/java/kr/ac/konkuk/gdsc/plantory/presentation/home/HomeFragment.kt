@@ -46,13 +46,17 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         addCallback()
         addListener()
         viewModel.getAllPlants()
-
-        getArgumentsAndShowAction(KEY_FROM_ADD, view)
-        getArgumentsAndShowAction(KEY_FROM_DETAIL_DELETE, view)
     }
 
-    private fun getArgumentsAndShowAction(key: String, view: View) {
+    override fun onResume() {
+        super.onResume()
+        getArgumentsAndShowAction(KEY_FROM_ADD)
+        getArgumentsAndShowAction(KEY_FROM_DETAIL_DELETE)
+    }
+
+    private fun getArgumentsAndShowAction(key: String) {
         arguments?.getString(key)?.let { message ->
+            val view = requireView()
             snackBar(view) { message }
             arguments?.putString(key, null)
         }
@@ -148,7 +152,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
         binding.ivHomeAdd.setOnSingleClickListener {
             PopupMenu(it.context, onAddButtonClick = {
                 navigateToAdd()
-            }).showAsDropDown(it, -55, 0)
+            }).showAsDropDown(it, -120, -15)
         }
     }
 
@@ -241,7 +245,7 @@ class HomeFragment : BindingFragment<FragmentHomeBinding>(R.layout.fragment_home
     }
 
     private inline fun <reified T : Fragment> navigateTo() {
-        activity?.supportFragmentManager?.commit {
+        parentFragmentManager.commit {
             replace<T>(R.id.fcv_main, T::class.simpleName).addToBackStack(ROOT_FRAGMENT_HOME)
         }
     }

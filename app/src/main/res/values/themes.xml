@@ -22,6 +22,7 @@
     <style name="Theme.Plantory.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/mint</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.Plantory</item>
     </style>
 

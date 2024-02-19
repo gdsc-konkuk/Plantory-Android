@@ -21,7 +21,7 @@ android {
         applicationId = "kr.ac.konkuk.gdsc.plantory"
         minSdk = 26
         targetSdk = 33
-        versionCode = 1002
+        versionCode = 1004
         versionName = "1.0.0"
         buildConfigField(
             "String",
