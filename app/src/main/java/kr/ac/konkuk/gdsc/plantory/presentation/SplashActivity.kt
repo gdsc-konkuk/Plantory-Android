@@ -89,8 +89,8 @@ class SplashActivity : AppCompatActivity() {
 
     private inline fun <reified T : Activity> navigateTo() {
         Intent(this, T::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(this)
+            finish()
         }
     }
 }
