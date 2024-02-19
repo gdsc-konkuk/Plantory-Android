@@ -251,8 +251,6 @@ class AddPlantFragment : BindingFragment<FragmentAddPlantBinding>(R.layout.fragm
         }
         parentFragmentManager.popBackStack()
     }
-
-
     private fun returnDateFormat(year: Int, month: Int, day: Int): String {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day)
